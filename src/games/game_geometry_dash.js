@@ -1,4 +1,4 @@
-﻿class GeometryDashGame {
+class GeometryDashGame {
     constructor(canvas, onGameOver, onVictory, onAddCoins) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -318,13 +318,18 @@
         this.player.vy += this.gravity;
         this.player.y += this.player.vy;
 
-        // Rotation in air (90 degrees per rotation cycle)
+        // Rotation in air (smooth 90 degrees rotation per standard jump)
         if (!this.player.grounded) {
-            this.player.rotation += 0.14;
+            const rotSpeed = (Math.PI / 2) / (Math.abs(this.jumpForce) * 2 / this.gravity);
+            this.player.rotation += rotSpeed;
         } else {
-            // Snap to nearest 90 degrees on floor
+            // Fix angle to nearest 90 degrees on floor / platform
             const snap = Math.round(this.player.rotation / (Math.PI / 2)) * (Math.PI / 2);
-            this.player.rotation += (snap - this.player.rotation) * 0.35;
+            if (Math.abs(snap - this.player.rotation) < 0.02) {
+                this.player.rotation = snap;
+            } else {
+                this.player.rotation += (snap - this.player.rotation) * 0.45;
+            }
         }
 
         // Record trail
