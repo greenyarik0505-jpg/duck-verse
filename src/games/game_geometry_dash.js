@@ -29,7 +29,7 @@ class GeometryDashGame {
         this.cameraX = 0;
         this.particles = [];
         this.holdingJump = false;
-        this.levelLength = 4800; // Finish line X coordinate
+        this.levelLength = 17280; // Full 1-minute track (~55s at 60 FPS, 130 BPM synced)
 
         // Music synth loop properties
         this.musicTimer = null;
@@ -45,76 +45,177 @@ class GeometryDashGame {
 
     initLevel() {
         // Level elements: blocks, spikes, pads, orbs, coins
-        // Spikes: { type: 'spike', x, y: floorY - height, w: 34, h: 36 }
-        // Blocks: { type: 'block', x, y, w, h }
-        // Pads: { type: 'pad', x, y, w: 36, h: 12 }
-        // Orbs: { type: 'orb', x, y, r: 18 }
         const f = this.floorY;
         const b = this.cubeSize;
 
         this.level = [
-            // Intro
+            // ==========================================
+            // PART 1: 0% - 25% (Intro & Cyber Warmup)
+            // ==========================================
             { type: 'spike', x: 450, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 700, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 750, y: f - 34, w: 32, h: 34 },
 
             // Small block hop
-            { type: 'block', x: 950, y: f - b, w: b, h: b },
-            { type: 'spike', x: 986, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 1050, y: f - b, w: b, h: b },
+            { type: 'spike', x: 1086, y: f - 34, w: 32, h: 34 },
 
             // Double block
-            { type: 'block', x: 1200, y: f - b, w: b * 2, h: b },
-            { type: 'spike', x: 1200 + b * 2 + 10, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 1350, y: f - b, w: b * 2, h: b },
+            { type: 'spike', x: 1350 + b * 2 + 12, y: f - 34, w: 32, h: 34 },
 
-            // Jump pad launch
-            { type: 'pad', x: 1450, y: f - 10, w: 36, h: 10 },
-            { type: 'spike', x: 1520, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 1552, y: f - 34, w: 32, h: 34 },
-            { type: 'block', x: 1620, y: f - b * 2, w: b * 3, h: b },
+            // Jump pad launch to high runway + Secret Coin 1 (x: 1850)
+            { type: 'pad', x: 1620, y: f - 10, w: 36, h: 10 },
+            { type: 'spike', x: 1700, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 1732, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 1800, y: f - b * 2, w: b * 3, h: b },
+            { type: 'coin', x: 1850, y: f - b * 3 - 25, r: 12, collected: false },
 
-            // Secret Coin 1
-            { type: 'coin', x: 1670, y: f - b * 3 - 20, r: 12, collected: false },
+            // Drop down & single spike
+            { type: 'spike', x: 2150, y: f - 34, w: 32, h: 34 },
 
-            // Fall down with spike
-            { type: 'spike', x: 1800, y: f - 34, w: 32, h: 34 },
-
-            // Yellow Jump Orb sequence
-            { type: 'spike', x: 2050, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 2082, y: f - 34, w: 32, h: 34 },
-            { type: 'orb', x: 2066, y: f - 90, r: 18, used: false },
-
-            // Platform stairs
-            { type: 'block', x: 2300, y: f - b, w: b, h: b },
-            { type: 'block', x: 2336, y: f - b * 2, w: b, h: b * 2 },
-            { type: 'block', x: 2372, y: f - b * 3, w: b, h: b * 3 },
+            // Yellow Jump Orb over spikes
             { type: 'spike', x: 2450, y: f - 34, w: 32, h: 34 },
             { type: 'spike', x: 2482, y: f - 34, w: 32, h: 34 },
-            { type: 'block', x: 2550, y: f - b * 2, w: b * 2, h: b },
+            { type: 'orb', x: 2466, y: f - 90, r: 18, used: false },
 
-            // Secret Coin 2
-            { type: 'coin', x: 2700, y: f - b * 2 - 15, r: 12, collected: false },
+            // Block stairs (ascending)
+            { type: 'block', x: 2750, y: f - b, w: b, h: b },
+            { type: 'block', x: 2786, y: f - b * 2, w: b, h: b * 2 },
+            { type: 'block', x: 2822, y: f - b * 3, w: b, h: b * 3 },
+            { type: 'spike', x: 2950, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 2982, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 3100, y: f - b * 2, w: b * 2, h: b },
 
-            // Double Orb Jump
-            { type: 'spike', x: 2850, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 2882, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 2914, y: f - 34, w: 32, h: 34 },
-            { type: 'orb', x: 2882, y: f - 85, r: 18, used: false },
+            // Double Orb sequence
+            { type: 'spike', x: 3450, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 3482, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 3466, y: f - 85, r: 18, used: false },
+            { type: 'spike', x: 3750, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 3766, y: f - 80, r: 18, used: false },
+            { type: 'block', x: 3900, y: f - b, w: b * 3, h: b },
 
-            { type: 'spike', x: 3100, y: f - 34, w: 32, h: 34 },
-            { type: 'orb', x: 3116, y: f - 80, r: 18, used: false },
-            { type: 'block', x: 3200, y: f - b, w: b * 3, h: b },
+            // ==========================================
+            // PART 2: 25% - 50% (Neon Elevation & Beat Drop)
+            // ==========================================
+            { type: 'spike', x: 4320, y: f - 34, w: 32, h: 34 },
+            { type: 'pad', x: 4500, y: f - 10, w: 36, h: 10 },
+            { type: 'block', x: 4620, y: f - b * 3, w: b * 3, h: b },
+            { type: 'spike', x: 4850, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 4882, y: f - 34, w: 32, h: 34 },
 
-            // Triple Spike challenge (Classic GD!)
-            { type: 'spike', x: 3500, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 3532, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 3564, y: f - 34, w: 32, h: 34 },
+            // Rhythmic floating platforms
+            { type: 'block', x: 5180, y: f - b, w: b * 2, h: b },
+            { type: 'spike', x: 5320, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 5450, y: f - b * 2, w: b * 2, h: b },
+            { type: 'spike', x: 5600, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 5750, y: f - b, w: b * 2, h: b },
 
-            // Final sprint to Portal
-            { type: 'pad', x: 3750, y: f - 10, w: 36, h: 10 },
-            { type: 'block', x: 3880, y: f - b * 3, w: b * 4, h: b },
-            { type: 'coin', x: 3950, y: f - b * 3 - 35, r: 12, collected: false },
-            { type: 'spike', x: 4150, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 4300, y: f - 34, w: 32, h: 34 },
-            { type: 'spike', x: 4332, y: f - 34, w: 32, h: 34 }
+            // Triple spike challenge 1
+            { type: 'spike', x: 6150, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 6182, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 6214, y: f - 34, w: 32, h: 34 },
+
+            // Pad launch over pit of spikes to high ledge
+            { type: 'pad', x: 6480, y: f - 10, w: 36, h: 10 },
+            { type: 'spike', x: 6580, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 6612, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 6644, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 6720, y: f - b * 3, w: b * 4, h: b },
+
+            // High-altitude orb jump
+            { type: 'spike', x: 7100, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 7116, y: f - 100, r: 18, used: false },
+            { type: 'block', x: 7250, y: f - b * 2, w: b * 3, h: b },
+            { type: 'spike', x: 7500, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 7532, y: f - 34, w: 32, h: 34 },
+
+            // Syncopated hops
+            { type: 'block', x: 7800, y: f - b, w: b, h: b },
+            { type: 'spike', x: 7950, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 8100, y: f - b, w: b, h: b },
+            { type: 'spike', x: 8250, y: f - 34, w: 32, h: 34 },
+            { type: 'pad', x: 8400, y: f - 10, w: 36, h: 10 },
+            { type: 'block', x: 8520, y: f - b * 2, w: b * 3, h: b },
+
+            // ==========================================
+            // PART 3: 50% - 75% (Synth Pulse & Secret Coin 2)
+            // ==========================================
+            { type: 'spike', x: 8900, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 9150, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 9182, y: f - 34, w: 32, h: 34 },
+
+            // Orb jump to Secret Coin 2 (x: 9600)
+            { type: 'pad', x: 9400, y: f - 10, w: 36, h: 10 },
+            { type: 'orb', x: 9550, y: f - 120, r: 18, used: false },
+            { type: 'coin', x: 9600, y: f - b * 4 - 15, r: 12, collected: false },
+            { type: 'block', x: 9650, y: f - b * 3, w: b * 3, h: b },
+            { type: 'spike', x: 9900, y: f - 34, w: 32, h: 34 },
+
+            // Stairway descent & fast rhythm
+            { type: 'block', x: 10150, y: f - b * 3, w: b, h: b * 3 },
+            { type: 'block', x: 10186, y: f - b * 2, w: b, h: b * 2 },
+            { type: 'block', x: 10222, y: f - b, w: b, h: b },
+            { type: 'spike', x: 10400, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 10432, y: f - 34, w: 32, h: 34 },
+
+            // Dual jump orbs chain
+            { type: 'spike', x: 10750, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 10782, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 10766, y: f - 85, r: 18, used: false },
+            { type: 'spike', x: 11050, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 11082, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 11066, y: f - 85, r: 18, used: false },
+            { type: 'block', x: 11200, y: f - b, w: b * 3, h: b },
+
+            // Triple spike challenge 2
+            { type: 'spike', x: 11600, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 11632, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 11664, y: f - 34, w: 32, h: 34 },
+
+            // High platform jump
+            { type: 'pad', x: 11950, y: f - 10, w: 36, h: 10 },
+            { type: 'block', x: 12100, y: f - b * 2, w: b * 4, h: b },
+            { type: 'spike', x: 12400, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 12650, y: f - 34, w: 32, h: 34 },
+
+            // ==========================================
+            // PART 4: 75% - 100% (Final Climax & Secret Coin 3)
+            // ==========================================
+            { type: 'block', x: 12900, y: f - b, w: b * 2, h: b },
+            { type: 'spike', x: 13050, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 13200, y: f - b * 2, w: b * 2, h: b },
+            { type: 'spike', x: 13350, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 13500, y: f - b * 3, w: b * 3, h: b },
+
+            // Rapid Pad launch sequence
+            { type: 'pad', x: 13850, y: f - 10, w: 36, h: 10 },
+            { type: 'spike', x: 13950, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 13982, y: f - 34, w: 32, h: 34 },
+            { type: 'block', x: 14100, y: f - b * 2, w: b * 3, h: b },
+
+            // High air orbs & Secret Coin 3 (x: 14750)
+            { type: 'spike', x: 14450, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 14482, y: f - 34, w: 32, h: 34 },
+            { type: 'orb', x: 14466, y: f - 90, r: 18, used: false },
+            { type: 'pad', x: 14650, y: f - 10, w: 36, h: 10 },
+            { type: 'coin', x: 14750, y: f - b * 4 - 20, r: 12, collected: false },
+            { type: 'block', x: 14850, y: f - b * 3, w: b * 4, h: b },
+
+            // Final gauntlet of spikes
+            { type: 'spike', x: 15300, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 15550, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 15582, y: f - 34, w: 32, h: 34 },
+
+            // Triple Spike climax
+            { type: 'spike', x: 15900, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 15932, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 15964, y: f - 34, w: 32, h: 34 },
+
+            // Final leap to Victory Gate
+            { type: 'pad', x: 16300, y: f - 10, w: 36, h: 10 },
+            { type: 'block', x: 16450, y: f - b * 2, w: b * 5, h: b },
+            { type: 'spike', x: 16800, y: f - 34, w: 32, h: 34 },
+            { type: 'spike', x: 16832, y: f - 34, w: 32, h: 34 }
         ];
     }
 
