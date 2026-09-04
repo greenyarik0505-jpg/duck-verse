@@ -1076,3 +1076,150 @@ canvas#game-canvas {
     padding: 2px 8px;
     border-radius: 6px;
 }
+
+/* Skin Shop Modal Styles (SCRUM-12) */
+.shop-modal-dialog {
+    max-width: 750px;
+}
+
+.shop-content-body {
+    padding: 24px;
+}
+
+.shop-subtitle {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+.skins-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.skin-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    padding: 18px 14px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+
+.skin-card:hover {
+    background: rgba(0, 243, 255, 0.08);
+    border-color: var(--cyan);
+    transform: translateY(-3px);
+}
+
+.skin-card.equipped {
+    border-color: var(--green);
+    background: rgba(0, 255, 153, 0.06);
+    box-shadow: 0 0 15px rgba(0, 255, 153, 0.2);
+}
+
+.skin-cube-preview {
+    width: 46px;
+    height: 46px;
+    border-radius: 4px;
+    border: 3px solid #000;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skin-inner-face {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+}
+
+.skin-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.skin-status {
+    margin-bottom: 14px;
+    font-size: 13px;
+}
+
+.unlocked-tag {
+    color: var(--green);
+    font-weight: 700;
+}
+
+.price-tag {
+    color: var(--yellow);
+    font-weight: 700;
+}
+
+.skin-action-btn {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.skin-action-btn.buy-btn {
+    background: linear-gradient(90deg, #ffe600, #ff9900);
+    color: #000;
+}
+
+.skin-action-btn.buy-btn:hover:not(:disabled) {
+    box-shadow: 0 0 12px rgba(255, 230, 0, 0.6);
+}
+
+.skin-action-btn.equip-btn {
+    background: var(--cyan);
+    color: #000;
+}
+
+.skin-action-btn.active-btn {
+    background: rgba(0, 255, 153, 0.2);
+    border: 1px solid var(--green);
+    color: var(--green);
+    cursor: default;
+}
+
+.skin-action-btn:disabled:not(.active-btn) {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.shop-trigger-btn {
+    background: linear-gradient(90deg, rgba(255, 0, 127, 0.2), rgba(0, 243, 255, 0.2)) !important;
+    border-color: var(--magenta) !important;
+    color: #fff !important;
+}
+
+.shop-trigger-btn:hover {
+    box-shadow: 0 0 15px var(--magenta-glow) !important;
+}
+
+/* Benchmark Tag (SCRUM-13) */
+.modal-benchmark-tag {
+    font-size: 12px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--border-glass);
+    padding: 4px 10px;
+    border-radius: 12px;
+    color: var(--cyan);
+    font-weight: 700;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
