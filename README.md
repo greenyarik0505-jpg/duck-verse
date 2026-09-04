@@ -1,4 +1,4 @@
-﻿# 🌌 Duck Verse — Next.js Game Hub & Geometry Dash
+# 🌌 Duck Verse — Next.js Game Hub & Geometry Dash
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fgreenyarik0505-jpg%2Fduck-verse)
 [![Next.js 15](https://img.shields.io/badge/Next.js-15%20App%20Router-black?style=flat&logo=next.js)](https://nextjs.org/)
@@ -18,9 +18,40 @@
 
 | Учасник | Зона відповідальності | Призначені задачі в Jira |
 | :--- | :--- | :--- |
-| **Yarik0505** | **Lead Frontend & Vercel DevOps**<br>Next.js 15, Архітектура хабу, Vercel CI/CD | • `SCRUM-14`: Ініціалізація Next.js 15, Tailwind & Vercel CI/CD<br>• `SCRUM-15`: Архітектура Game Hub та Game Registry<br>• `SCRUM-12`: GD: Магазин кастомізації та скіни куба<br>• `SCRUM-13`: Тестування затримки вводу (Input Lag) та реліз |
-| **Степаненко Дмитро** | **Gameplay & Physics Engineer**<br>Фізика 2D, Хітбокси, Анімації | • `SCRUM-7`: 1. GD: Базова фізика куба та чуйне керування<br>• `SCRUM-8`: 2. GD: Перешкоди, інтерактивні об'єкти (шипи, батути, орби)<br>• `SCRUM-11`: 5. GD: Візуальні ефекти, неоновий шлейф і частинки |
-| **Кирил Пушкарук** | **Audio, Level Design & Backend State**<br>Web Audio API, Рівні, Next.js API | • `SCRUM-9`: 3. GD: Музичний рушій та ритм-синхронізація (130 BPM)<br>• `SCRUM-10`: 4. GD: Дизайн першого рівня (Neon Madness) та прогрес 0-100%<br>• `SCRUM-16`: Backend: Збереження прогресу, спроб і лідерборд у Vercel |
+| **Yarik0505** | **Lead Frontend & Vercel DevOps**<br>Next.js 15, Архітектура хабу, Vercel CI/CD | • `SCRUM-14`: [Етап 1] Next.js 15, Tailwind & Vercel CI/CD<br>• `SCRUM-15`: [Етап 2] Архітектура Game Hub та Game Registry<br>• `SCRUM-12`: [Етап 3] GD: Магазин кастомізації та скіни куба<br>• `SCRUM-13`: [Етап 4] Тестування Input Lag та реліз |
+| **Степаненко Дмитро** | **Gameplay & Physics Engineer**<br>Фізика 2D, Хітбокси, Анімації | • `SCRUM-7`: [Етап 1] GD: Базова фізика куба та керування<br>• `SCRUM-8`: [Етап 2] GD: Перешкоди (шипи, батути, орби)<br>• `SCRUM-11`: [Етап 3] GD: Неоновий шлейф, частинки та анімації |
+| **Кирил Пушкарук** | **Audio, Level Design & Backend State**<br>Web Audio API, Рівні, Next.js API | • `SCRUM-9`: [Етап 1] GD: Музичний рушій 130 BPM<br>• `SCRUM-10`: [Етап 2] GD: Дизайн рівня (Neon Madness) 0-100%<br>• `SCRUM-16`: [Етап 3] Backend: Збереження спроб і лідерборд |
+
+---
+
+## 🗺️ Порядок виконання розробки за етапами (Roadmap)
+
+```mermaid
+graph LR
+    subgraph E1["🟢 Етап 1: Базовий фундамент"]
+        T14["SCRUM-14: Next.js + Vercel"]
+        T7["SCRUM-7: Фізика куба"]
+        T9["SCRUM-9: Музика 130 BPM"]
+    end
+
+    subgraph E2["🟡 Етап 2: Геймплей"]
+        T8["SCRUM-8: Перешкоди & Хітбокси"]
+        T10["SCRUM-10: Рівень 1 (0-100%)"]
+        T15["SCRUM-15: Вітрина Game Hub"]
+    end
+
+    subgraph E3["🟣 Етап 3: Фічі & Бекенд"]
+        T11["SCRUM-11: Частинки & Шлейф"]
+        T16["SCRUM-16: Збереження у Vercel"]
+        T12["SCRUM-12: Магазин скінів"]
+    end
+
+    subgraph E4["🔴 Етап 4: Фінал"]
+        T13["SCRUM-13: Тест Input Lag & Реліз"]
+    end
+
+    E1 --> E2 --> E3 --> E4
+```
 
 ---
 
