@@ -1,60 +1,87 @@
-﻿# 🌌 Duck Verse — Game Hub
+﻿# 🌌 Duck Verse — Next.js Game Hub & Geometry Dash
 
-[![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Atlassian Jira](https://img.shields.io/badge/Jira-SCRUM-0052CC.svg)](https://gta6-sliv-cyberleek.atlassian.net)
-[![Platform](https://img.shields.io/badge/platform-Web%20%7C%20HTML5%20%7C%20Canvas-00f3ff.svg)](#)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fgreenyarik0505-jpg%2Fduck-verse)
+[![Next.js 15](https://img.shields.io/badge/Next.js-15%20App%20Router-black?style=flat&logo=next.js)](https://nextjs.org/)
+[![Vercel](https://img.shields.io/badge/Hosted%20on-Vercel-000000?style=flat&logo=vercel)](https://vercel.com/)
+[![Atlassian Jira](https://img.shields.io/badge/Jira-SCRUM%20Board-0052CC?style=flat&logo=jira)](https://gta6-sliv-cyberleek.atlassian.net)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-**Duck Verse** — это неоновый мультиверс игровой портал (Game Hub) с киберпанк стилистикой, процедурным звуковым 8-битным синтезатором на Web Audio API, встроенной системой очков, валюты (QuackCoins) и достижений.
+**Duck Verse** — це сучасний масштабований ігровий портал (**Game Hub**) на базі **Next.js 15 (App Router)** та **Vercel**, створений для швидкого підключення необмеженої кількості веб-ігор.
 
----
-
-## 🎮 Доступные игры и дорожная карта
-
-| Игра | Жанр | Статус | Описание |
-| :--- | :--- | :--- | :--- |
-| **Geometry Dash Neon** | Ритм-платформер | 📋 *Запланирован в Jira (SCRUM-6)* | Культовый ритм-экшен с прыжками через шипы, батутами и прогрессом |
-| **Cyber Flap** | Аркадный раннер | ✅ *Готово* | Реактивный полет через лазерные барьеры со сбором монет |
-| **Galactic Invaders** | Space Shooter | ✅ *Готово* | Космический аркадный шутер с волнами противников |
-| **Multiverse Tycoon** | Idle / Кликер | ✅ *Готово* | Кликер с авто-крякерами и квантовыми апгрейдами дохода |
-| **Arcade Hunter** | Reflex Shooter | ✅ *Готово* | Неоновый тир на реакцию с комбо-множителями |
+Флагманська перша гра хабу — культовий ритм-платформер **Geometry Dash Neon** з чесною фізикою, процедурним Web Audio синтезатором та неоновою графікою.
 
 ---
 
-## 📋 План разработки Geometry Dash в Jira
+## 👥 Команда проекту та розподіл завдань (Спринт 1: "Создание игри")
 
-В Jira проекте [SCRUM](https://gta6-sliv-cyberleek.atlassian.net) создан эпик **`SCRUM-6`** с декомпозицией:
-1. `SCRUM-7`: Базовая физика куба и отзывчивое управление
-2. `SCRUM-8`: Препятствия, интерактивные объекты и хитбоксы
-3. `SCRUM-9`: Музыкальный движок и ритм-синхронизация (130 BPM)
-4. `SCRUM-10`: Дизайн первого уровня (Neon Madness) и прогресс-бар
-5. `SCRUM-11`: Визуальные эффекты, частицы и шлейф
-6. `SCRUM-12`: Магазин кастомизации и скины куба
-7. `SCRUM-13`: Тестирование задержки ввода (Input Lag) и релиз в хабе
+Проект розробляється командою з 3 осіб з рівномірним розподілом задач у [Jira Board](https://gta6-sliv-cyberleek.atlassian.net):
+
+| Учасник | Зона відповідальності | Призначені задачі в Jira |
+| :--- | :--- | :--- |
+| **Yarik0505** | **Lead Frontend & Vercel DevOps**<br>Next.js 15, Архітектура хабу, Vercel CI/CD | • `SCRUM-14`: Ініціалізація Next.js 15, Tailwind & Vercel CI/CD<br>• `SCRUM-15`: Архітектура Game Hub та Game Registry<br>• `SCRUM-12`: GD: Магазин кастомізації та скіни куба<br>• `SCRUM-13`: Тестування затримки вводу (Input Lag) та реліз |
+| **Степаненко Дмитро** | **Gameplay & Physics Engineer**<br>Фізика 2D, Хітбокси, Анімації | • `SCRUM-7`: 1. GD: Базова фізика куба та чуйне керування<br>• `SCRUM-8`: 2. GD: Перешкоди, інтерактивні об'єкти (шипи, батути, орби)<br>• `SCRUM-11`: 5. GD: Візуальні ефекти, неоновий шлейф і частинки |
+| **Кирил Пушкарук** | **Audio, Level Design & Backend State**<br>Web Audio API, Рівні, Next.js API | • `SCRUM-9`: 3. GD: Музичний рушій та ритм-синхронізація (130 BPM)<br>• `SCRUM-10`: 4. GD: Дизайн першого рівня (Neon Madness) та прогрес 0-100%<br>• `SCRUM-16`: Backend: Збереження прогресу, спроб і лідерборд у Vercel |
 
 ---
 
-## 🚀 Быстрый запуск
+## 🏗️ Архітектура Game Hub
 
-Для запуска игрового портала локально откройте терминал в папке проекта и выполните:
-
-```bash
-# С помощью Python:
-python -m http.server 8000
+```
+duck-verse/
+├── app/
+│   ├── api/
+│   │   └── scores/route.js       # Vercel Serverless API для лідерборду та рекордів
+│   ├── layout.js                 # Головний layout із шрифтами Orbitron та темною темою
+│   └── page.js                   # Інтерактивна вітрина Game Hub
+├── components/                   # UI компоненти хабу (картки, модалки, гаманець)
+├── lib/
+│   └── games/
+│       ├── geometry_dash.js      # Рушій Geometry Dash (60 FPS Canvas)
+│       └── registry.js           # Реєстр плагінів ігор для додавання нових ігор
+├── src/                          # Локальні скрипти, аудіо-синтезатор та хелпери
+├── vercel.json                   # Оптимальні налаштування для хостингу на Vercel
+├── .github/                      # PR шаблони, Issue шаблони та CI пайплайн
+└── CONTRIBUTING.md               # Стандарти коду та правила гілок для команди
 ```
 
-или
+---
 
-```bash
-# С помощью Node.js:
-npx serve .
-```
+## 🕹️ Як додати нову гру в Game Hub?
 
-После этого откройте в браузере: `http://localhost:8000`
+Завдяки модульній системі Game Registry, підключення нової гри займає лічені хвилини:
+1. Створіть файл рушія гри в `lib/games/my_game.js`, який реалізує методи `start()` та `stop()`.
+2. Зареєструйте гру у списку `lib/games/registry.js` із назвою, бейджем, категорією та іконкою.
+3. Гра автоматично з'явиться у вітрині, пошуку, системі фільтрів та отримає спільний лічильник монет і рекордів!
 
 ---
 
-## 🛠️ Стек технологий
-* **UI**: HTML5, Modern CSS (Glassmorphism, Neon Cyberpunk, Flexbox & Grid)
-* **Движки игр**: HTML5 Canvas 2D API (60 FPS)
-* **Аудио**: Web Audio API (процедурный 8-битный звуковой синтезатор без внешних файлов)
-* **Управление проектом**: Atlassian Jira Cloud (`mcp-atlassian`)
+## 🚀 Локальний запуск проекту
+
+### Крок 1. Клонування репозиторію
+```bash
+git clone https://github.com/greenyarik0505-jpg/duck-verse.git
+cd duck-verse
+```
+
+### Крок 2. Встановлення залежностей
+```bash
+npm install
+```
+
+### Крок 3. Запуск dev-сервера Next.js
+```bash
+npm run dev
+```
+Відкрийте [http://localhost:3000](http://localhost:3000) у браузері.
+
+### Швидкий деплой на Vercel
+Встановіть Vercel CLI або натисніть кнопку **Deploy with Vercel** угорі:
+```bash
+npm install -g vercel
+vercel
+```
+
+---
+
+## 📄 Ліцензія
+Проект поширюється під відкритою ліцензією [MIT](LICENSE).

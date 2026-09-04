@@ -1,0 +1,32 @@
+﻿name: "📌 Нова задача / Фіча"
+description: "Створити опис нової задачі для розробки Duck Verse"
+title: "[TASK]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "### Форма для створення задачі з прив'язкою до Jira Board"
+  - type: input
+    id: jira_key
+    attributes:
+      label: "Ключ задачі в Jira"
+      placeholder: "наприклад, SCRUM-14"
+    validations:
+      required: true
+  - type: dropdown
+    id: assignee
+    attributes:
+      label: "Відповідальний у команді"
+      options:
+        - "Yarik0505"
+        - "Степаненко Дмитро"
+        - "Кирил Пушкарук"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: "Детальний опис задачі"
+      placeholder: "Опишіть вимоги до реалізації..."
+    validations:
+      required: true
