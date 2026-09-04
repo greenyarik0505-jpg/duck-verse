@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duck Verse — Ultimate Game Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="hub-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-logo">
+                    <span class="logo-box">GD</span>
+                </div>
+                <div class="brand-text">
+                    <h1 class="logo-title">DUCK<span class="neon-text">VERSE</span></h1>
+                    <span class="logo-subtitle">GAME HUB</span>
+                </div>
+            </div>
+
+            <div class="header-search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="game-search" placeholder="Поиск игр...">
+            </div>
+
+            <div class="header-actions">
+                <div class="user-wallet">
+                    <span class="coin-icon">🪙</span>
+                    <span class="user-coins-val">50</span>
+                </div>
+                <button id="mute-btn" class="header-btn">🔊 Звук: Вкл</button>
+                <a href="https://github.com/greenyarik0505-jpg/duck-verse" target="_blank" class="header-btn gh-btn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="hub-main">
+        <!-- Hero Spotlight: Geometry Dash -->
+        <section class="hero-spotlight">
+            <div class="spotlight-content">
+                <div class="spotlight-badge">🔥 ПРЕМЬЕРА ХАБА</div>
+                <h2 class="spotlight-title">GEOMETRY DASH <span class="neon-cyan">NEON</span></h2>
+                <p class="spotlight-desc">
+                    Ритм, скорость и чистый адреналин! Преодолевай неоновые шипы, взлетай на батутах, активируй прыжковые сферы под 130 BPM электронный бит и установи рекорд 100%!
+                </p>
+                <div class="spotlight-features">
+                    <span>⚡ 100% честная физика</span>
+                    <span>🎵 Синтезатор музыки 130 BPM</span>
+                    <span>🏆 Таблица рекордов</span>
+                </div>
+                <div class="spotlight-actions">
+                    <button class="btn-primary-large" onclick="window.hub.launchGame('geometry_dash')">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span>ИГРАТЬ В GEOMETRY DASH</span>
+                    </button>
+                </div>
+            </div>
+            <div class="spotlight-visual">
+                <div class="gd-hero-scene">
+                    <div class="gd-hero-cube"></div>
+                    <div class="gd-hero-spikes">
+                        <div class="spike-item"></div>
+                        <div class="spike-item"></div>
+                        <div class="spike-item"></div>
+                    </div>
+                    <div class="gd-hero-pad"></div>
+                    <div class="gd-hero-orb"></div>
+                    <div class="gd-hero-floor"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Filters -->
+        <section class="categories-bar">
+            <button class="cat-btn active" data-category="all">Все игры</button>
+            <button class="cat-btn" data-category="action">Экшен и Ритм</button>
+            <button class="cat-btn" data-category="arcade">Аркады</button>
+            <button class="cat-btn" data-category="casual">Кликеры</button>
+        </section>
+
+        <!-- Games Grid -->
+        <section class="games-section">
+            <div id="games-grid" class="games-grid">
+                <!-- Dynamically rendered by hub.js -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Game Playing Modal Overlay -->
+    <div id="game-modal" class="game-modal">
+        <div class="modal-backdrop" onclick="window.hub.closeGame()"></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <div class="modal-title-box">
+                    <span class="modal-live-dot"></span>
+                    <h3 id="modal-game-title">Geometry Dash Neon</h3>
+                </div>
+                <div class="modal-controls-hint">
+                    Управление: <b>Пробел</b>, <b>Стрелка вверх</b> или <b>Клик мыши / Тап</b>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn" onclick="window.hub.restartActiveGame()" title="Перезапуск">🔄 Заново</button>
+                    <button class="modal-btn close-btn" onclick="window.hub.closeGame()" title="Выйти в хаб">✖ Закрыть</button>
+                </div>
+            </div>
+            <div id="game-container" class="game-container">
+                <!-- Canvas or game root injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Result / Game Over Modal -->
+    <div id="result-modal" class="result-modal">
+        <div class="result-backdrop" onclick="window.hub.closeResultModal()"></div>
+        <div class="result-dialog">
+            <h2 id="result-title" class="result-title">ИГРА ОКОНЧЕНА</h2>
+            <div id="result-game-name" class="result-game-name">Geometry Dash Neon</div>
+            <div id="result-score" class="result-score">64%</div>
+            <div id="result-sub" class="result-sub">Рекорд: 64% (Попытка 12)</div>
+            <div class="result-actions">
+                <button class="btn-primary" onclick="window.hub.restartFromResult()">🔄 Еще раз</button>
+                <button class="btn-secondary" onclick="window.hub.closeResultModal(); window.hub.closeGame();">В меню хаба</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/audio.js"></script>
+    <script src="src/games/game_geometry_dash.js"></script>
+    <script src="src/games/game_flappy.js"></script>
+    <script src="src/games/game_invaders.js"></script>
+    <script src="src/games/game_clicker.js"></script>
+    <script src="src/games/game_hunter.js"></script>
+    <script src="src/hub.js"></script>
+</body>
+</html>
