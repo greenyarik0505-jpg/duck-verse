@@ -1,9 +1,13 @@
-﻿import '../styles.css';
+import '../styles.css';
 
 export const metadata = {
   title: 'Duck Verse — Next.js Game Hub & Geometry Dash',
   description: 'Cyberpunk Game Hub on Next.js 15 & Vercel featuring Geometry Dash Neon',
-  viewport: 'width=device-width, initial-scale=1'
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
