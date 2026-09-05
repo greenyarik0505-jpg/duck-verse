@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { getGameById } from '../lib/games/registry';
 
 function GameModalContent({ gameId, onClose, onAddCoins }) {
-  const containerRef = useRef(null);
+  const canvasRef = useRef(null);
   const [fps, setFps] = useState(60);
   const [inputLag, setInputLag] = useState('< 16ms');
   const [loading, setLoading] = useState(true);
@@ -60,31 +60,17 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
     const initGame = async () => {
       try {
-        // Load Audio Engine
         await loadScript('/audio.js');
         if (window.SoundController && !window.sound) {
           window.sound = new window.SoundController();
         }
 
-        // Load Game Engine Script
         const enginePath = gameMeta.enginePath || '/games/game_geometry_dash.js';
         await loadScript(enginePath);
 
-        if (!isMounted || !containerRef.current) return;
+        if (!isMounted || !canvasRef.current) return;
 
-        const container = containerRef.current;
-        container.innerHTML = '';
-
-        const canvas = document.createElement('canvas');
-        canvas.id = 'game-canvas';
-        canvas.width = 850;
-        canvas.height = 480;
-        canvas.style.maxWidth = '100%';
-        canvas.style.height = 'auto';
-        canvas.style.borderRadius = '8px';
-        canvas.style.boxShadow = '0 0 24px rgba(0, 243, 255, 0.25)';
-        container.appendChild(canvas);
-
+        const canvas = canvasRef.current;
         const GameClass = window[gameMeta.engineClass] || window.GeometryDashGame;
         if (GameClass && typeof GameClass === 'function') {
           const instance = new GameClass(
@@ -106,13 +92,13 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           }
           activeGameRef.current = instance;
         } else {
-          setErrorMsg('Ігровий рушій завантажується...');
+          setErrorMsg('Ігровий рушій не знайдено.');
         }
         setLoading(false);
       } catch (err) {
         console.error('Game initialization error:', err);
         if (isMounted) {
-          setErrorMsg('Помилка запуску гри. Спробуйте оновити сторінку.');
+          setErrorMsg('Помилка запуску гри.');
           setLoading(false);
         }
       }
@@ -146,9 +132,6 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         activeGameRef.current.stop();
         activeGameRef.current = null;
       }
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
-      }
     };
   }, [gameId]);
 
@@ -164,9 +147,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
   };
 
   const handleToggleFullscreen = () => {
-    if (!containerRef.current) return;
+    const el = canvasRef.current?.parentElement;
+    if (!el) return;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen?.().catch(() => {});
+      el.requestFullscreen?.().catch(() => {});
     } else {
       document.exitFullscreen?.().catch(() => {});
     }
@@ -179,7 +163,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         <div className="modal-header">
           <div className="modal-title-box">
             <span className="modal-live-dot"></span>
-            <h3>{gameMeta.title || 'Ігровий сеанс'}</h3>
+            <h3>{gameMeta.title || 'Geometry Dash Neon'}</h3>
           </div>
 
           <div className="modal-benchmark-tag" title="SCRUM-13: Моніторинг швидкодії">
@@ -203,7 +187,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           </div>
         </div>
 
-        <div id="game-container" className="game-container" ref={containerRef}>
+        <div id="game-container" className="game-container">
           {loading && (
             <div className="flex flex-col items-center justify-center p-12 text-cyan-400">
               <div className="w-10 h-10 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -218,6 +202,20 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
               </button>
             </div>
           )}
+          <canvas
+            ref={canvasRef}
+            id="game-canvas"
+            width={850}
+            height={480}
+            style={{
+              display: loading ? 'none' : 'block',
+              maxWidth: '100%',
+              height: 'auto',
+              borderRadius: '8px',
+              boxShadow: '0 0 24px rgba(0, 243, 255, 0.25)',
+              margin: '0 auto'
+            }}
+          />
         </div>
       </div>
     </div>
