@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   return (
@@ -36,7 +36,7 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
           {/* Wallet */}
           <div className="user-wallet" title="Ваш баланс QuackCoins">
             <span className="coin-icon">🪙</span>
-            <span className="user-coins-val">{coins}</span>
+            <span className="user-coins-val" suppressHydrationWarning>{coins}</span>
           </div>
 
           {/* Skin Shop Trigger (SCRUM-12) */}
@@ -45,7 +45,7 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
           </button>
 
           {/* Sound Mute */}
-          <button className="header-btn" onClick={onToggleSound}>
+          <button className="header-btn" onClick={onToggleSound} suppressHydrationWarning>
             {soundEnabled ? '🔊 Звук: Увімк' : '🔇 Звук: Вимк'}
           </button>
 

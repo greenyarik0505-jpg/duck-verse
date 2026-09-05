@@ -3,38 +3,53 @@
 import { useEffect, useRef, useState } from 'react';
 import { getGameById } from '../lib/games/registry';
 
-export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
+function GameModalContent({ gameId, onClose, onAddCoins }) {
   const containerRef = useRef(null);
   const [fps, setFps] = useState(60);
   const [inputLag, setInputLag] = useState('< 16ms');
   const [loading, setLoading] = useState(true);
-  const [gameTitle, setGameTitle] = useState('Geometry Dash Neon');
+  const [errorMsg, setErrorMsg] = useState(null);
   const activeGameRef = useRef(null);
 
-  const gameMeta = getGameById(gameId);
+  const gameMeta = getGameById(gameId) || {
+    id: 'geometry_dash',
+    title: 'Geometry Dash Neon',
+    enginePath: '/games/game_geometry_dash.js',
+    engineClass: 'GeometryDashGame'
+  };
 
-  // Helper to load a script dynamically if not present
   const loadScript = (src) => {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        resolve();
+    return new Promise((resolve) => {
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        if (existing.getAttribute('data-loaded') === 'true') {
+          resolve(true);
+          return;
+        }
+        existing.addEventListener('load', () => resolve(true), { once: true });
+        existing.addEventListener('error', () => resolve(false), { once: true });
         return;
       }
+
       const s = document.createElement('script');
       s.src = src;
       s.async = true;
-      s.onload = () => resolve();
-      s.onerror = (err) => reject(err);
+      s.onload = () => {
+        s.setAttribute('data-loaded', 'true');
+        resolve(true);
+      };
+      s.onerror = () => {
+        console.warn('Script failed to load:', src);
+        resolve(false);
+      };
       document.body.appendChild(s);
     });
   };
 
   useEffect(() => {
-    if (!isOpen || !containerRef.current) return;
-
     let isMounted = true;
     setLoading(true);
-    setGameTitle(gameMeta.title || 'Game');
+    setErrorMsg(null);
 
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -43,14 +58,15 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
     };
     window.addEventListener('keydown', handleKeyDown);
 
-    // Dynamic loader for Audio and Game Script
     const initGame = async () => {
       try {
+        // Load Audio Engine
         await loadScript('/audio.js');
-        if (!window.sound && window.SoundController) {
+        if (window.SoundController && !window.sound) {
           window.sound = new window.SoundController();
         }
 
+        // Load Game Engine Script
         const enginePath = gameMeta.enginePath || '/games/game_geometry_dash.js';
         await loadScript(enginePath);
 
@@ -66,32 +82,39 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
         canvas.style.maxWidth = '100%';
         canvas.style.height = 'auto';
         canvas.style.borderRadius = '8px';
-        canvas.style.boxShadow = '0 0 20px rgba(0, 243, 255, 0.2)';
+        canvas.style.boxShadow = '0 0 24px rgba(0, 243, 255, 0.25)';
         container.appendChild(canvas);
 
         const GameClass = window[gameMeta.engineClass] || window.GeometryDashGame;
-        if (GameClass) {
+        if (GameClass && typeof GameClass === 'function') {
           const instance = new GameClass(
             canvas,
             () => {
-              // Game Over callback
+              // Game Over
             },
             () => {
-              // Victory callback
+              // Victory
               if (onAddCoins) onAddCoins(50);
             },
             (coins) => {
-              // Coin collected
+              // Collect coins
               if (onAddCoins) onAddCoins(coins || 1);
             }
           );
-          instance.start();
+          if (instance && typeof instance.start === 'function') {
+            instance.start();
+          }
           activeGameRef.current = instance;
+        } else {
+          setErrorMsg('Ігровий рушій завантажується...');
         }
         setLoading(false);
       } catch (err) {
-        console.error('Failed to initialize game engine:', err);
-        setLoading(false);
+        console.error('Game initialization error:', err);
+        if (isMounted) {
+          setErrorMsg('Помилка запуску гри. Спробуйте оновити сторінку.');
+          setLoading(false);
+        }
       }
     };
 
@@ -104,14 +127,14 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
       const now = performance.now();
       const currentFps = Math.round((frameCount * 1000) / (now - lastTime));
       setFps(currentFps > 0 ? currentFps : 60);
-      setInputLag(currentFps >= 58 ? '~16.6ms (Відмінно)' : '~33ms');
+      setInputLag(currentFps >= 58 ? '~16.6ms (60 FPS)' : '~33ms');
       frameCount = 0;
       lastTime = now;
     }, 1000);
 
     const countFrames = () => {
       frameCount++;
-      if (isOpen && isMounted) requestAnimationFrame(countFrames);
+      if (isMounted) requestAnimationFrame(countFrames);
     };
     requestAnimationFrame(countFrames);
 
@@ -127,13 +150,13 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
         containerRef.current.innerHTML = '';
       }
     };
-  }, [isOpen, gameId]);
+  }, [gameId]);
 
   const handleRestart = () => {
     if (activeGameRef.current) {
       if (typeof activeGameRef.current.restart === 'function') {
         activeGameRef.current.restart();
-      } else if (typeof activeGameRef.current.stop === 'function') {
+      } else if (typeof activeGameRef.current.stop === 'function' && typeof activeGameRef.current.start === 'function') {
         activeGameRef.current.stop();
         activeGameRef.current.start();
       }
@@ -149,8 +172,6 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
     }
   };
 
-  if (!isOpen) return null;
-
   return (
     <div className="game-modal active">
       <div className="modal-backdrop" onClick={onClose}></div>
@@ -158,10 +179,10 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
         <div className="modal-header">
           <div className="modal-title-box">
             <span className="modal-live-dot"></span>
-            <h3>{gameTitle}</h3>
+            <h3>{gameMeta.title || 'Ігровий сеанс'}</h3>
           </div>
 
-          <div className="modal-benchmark-tag" title="SCRUM-13: Моніторинг швидкодії вводу">
+          <div className="modal-benchmark-tag" title="SCRUM-13: Моніторинг швидкодії">
             <span>⚡ {fps} FPS</span> | <span>{inputLag}</span>
           </div>
 
@@ -170,13 +191,13 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
           </div>
 
           <div className="modal-buttons">
-            <button className="modal-btn" onClick={handleRestart} title="Перезапустити">
+            <button className="modal-btn" onClick={handleRestart} title="Перезапустити раунд">
               🔄 Заново
             </button>
             <button className="modal-btn" onClick={handleToggleFullscreen} title="Повноекранний режим">
               ⛶ Повний екран
             </button>
-            <button className="modal-btn close-btn" onClick={onClose} title="Вийти в хаб (Esc)">
+            <button className="modal-btn close-btn" onClick={onClose} title="Закрити (Escape)">
               ✖ Закрити
             </button>
           </div>
@@ -185,12 +206,25 @@ export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
         <div id="game-container" className="game-container" ref={containerRef}>
           {loading && (
             <div className="flex flex-col items-center justify-center p-12 text-cyan-400">
-              <div className="w-8 h-8 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+              <div className="w-10 h-10 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
               <p className="text-sm font-semibold tracking-wider">Завантаження ігрового модуля...</p>
+            </div>
+          )}
+          {errorMsg && (
+            <div className="flex flex-col items-center justify-center p-12 text-rose-400">
+              <p className="mb-4 font-semibold">{errorMsg}</p>
+              <button className="modal-btn" onClick={() => window.location.reload()}>
+                Оновити сайт
+              </button>
             </div>
           )}
         </div>
       </div>
     </div>
   );
+}
+
+export default function GameModal({ isOpen, gameId, onClose, onAddCoins }) {
+  if (!isOpen) return null;
+  return <GameModalContent gameId={gameId} onClose={onClose} onAddCoins={onAddCoins} />;
 }
