@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
@@ -42,9 +42,8 @@ export default function GameHubPage() {
   };
 
   const handleLaunchGame = (gameId) => {
-    setSelectedGameId(gameId);
-    // For full standalone canvas experience
-    window.location.href = `/index.html?play=${gameId}`;
+    setSelectedGameId(gameId || 'geometry_dash');
+    setIsGameOpen(true);
   };
 
   let filtered = getGamesByCategory(activeCategory);
