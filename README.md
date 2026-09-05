@@ -20,7 +20,7 @@
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.1%20(App%20Router)-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React 19](https://img.shields.io/badge/React-19.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![Vercel](https://img.shields.io/badge/Hosted%20on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+[![Vercel](https://img.shields.io/badge/Live%20Demo-duck--verse.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://duck-verse.vercel.app)
 [![Atlassian Jira](https://img.shields.io/badge/Jira-SCRUM%20Board-0052CC?style=for-the-badge&logo=jira&logoColor=white)](https://gta6-sliv-cyberleek.atlassian.net)
 [![License: MIT](https://img.shields.io/badge/License-MIT-00f3ff?style=for-the-badge)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
