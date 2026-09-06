@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 const CATEGORIES = [
   { id: 'all', label: 'Усі ігри' },
@@ -9,16 +9,18 @@ const CATEGORIES = [
 
 export default function CategoryFilter({ activeCategory, onSelectCategory }) {
   return (
-    <section className="categories-bar">
+    <nav className="categories-bar" aria-label="Фільтрація ігор за жанрами">
       {CATEGORIES.map((cat) => (
         <button
           key={cat.id}
           className={`cat-btn ${activeCategory === cat.id ? 'active' : ''}`}
           onClick={() => onSelectCategory(cat.id)}
+          aria-pressed={activeCategory === cat.id}
+          title={`Фільтр: ${cat.label}`}
         >
           {cat.label}
         </button>
       ))}
-    </section>
+    </nav>
   );
 }

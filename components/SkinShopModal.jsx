@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { getPlayerSkins, saveUnlockedSkin, getActiveSkin, setActiveSkin } from '../lib/skins';
@@ -43,11 +43,11 @@ export default function SkinShopModal({ isOpen, onClose, coins, onUpdateCoins })
             <span className="modal-live-dot"></span>
             <h3>🎨 Магазин кастомізації куба (Geometry Dash)</h3>
           </div>
-          <div className="user-wallet">
-            <span>🪙 {coins}</span>
+          <div className="user-wallet" title={`Ваш баланс: ${coins} QuackCoins`}>
+            <span suppressHydrationWarning>🪙 {coins}</span>
           </div>
           <div className="modal-buttons">
-            <button className="modal-btn close-btn" onClick={onClose}>
+            <button className="modal-btn close-btn" onClick={onClose} title="Закрити магазин (Escape)">
               ✖ Закрити
             </button>
           </div>

@@ -75,14 +75,117 @@ export default function GameHubPage() {
         />
 
         {/* Modular Games Grid */}
-        <section className="games-section">
-          <div className="games-grid">
-            {filtered.map((game) => (
-              <GameCard key={game.id} game={game} onPlay={handleLaunchGame} />
-            ))}
+        <section className="games-section" aria-label="Каталог ігор">
+          {filtered.length > 0 ? (
+            <div className="games-grid">
+              {filtered.map((game) => (
+                <GameCard key={game.id} game={game} onPlay={handleLaunchGame} />
+              ))}
+            </div>
+          ) : (
+            <div className="empty-search-state">
+              <span className="empty-search-icon" aria-hidden="true">🔍</span>
+              <h3 className="empty-search-title">Ігор не знайдено</h3>
+              <p className="empty-search-desc">
+                За запитом {searchQuery ? `«${searchQuery}»` : ''} у цій категорії немає ігор. Спробуйте інший запит або скиньте фільтри.
+              </p>
+              <button
+                className="btn-reset-search"
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveCategory('all');
+                }}
+              >
+                Скинути фільтри
+              </button>
+            </div>
+          )}
+        </section>
+
+        {/* Live Team & Jira Sprint Section */}
+        <section className="team-section" aria-label="Команда розробки та спринт">
+          <div className="team-header">
+            <div className="team-badge">👥 КОМАНДА РОЗРОБКИ</div>
+            <h3 className="team-title">
+              Активний спринт: <span className="neon-text">«Створення гри»</span>
+            </h3>
+            <a
+              href="https://gta6-sliv-cyberleek.atlassian.net"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="jira-link-pill"
+              title="Відкрити Scrum-дошку проекту в Jira Cloud"
+            >
+              <span className="live-pulse" aria-hidden="true"></span>
+              <span>Jira Live Дошка</span>
+            </a>
+          </div>
+
+          <div className="team-grid">
+            <div className="member-card">
+              <div className="member-avatar" aria-hidden="true">👑</div>
+              <div className="member-info">
+                <div className="member-name">Yarik0505</div>
+                <div className="member-role">Team Lead • Next.js Hub, UI/UX, Деплой</div>
+                <div className="member-tasks">
+                  <span className="task-tag">SCRUM-14</span>
+                  <span className="task-tag">SCRUM-15</span>
+                  <span className="task-tag">SCRUM-12</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="member-card">
+              <div className="member-avatar" aria-hidden="true">🎮</div>
+              <div className="member-info">
+                <div className="member-name">Степаненко Дмитро</div>
+                <div className="member-role">Gameplay & Physics • Фізика куба, шипи, FX</div>
+                <div className="member-tasks">
+                  <span className="task-tag">SCRUM-7</span>
+                  <span className="task-tag">SCRUM-8</span>
+                  <span className="task-tag">SCRUM-11</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="member-card">
+              <div className="member-avatar" aria-hidden="true">🎵</div>
+              <div className="member-info">
+                <div className="member-name">Кирил Пушкарук</div>
+                <div className="member-role">Audio & Level Design • Синтезатор 130 BPM, API</div>
+                <div className="member-tasks">
+                  <span className="task-tag">SCRUM-9</span>
+                  <span className="task-tag">SCRUM-10</span>
+                  <span className="task-tag">SCRUM-16</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
+
+      {/* Hub Footer */}
+      <footer className="hub-footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <span className="footer-logo">
+              DUCK<span className="neon-text">VERSE</span>
+            </span>
+            <p className="footer-desc">
+              Автономна кіберпанк ігрова платформа нового покоління на базі Next.js 15, React 19 та Vercel Production.
+            </p>
+          </div>
+          <div className="footer-meta">
+            <span className="footer-tag">⚡ 60 FPS Canvas Engine</span>
+            <span className="footer-tag">🎵 130 BPM Web Audio</span>
+            <span className="footer-tag">🏆 Хмарна таблиця рекордів</span>
+            <span className="footer-tag">🎨 Магазин кастомізації</span>
+          </div>
+          <div className="footer-copy">
+            © 2026 Duck Verse. Усі права захищено. Створено для турнірних рекордів та чистого ритму.
+          </div>
+        </div>
+      </footer>
 
       {/* Skin Shop Modal (SCRUM-12) */}
       <SkinShopModal
