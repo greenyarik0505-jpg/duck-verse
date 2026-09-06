@@ -444,6 +444,13 @@ class GeometryDashGame {
 
     restart() {
         this.stop();
+        this.attempts++;
+        try {
+            const storage = (typeof window !== 'undefined' && window.localStorage) ? window.localStorage : (typeof localStorage !== 'undefined' ? localStorage : null);
+            if (storage) {
+                storage.setItem('duckverse_gd_attempts', this.attempts.toString());
+            }
+        } catch (e) {}
         this.start();
     }
 
@@ -808,15 +815,20 @@ class GeometryDashGame {
             if (itemRight < this.player.x - 120 || item.x > this.player.x + 200) continue;
 
             if (item.type === 'spike') {
-                // Трикутний хітбокс шипа
-                const spikeL = item.x + 6;
-                const spikeR = item.x + item.w - 6;
-                const spikeT = item.y + 8;
+                // Справедливий трикутний хітбокс шипа (як в оригіналі Geometry Dash)
+                const spikeT = item.y + 7;
                 const spikeB = item.y + item.h;
 
-                if (pBox.r > spikeL && pBox.l < spikeR && pBox.b > spikeT && pBox.t < spikeB) {
-                    this.die();
-                    return;
+                if (pBox.b > spikeT && pBox.t < spikeB) {
+                    const ratio = Math.max(0, Math.min(1, (spikeB - pBox.b) / item.h));
+                    const inset = 6 + ratio * (item.w / 2 - 7);
+                    const dynamicL = item.x + inset;
+                    const dynamicR = item.x + item.w - inset;
+
+                    if (pBox.r > dynamicL && pBox.l < dynamicR) {
+                        this.die();
+                        return;
+                    }
                 }
             } else if (item.type === 'block') {
                 const bL = item.x;
@@ -1256,56 +1268,6 @@ class GeometryDashGame {
         });
 
         ctx.restore(); // кінець зсуву камери
-
-        // 5. Верхній UI: смуга прогресу та показники українською мовою
-        const percent = Math.min(100, Math.floor((this.player.x / this.levelLength) * 100));
-
-        const rr = (x, y, rw, rh, rad) => {
-            ctx.beginPath();
-            if (typeof ctx.roundRect === 'function') {
-                ctx.roundRect(x, y, rw, rh, rad);
-            } else {
-                ctx.rect(x, y, rw, rh);
-            }
-        };
-
-        // Контейнер смуги (солідний мінімалістичний прямокутник із заокругленням)
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-        rr(w / 2 - 160, 16, 320, 14, 7);
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-
-        // Заповнення смуги
-        const barWidth = Math.max(0, (percent / 100) * 316);
-        const barGrad = ctx.createLinearGradient(w / 2 - 158, 0, w / 2 - 158 + barWidth, 0);
-        barGrad.addColorStop(0, '#00b4d8');
-        barGrad.addColorStop(1, '#00e676');
-        ctx.fillStyle = barGrad;
-        rr(w / 2 - 158, 18, barWidth, 10, 5);
-        ctx.fill();
-
-        // Текст відсотка
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 16px "Segoe UI", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.shadowColor = '#000000';
-        ctx.shadowBlur = 2;
-        ctx.fillText(`${percent}%`, w / 2, 48);
-        ctx.shadowBlur = 0;
-
-        // Лічильник спроб (українською мовою)
-        ctx.textAlign = 'left';
-        ctx.font = 'bold 15px "Segoe UI", sans-serif';
-        ctx.fillStyle = '#00c8ff';
-        ctx.fillText(`Спроба ${this.attempts}`, 20, 32);
-
-        // Рекорд (українською мовою)
-        ctx.textAlign = 'right';
-        ctx.fillStyle = '#ffd000';
-        ctx.fillText(`Рекорд: ${this.bestPercent}%`, w - 20, 32);
     }
 
     loop() {

@@ -122,7 +122,15 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     onClose();
   }, [onClose]);
 
-  const handleRestart = useCallback(() => {
+  const onAddCoinsRef = useRef(onAddCoins);
+  useEffect(() => {
+    onAddCoinsRef.current = onAddCoins;
+  }, [onAddCoins]);
+
+  const handleRestart = useCallback((e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
     if (activeGameRef.current) {
       const g = activeGameRef.current;
       if (typeof g.restart === 'function') {
@@ -131,9 +139,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         g.stop();
         g.start();
       }
-      g.attempts = (g.attempts || 1) + 1;
-      localStorage.setItem('duckverse_gd_attempts', g.attempts.toString());
-      setAttempts(g.attempts);
+      setAttempts(g.attempts || 1);
       setProgress(0);
     }
   }, []);
@@ -216,11 +222,11 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
               setBestScore(curBest);
             },
             () => {
-              if (onAddCoins) onAddCoins(50);
+              if (onAddCoinsRef.current) onAddCoinsRef.current(50);
               setBestScore(100);
             },
             (coins) => {
-              if (onAddCoins) onAddCoins(coins || 1);
+              if (onAddCoinsRef.current) onAddCoinsRef.current(coins || 1);
             }
           );
 
@@ -251,16 +257,16 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
     initGame();
 
+    let rafId = null;
     let lastTime = performance.now();
     let frameCount = 0;
     const interval = setInterval(() => {
       const now = performance.now();
       const delta = now - lastTime;
       if (delta > 0) {
-        const currentFps = Math.round((frameCount * 1000) / delta);
-        const validFps = currentFps > 0 ? currentFps : 60;
-        setFps(validFps);
-        setInputLag(validFps >= 55 ? '< 16ms' : '~33ms');
+        const measuredFps = Math.min(144, Math.max(1, Math.round((frameCount * 1000) / delta)));
+        setFps(measuredFps);
+        setInputLag(measuredFps >= 55 ? '< 16ms' : '~33ms');
       }
       frameCount = 0;
       lastTime = now;
@@ -268,19 +274,22 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
     const countFrames = () => {
       frameCount++;
-      if (isMounted) requestAnimationFrame(countFrames);
+      if (isMounted) {
+        rafId = requestAnimationFrame(countFrames);
+      }
     };
-    requestAnimationFrame(countFrames);
+    rafId = requestAnimationFrame(countFrames);
 
     return () => {
       isMounted = false;
       clearInterval(interval);
+      if (rafId) cancelAnimationFrame(rafId);
       if (activeGameRef.current && typeof activeGameRef.current.stop === 'function') {
         activeGameRef.current.stop();
         activeGameRef.current = null;
       }
     };
-  }, [gameId, gameMeta.engineClass, gameMeta.enginePath, onAddCoins]);
+  }, [gameId, gameMeta.engineClass, gameMeta.enginePath]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -366,7 +375,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <h2 className="gaming-brand-text">
             <span>⚡ DUCKVERSE</span>
             <span className="gaming-brand-sep">|</span>
-            <span className="gaming-brand-title">GEOMETRY DASH NEON</span>
+            <span className="gaming-brand-title">GEOMETRY DASH</span>
           </h2>
         </div>
 
@@ -397,7 +406,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <button
             type="button"
             className="gaming-btn"
-            onClick={handleRestart}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRestart(e);
+            }}
             title="Перезапустити раунд (Клавіша R)"
           >
             <span>🔄 [R] Заново</span>
@@ -406,7 +418,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <button
             type="button"
             className={`gaming-btn ${!soundEnabled ? 'gaming-btn-muted' : ''}`}
-            onClick={handleToggleSound}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleSound();
+            }}
             title={soundEnabled ? 'Вимкнути звук (Клавіша M)' : 'Увімкнути звук (Клавіша M)'}
           >
             <span>{soundEnabled ? '🔊 [M]' : '🔇 [M]'}</span>
@@ -415,7 +430,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <button
             type="button"
             className="gaming-btn"
-            onClick={handleToggleFullscreen}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleFullscreen();
+            }}
             title={isFullscreen ? 'Вийти з повного екрана (Клавіша F)' : 'Повноекранний режим (Клавіша F)'}
           >
             <span>⛶ [F]</span>
@@ -424,7 +442,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <button
             type="button"
             className="gaming-btn gaming-btn-exit"
-            onClick={handleClose}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleClose();
+            }}
             title="Повернутися до хабу (Клавіша Escape)"
           >
             <span>✖ [Esc] До хабу</span>
