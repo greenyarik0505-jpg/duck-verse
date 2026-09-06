@@ -234,11 +234,18 @@ class GeometryDashGame {
             { type: 'spike', x: 2448, y: f - 34, w: 32, h: 34 },
             { type: 'orb', x: 2448, y: f - 85, r: 18, used: false },
 
-            // Beat 19.0 - 21.5 (x: 2736 - 3096) - Ascending block stairs
-            { type: 'block', x: 2736, y: f - b, w: b, h: b },
-            { type: 'block', x: 2772, y: f - b * 2, w: b, h: b * 2 },
-            { type: 'block', x: 2808, y: f - b * 3, w: b, h: b * 3 },
-            { type: 'spike', x: 2952, y: f - 34, w: 32, h: 34 },
+            // Beat 19.0 - 21.5 (x: 2664 - 3096) - Launch Pad & Elevated Terraced Runway
+            // Жовтий трамплін на підлозі для зльоту на високу терасу
+            { type: 'pad', x: 2664, y: f - 10, w: 36, h: 10 },
+            // Тераса 1 (ширина 2 блоки) із запасним трампліном
+            { type: 'block', x: 2736, y: f - b, w: b * 2, h: b },
+            { type: 'pad', x: 2772, y: f - b - 10, w: 36, h: 10 },
+            // Тераса 2 (висота 2b, ширина 2 блоки)
+            { type: 'block', x: 2808, y: f - b * 2, w: b * 2, h: b * 2 },
+            // Тераса 3 — просторий злітний майданчик (висота 3b, ширина 4 блоки = 144px)
+            { type: 'block', x: 2880, y: f - b * 3, w: b * 4, h: b * 3 },
+            // Шип на підлозі між терасою та наступною платформою
+            { type: 'spike', x: 3048, y: f - 34, w: 32, h: 34 },
             { type: 'block', x: 3096, y: f - b * 2, w: b * 3, h: b },
 
             // Beat 24.0 - 27.0 (x: 3456 - 3888) - Double Orb sequence
@@ -872,17 +879,23 @@ class GeometryDashGame {
                 const bT = item.y;
                 const bB = item.y + item.h;
 
-                const overlapX = pBox.r > bL && pBox.l < bR;
+                // Перевірка горизонтального перекриття
+                const overlapX = pBox.r > bL + 2 && pBox.l < bR - 2;
                 if (overlapX) {
-                    // Приземлення зверху
                     const prevY = this.player.y - this.player.vy;
-                    if (prevY + this.cubeSize <= bT + 12 && this.player.vy >= 0) {
+                    const prevBottom = prevY + this.cubeSize;
+
+                    // Чесне приземлення зверху: в попередньому кадрі дно було над дахом або на ньому
+                    // Усунуто баг "телепортації": більше ніяких стрибків угору на 12px при дотику до боку
+                    const isLanding = prevBottom <= bT + 2 && this.player.vy >= 0 && (this.player.y + this.cubeSize >= bT);
+
+                    if (isLanding) {
                         this.player.y = bT - this.cubeSize;
                         this.player.vy = 0;
                         this.player.grounded = true;
                         onPlatform = true;
-                    } else if (pBox.b > bT + 8 && pBox.t < bB) {
-                        // Зіткнення з боком / низом блока
+                    } else if (pBox.b > bT + 4 && pBox.t < bB - 2) {
+                        // Зіткнення з вертикальною бічною стінкою або днищем
                         this.die();
                         return;
                     }
