@@ -146,14 +146,6 @@ export default function GameHubPage() {
                 >
                   GitHub Репозиторій
                 </a>
-                <a
-                  href="https://gta6-sliv-cyberleek.atlassian.net"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="footer-link"
-                >
-                  Jira Cloud Дошка
-                </a>
               </div>
             </div>
           </div>

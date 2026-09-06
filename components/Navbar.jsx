@@ -85,18 +85,6 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
             </svg>
             <span>GitHub</span>
           </a>
-
-          {/* Jira Link */}
-          <a
-            href="https://gta6-sliv-cyberleek.atlassian.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="header-btn jira-btn"
-            title="Scrum-дошка проекту в Jira"
-            aria-label="Jira дошка"
-          >
-            <span>Jira Дошка</span>
-          </a>
         </div>
       </div>
     </header>
