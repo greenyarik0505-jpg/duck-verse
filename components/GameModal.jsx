@@ -17,11 +17,12 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
   const [attempts, setAttempts] = useState(1);
   const [bestScore, setBestScore] = useState(0);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [speedMultiplier, setSpeedMultiplier] = useState(0.85);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const gameMeta = getGameById(gameId) || {
     id: 'geometry_dash',
-    title: 'Geometry Dash Neon',
+    title: 'Geometry Dash',
     enginePath: '/games/game_geometry_dash.js',
     engineClass: 'GeometryDashGame'
   };
@@ -57,6 +58,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
   useEffect(() => {
     const savedMuted = localStorage.getItem('duckverse_muted') === 'true';
     setSoundEnabled(!savedMuted);
+    const savedSpeed = parseFloat(localStorage.getItem('duckverse_gd_speed') || '0.85') || 0.85;
+    setSpeedMultiplier(savedSpeed);
   }, []);
 
   const handleToggleSound = useCallback(() => {
@@ -76,6 +79,27 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         } else if (activeGameRef.current.running) {
           activeGameRef.current.startMusic?.();
         }
+      }
+      return next;
+    });
+  }, []);
+
+  const handleToggleSpeed = useCallback((e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
+    setSpeedMultiplier((prev) => {
+      let next = 1.0;
+      if (prev >= 0.95) next = 0.85;
+      else if (prev >= 0.8) next = 0.75;
+      else next = 1.0;
+
+      try {
+        localStorage.setItem('duckverse_gd_speed', next.toString());
+      } catch {}
+
+      if (activeGameRef.current && typeof activeGameRef.current.setSpeedMultiplier === 'function') {
+        activeGameRef.current.setSpeedMultiplier(next);
       }
       return next;
     });
@@ -182,6 +206,12 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         return;
       }
 
+      if (e.key === 's' || e.key === 'S' || e.code === 'KeyS') {
+        e.preventDefault();
+        handleToggleSpeed();
+        return;
+      }
+
       if (e.code === 'Space' || e.code === 'ArrowUp') {
         e.preventDefault();
       }
@@ -191,7 +221,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleClose, handleRestart, handleToggleFullscreen, handleToggleSound]);
+  }, [handleClose, handleRestart, handleToggleFullscreen, handleToggleSound, handleToggleSpeed]);
 
   useEffect(() => {
     let isMounted = true;
@@ -237,6 +267,11 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             if (clientWidth > 0 && clientHeight > 0) {
               instance.resize(clientWidth, clientHeight, true);
             }
+          }
+
+          if (instance && typeof instance.setSpeedMultiplier === 'function') {
+            const initialSpeed = parseFloat(localStorage.getItem('duckverse_gd_speed') || '0.85') || 0.85;
+            instance.setSpeedMultiplier(initialSpeed);
           }
 
           if (instance && typeof instance.start === 'function') {
@@ -399,9 +434,21 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         </div>
 
         <div className="gaming-hud-right">
-          <div className="gaming-fps-tag" title="SCRUM-13: Моніторинг швидкодії">
+          <div className="gaming-fps-tag" title="SCRUM-13: Моніторинг швидкодії (фіксовані 60 FPS)">
             <span>⚡ {fps} FPS | {inputLag}</span>
           </div>
+
+          <button
+            type="button"
+            className="gaming-btn gaming-btn-speed"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleSpeed(e);
+            }}
+            title="Швидкість гри (Клавіша S): 0.85x (комфортна), 1.0x (класична), 0.75x (тренувальна)"
+          >
+            <span>⚡ {speedMultiplier}x</span>
+          </button>
 
           <button
             type="button"
@@ -499,6 +546,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
           <span className="text-slate-700">|</span>
           <span><kbd>R</kbd> — заново</span>
+          <span className="text-slate-700">|</span>
+          <span><kbd>S</kbd> — швидкість</span>
           <span className="text-slate-700">|</span>
           <span><kbd>F</kbd> — повний екран</span>
           <span className="text-slate-700">|</span>

@@ -1540,6 +1540,18 @@ canvas#game-canvas {
     background: rgba(248, 113, 113, 0.08);
 }
 
+.gaming-btn-speed {
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.3);
+    background: rgba(56, 189, 248, 0.08);
+}
+
+.gaming-btn-speed:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: rgba(56, 189, 248, 0.5);
+    color: #ffffff;
+}
+
 .gaming-btn-exit {
     background: rgba(239, 68, 68, 0.15);
     border-color: rgba(239, 68, 68, 0.3);

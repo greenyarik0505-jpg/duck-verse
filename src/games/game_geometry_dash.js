@@ -91,9 +91,22 @@ class GeometryDashGame {
 
         this.cubeSize = 36;
         this.floorY = this.baseHeight - 70;
-        this.gravity = 0.95;
-        this.jumpForce = -13.5;
-        this.speed = 5.2;
+        this.baseGravity = 0.95;
+        this.baseJumpForce = -13.5;
+        this.baseSpeed = 5.2;
+
+        this.lastTime = null;
+        this.accumulator = 0;
+
+        let storedSpeed = '0.85';
+        try {
+            const storage = (typeof window !== 'undefined' && window.localStorage) ? window.localStorage : (typeof localStorage !== 'undefined' ? localStorage : null);
+            if (storage) {
+                storedSpeed = storage.getItem('duckverse_gd_speed') || '0.85';
+            }
+        } catch (e) {}
+
+        this.setSpeedMultiplier(parseFloat(storedSpeed) || 0.85);
 
         this.player = {
             x: 90,
@@ -123,6 +136,25 @@ class GeometryDashGame {
         this.handleResize = this.handleResize.bind(this);
 
         this.resize(this.baseWidth, this.baseHeight, false);
+    }
+
+    setSpeedMultiplier(mult) {
+        const s = Math.max(0.5, Math.min(1.5, Number(mult) || 0.85));
+        this.speedMultiplier = s;
+        this.speed = this.baseSpeed * s;
+        this.jumpForce = this.baseJumpForce * s;
+        this.gravity = this.baseGravity * (s * s);
+
+        try {
+            const storage = (typeof window !== 'undefined' && window.localStorage) ? window.localStorage : (typeof localStorage !== 'undefined' ? localStorage : null);
+            if (storage) {
+                storage.setItem('duckverse_gd_speed', s.toString());
+            }
+        } catch (e) {}
+
+        if (this.running && this.musicTimer) {
+            this.startMusic();
+        }
     }
 
     // 1. Рівномірне масштабування та збереження пропорцій без спотворення кубика
@@ -375,6 +407,9 @@ class GeometryDashGame {
             this.deathTimer = null;
         }
 
+        this.lastTime = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+        this.accumulator = 0;
+
         this.running = true;
         this.won = false;
         this.holdingJump = false;
@@ -460,8 +495,9 @@ class GeometryDashGame {
         window.sound.init();
         if (!window.sound.ctx) return;
 
-        // Динамічний 130 BPM електронний бас-синтезатор
-        const bpm = 130;
+        // Динамічний 130 BPM електронний бас-синтезатор із синхронізацією швидкості
+        const baseBpm = 130;
+        const bpm = baseBpm * (this.speedMultiplier || 1.0);
         const interval = (60 / bpm) * 1000 / 2; // восьмі ноти
         const bassNotes = [110, 110, 130.81, 110, 146.83, 130.81, 110, 164.81]; // басова лінія A2
         this.musicBeat = 0;
@@ -1270,14 +1306,36 @@ class GeometryDashGame {
         ctx.restore(); // кінець зсуву камери
     }
 
-    loop() {
+    loop(currentTime) {
         if (!this.running) return;
-        this.update();
-        this.draw();
-        // Не плануємо наступний кадр, якщо update() зупинив гру (смерть/перемога)
+
+        const now = (typeof performance !== 'undefined' && performance.now) ? (currentTime || performance.now()) : Date.now();
+        let frameDelta = now - (this.lastTime || now);
+        this.lastTime = now;
+
+        // Захист від стрибків при перемиканні вкладок або лагах (не більше 100мс)
+        if (frameDelta > 100) frameDelta = 100;
+        if (frameDelta < 0) frameDelta = 0;
+
+        this.accumulator += frameDelta;
+        const FIXED_STEP = 1000 / 60; // 16.6667ms — фіксований 60 FPS крок фізики для будь-яких моніторів (60Hz, 120Hz, 144Hz, 240Hz)
+
+        let steps = 0;
+        while (this.accumulator >= FIXED_STEP && steps < 4) {
+            this.update();
+            this.accumulator -= FIXED_STEP;
+            steps++;
+            if (!this.running) break;
+        }
+
+        if (this.running || this.won) {
+            this.draw();
+        }
+
+        // Запитуємо наступний кадр лише якщо гра все ще активна
         if (this.running) {
             if (typeof requestAnimationFrame !== 'undefined') {
-                this.animationId = requestAnimationFrame(() => this.loop());
+                this.animationId = requestAnimationFrame((t) => this.loop(t));
             }
         }
     }
