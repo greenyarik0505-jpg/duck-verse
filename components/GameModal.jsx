@@ -508,54 +508,49 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           </h2>
 
           {/* Unified Game Selection Menu (SCRUM-20) */}
-          <div ref={menuRef} className="relative ml-2">
+          <div ref={menuRef} className="game-selector-dropdown-wrapper">
             <button
               type="button"
-              className="gaming-btn font-bold flex items-center gap-1.5 px-3 py-1.5 bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 rounded-lg transition-all"
+              className="game-selector-trigger-btn"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsGameMenuOpen((prev) => !prev);
               }}
               title="Єдине уніфіковане меню вибору та перемикання ігор"
+              aria-expanded={isGameMenuOpen}
             >
               <span>🎮 МЕНЮ ІГОР</span>
-              <span className="text-xs">{isGameMenuOpen ? '▲' : '▼'}</span>
+              <span style={{ fontSize: '10px' }}>{isGameMenuOpen ? '▲' : '▼'}</span>
             </button>
 
             {isGameMenuOpen && (
-              <div className="absolute left-0 top-full mt-2 w-64 bg-[#0a0f1d] border border-cyan-500/40 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-3 py-2 border-b border-slate-800 text-[11px] font-bold text-cyan-400 tracking-wider flex items-center justify-between">
-                  <span>ДОСТУПНІ ІГРИ ({playableGames.length})</span>
-                  <span className="text-[10px] text-slate-500">ШВИДКИЙ ЗАПУСК</span>
+              <div className="game-selector-menu">
+                <div className="game-selector-header">
+                  <span className="game-selector-header-title">ДОСТУПНІ ІГРИ ({playableGames.length})</span>
+                  <span className="game-selector-header-badge">ШВИДКИЙ ЗАПУСК</span>
                 </div>
-                <div className="p-1.5 space-y-1">
+                <div className="game-selector-list">
                   {playableGames.map((g) => {
                     const isCur = currentGameId === g.id;
                     return (
                       <button
                         key={g.id}
                         type="button"
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                          isCur
-                            ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/50 shadow-sm'
-                            : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
-                        }`}
+                        className={`game-selector-item-btn ${isCur ? 'is-active' : ''}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setCurrentGameId(g.id);
                           setIsGameMenuOpen(false);
                         }}
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="text-base">{g.icon}</span>
-                          <span>{g.title}</span>
+                        <div className="game-selector-item-left">
+                          <span className="game-selector-item-icon">{g.icon}</span>
+                          <span className="game-selector-item-title">{g.title}</span>
                         </div>
                         {isCur ? (
-                          <span className="text-[10px] bg-cyan-500/30 text-cyan-300 px-1.5 py-0.5 rounded font-mono">
-                            АКТИВНА
-                          </span>
+                          <span className="game-selector-item-tag">АКТИВНА</span>
                         ) : (
-                          <span className="text-[10px] text-slate-400">ГРАТИ →</span>
+                          <span className="game-selector-item-action">ГРАТИ →</span>
                         )}
                       </button>
                     );
