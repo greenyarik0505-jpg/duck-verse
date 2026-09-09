@@ -1,31 +1,50 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { getGameById } from '../lib/games/registry';
+import { getGameById, GAME_REGISTRY } from '../lib/games/registry';
 
 function GameModalContent({ gameId, onClose, onAddCoins }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const activeGameRef = useRef(null);
+  const menuRef = useRef(null);
+
+  const [currentGameId, setCurrentGameId] = useState(gameId || 'geometry_dash');
+  const [isGameMenuOpen, setIsGameMenuOpen] = useState(false);
 
   const [fps, setFps] = useState(60);
   const [inputLag, setInputLag] = useState('< 16ms');
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
 
+  // Geometry Dash stats
   const [progress, setProgress] = useState(0);
   const [attempts, setAttempts] = useState(1);
   const [bestScore, setBestScore] = useState(0);
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const [speedMultiplier, setSpeedMultiplier] = useState(0.85);
+
+  // Invaders stats
+  const [invadersWave, setInvadersWave] = useState(1);
+  const [invadersScore, setInvadersScore] = useState(0);
+  const [invadersBest, setInvadersBest] = useState(0);
+
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const gameMeta = getGameById(gameId) || {
+  useEffect(() => {
+    if (gameId) {
+      setCurrentGameId(gameId);
+    }
+  }, [gameId]);
+
+  const gameMeta = getGameById(currentGameId) || {
     id: 'geometry_dash',
     title: 'Geometry Dash',
     enginePath: '/games/game_geometry_dash.js',
     engineClass: 'GeometryDashGame'
   };
+
+  const playableGames = GAME_REGISTRY.filter((g) => g.status === 'playable');
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -60,6 +79,16 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     setSoundEnabled(!savedMuted);
     const savedSpeed = parseFloat(localStorage.getItem('duckverse_gd_speed') || '0.85') || 0.85;
     setSpeedMultiplier(savedSpeed);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setIsGameMenuOpen(false);
+      }
+    };
+    document.addEventListener('pointerdown', handleClickOutside);
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, []);
 
   const handleToggleSound = useCallback(() => {
@@ -207,9 +236,11 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       }
 
       if (e.key === 's' || e.key === 'S' || e.code === 'KeyS') {
-        e.preventDefault();
-        handleToggleSpeed();
-        return;
+        if (currentGameId === 'geometry_dash') {
+          e.preventDefault();
+          handleToggleSpeed();
+          return;
+        }
       }
 
       if (e.code === 'Space' || e.code === 'ArrowUp') {
@@ -221,12 +252,20 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleClose, handleRestart, handleToggleFullscreen, handleToggleSound, handleToggleSpeed]);
+  }, [handleClose, handleRestart, handleToggleFullscreen, handleToggleSound, handleToggleSpeed, currentGameId]);
 
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
     setErrorMsg(null);
+
+    // Clean up previous active game instance
+    if (activeGameRef.current && typeof activeGameRef.current.stop === 'function') {
+      try {
+        activeGameRef.current.stop();
+      } catch (err) {}
+      activeGameRef.current = null;
+    }
 
     const initGame = async () => {
       try {
@@ -245,15 +284,22 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         if (GameClass && typeof GameClass === 'function') {
           const instance = new GameClass(
             canvas,
-            () => {
-              const curAttempts = parseInt(localStorage.getItem('duckverse_gd_attempts') || '1', 10) || 1;
-              const curBest = parseInt(localStorage.getItem('duckverse_gd_best') || '0', 10) || 0;
-              setAttempts(curAttempts);
-              setBestScore(curBest);
+            (res) => {
+              if (currentGameId === 'geometry_dash') {
+                const curAttempts = parseInt(localStorage.getItem('duckverse_gd_attempts') || '1', 10) || 1;
+                const curBest = parseInt(localStorage.getItem('duckverse_gd_best') || '0', 10) || 0;
+                setAttempts(curAttempts);
+                setBestScore(curBest);
+              } else if (currentGameId === 'invaders') {
+                if (res && res.score) {
+                  setInvadersScore(res.score);
+                  setInvadersWave(res.wave || 1);
+                }
+              }
             },
             () => {
               if (onAddCoinsRef.current) onAddCoinsRef.current(50);
-              setBestScore(100);
+              if (currentGameId === 'geometry_dash') setBestScore(100);
             },
             (coins) => {
               if (onAddCoinsRef.current) onAddCoinsRef.current(coins || 1);
@@ -320,11 +366,13 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       clearInterval(interval);
       if (rafId) cancelAnimationFrame(rafId);
       if (activeGameRef.current && typeof activeGameRef.current.stop === 'function') {
-        activeGameRef.current.stop();
+        try {
+          activeGameRef.current.stop();
+        } catch (err) {}
         activeGameRef.current = null;
       }
     };
-  }, [gameId, gameMeta.engineClass, gameMeta.enginePath]);
+  }, [currentGameId, gameMeta.engineClass, gameMeta.enginePath]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -366,71 +414,150 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     setAttempts(initAttempts);
     setBestScore(initBest);
 
-    let lastP = 0;
-    let lastA = initAttempts;
-    let lastB = initBest;
+    const initInvadersBest = parseInt(localStorage.getItem('duckverse_invaders_best') || '0', 10) || 0;
+    setInvadersBest(initInvadersBest);
 
     const syncInterval = setInterval(() => {
       const g = activeGameRef.current;
       if (g) {
-        const curX = g.player?.x || 0;
-        const len = g.levelLength || 17280;
-        const p = Math.min(100, Math.max(0, Math.floor((curX / len) * 100)));
-        if (p !== lastP) {
-          lastP = p;
+        if (currentGameId === 'geometry_dash') {
+          const curX = g.player?.x || 0;
+          const len = g.levelLength || 17280;
+          const p = Math.min(100, Math.max(0, Math.floor((curX / len) * 100)));
           setProgress(p);
-        }
-        const a = g.attempts !== undefined ? g.attempts : (parseInt(localStorage.getItem('duckverse_gd_attempts') || '1', 10) || 1);
-        if (a !== lastA) {
-          lastA = a;
+
+          const a = g.attempts !== undefined ? g.attempts : (parseInt(localStorage.getItem('duckverse_gd_attempts') || '1', 10) || 1);
           setAttempts(a);
-        }
-        const b = g.bestPercent !== undefined ? g.bestPercent : (parseInt(localStorage.getItem('duckverse_gd_best') || '0', 10) || 0);
-        if (b !== lastB) {
-          lastB = b;
+
+          const b = g.bestPercent !== undefined ? g.bestPercent : (parseInt(localStorage.getItem('duckverse_gd_best') || '0', 10) || 0);
           setBestScore(b);
+        } else if (currentGameId === 'invaders') {
+          if (g.wave !== undefined) setInvadersWave(g.wave);
+          if (g.score !== undefined) setInvadersScore(g.score);
+          if (g.bestScore !== undefined) setInvadersBest(g.bestScore);
         }
       }
     }, 50);
 
     return () => clearInterval(syncInterval);
-  }, []);
+  }, [currentGameId]);
 
   const handleContainerPointerDown = (e) => {
-    if (e.target !== canvasRef.current && activeGameRef.current?.tryJump) {
-      activeGameRef.current.tryJump();
+    if (e.target !== canvasRef.current) {
+      if (activeGameRef.current?.tryJump) {
+        activeGameRef.current.tryJump();
+      } else if (activeGameRef.current?.shoot) {
+        activeGameRef.current.shoot();
+      }
     }
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-[#030713] flex flex-col w-screen h-screen overflow-hidden select-none gaming-view-fullscreen">
       <header className="gaming-hud-header">
-        <div className="gaming-hud-brand">
+        <div className="gaming-hud-brand flex items-center gap-3">
           <span className="gaming-live-dot" title="Ігровий рушій активний"></span>
           <h2 className="gaming-brand-text">
             <span>⚡ DUCKVERSE</span>
             <span className="gaming-brand-sep">|</span>
-            <span className="gaming-brand-title">GEOMETRY DASH</span>
+            <span className="gaming-brand-title">{gameMeta.title.toUpperCase()}</span>
           </h2>
+
+          {/* Unified Game Selection Menu (SCRUM-20) */}
+          <div ref={menuRef} className="relative ml-2">
+            <button
+              type="button"
+              className="gaming-btn font-bold flex items-center gap-1.5 px-3 py-1.5 bg-cyan-950/60 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-900/60 hover:border-cyan-400 rounded-lg transition-all"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsGameMenuOpen((prev) => !prev);
+              }}
+              title="Єдине уніфіковане меню вибору та перемикання ігор"
+            >
+              <span>🎮 МЕНЮ ІГОР</span>
+              <span className="text-xs">{isGameMenuOpen ? '▲' : '▼'}</span>
+            </button>
+
+            {isGameMenuOpen && (
+              <div className="absolute left-0 top-full mt-2 w-64 bg-[#0a0f1d] border border-cyan-500/40 rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3 py-2 border-b border-slate-800 text-[11px] font-bold text-cyan-400 tracking-wider flex items-center justify-between">
+                  <span>ДОСТУПНІ ІГРИ ({playableGames.length})</span>
+                  <span className="text-[10px] text-slate-500">ШВИДКИЙ ЗАПУСК</span>
+                </div>
+                <div className="p-1.5 space-y-1">
+                  {playableGames.map((g) => {
+                    const isCur = currentGameId === g.id;
+                    return (
+                      <button
+                        key={g.id}
+                        type="button"
+                        className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                          isCur
+                            ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/50 shadow-sm'
+                            : 'text-slate-300 hover:bg-white/5 hover:text-white border border-transparent'
+                        }`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentGameId(g.id);
+                          setIsGameMenuOpen(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{g.icon}</span>
+                          <span>{g.title}</span>
+                        </div>
+                        {isCur ? (
+                          <span className="text-[10px] bg-cyan-500/30 text-cyan-300 px-1.5 py-0.5 rounded font-mono">
+                            АКТИВНА
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-slate-400">ГРАТИ →</span>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="gaming-hud-center">
-          <span className="gaming-stat-badge" title="Кількість спроб">
-            🔥 Спроба {attempts}
-          </span>
-          <span className="gaming-stat-badge gaming-stat-best" title="Найкращий результат">
-            🏆 Рекорд {bestScore}%
-          </span>
-
-          <div className="gaming-progress-box" title={`Поточний прогрес: ${progress}%`}>
-            <div className="gaming-progress-track">
-              <div
-                className="gaming-progress-fill"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="gaming-progress-percent">{progress}%</span>
-          </div>
+          {currentGameId === 'geometry_dash' ? (
+            <>
+              <span className="gaming-stat-badge" title="Кількість спроб">
+                🔥 Спроба {attempts}
+              </span>
+              <span className="gaming-stat-badge gaming-stat-best" title="Найкращий результат">
+                🏆 Рекорд {bestScore}%
+              </span>
+              <div className="gaming-progress-box" title={`Поточний прогрес: ${progress}%`}>
+                <div className="gaming-progress-track">
+                  <div
+                    className="gaming-progress-fill"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <span className="gaming-progress-percent">{progress}%</span>
+              </div>
+            </>
+          ) : currentGameId === 'invaders' ? (
+            <>
+              <span className="gaming-stat-badge" title="Поточна космічна хвиля">
+                👾 Хвиля {invadersWave}
+              </span>
+              <span className="gaming-stat-badge" title="Поточні очки">
+                🎯 Очки {invadersScore}
+              </span>
+              <span className="gaming-stat-badge gaming-stat-best" title="Найкращий рахунок">
+                🏆 Рекорд {invadersBest}
+              </span>
+            </>
+          ) : (
+            <span className="gaming-stat-badge">
+              🎮 {gameMeta.tag}
+            </span>
+          )}
         </div>
 
         <div className="gaming-hud-right">
@@ -438,17 +565,19 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             <span>⚡ {fps} FPS | {inputLag}</span>
           </div>
 
-          <button
-            type="button"
-            className="gaming-btn gaming-btn-speed"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleSpeed(e);
-            }}
-            title="Швидкість гри (Клавіша S): 0.85x (комфортна), 1.0x (класична), 0.75x (тренувальна)"
-          >
-            <span>⚡ {speedMultiplier}x</span>
-          </button>
+          {currentGameId === 'geometry_dash' && (
+            <button
+              type="button"
+              className="gaming-btn gaming-btn-speed"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleSpeed(e);
+              }}
+              title="Швидкість гри (Клавіша S): 0.85x (комфортна), 1.0x (класична), 0.75x (тренувальна)"
+            >
+              <span>⚡ {speedMultiplier}x</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -543,11 +672,21 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
       <footer className="gaming-hud-footer">
         <div className="flex items-center gap-3">
-          <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
+          {currentGameId === 'geometry_dash' ? (
+            <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
+          ) : currentGameId === 'invaders' ? (
+            <span>Керування: <kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> / <kbd>Миша</kbd> — рух | <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — лазери</span>
+          ) : (
+            <span>Керування: <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — дія</span>
+          )}
           <span className="text-slate-700">|</span>
           <span><kbd>R</kbd> — заново</span>
-          <span className="text-slate-700">|</span>
-          <span><kbd>S</kbd> — швидкість</span>
+          {currentGameId === 'geometry_dash' && (
+            <>
+              <span className="text-slate-700">|</span>
+              <span><kbd>S</kbd> — швидкість</span>
+            </>
+          )}
           <span className="text-slate-700">|</span>
           <span><kbd>F</kbd> — повний екран</span>
           <span className="text-slate-700">|</span>
@@ -556,7 +695,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           <span><kbd>Esc</kbd> — до хабу</span>
         </div>
         <div className="hidden md:flex items-center gap-2 font-mono text-[11px] text-slate-500">
-          <span>DUCKVERSE AAA GAMING VIEW 60 FPS</span>
+          <span>DUCKVERSE AAA UNIFIED GAMING VIEW 60 FPS</span>
         </div>
       </footer>
     </div>
