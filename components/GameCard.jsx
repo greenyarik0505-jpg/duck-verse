@@ -59,7 +59,7 @@ export default function GameCard({ game, onPlay }) {
           </button>
         ) : (
           <button
-            className="play-btn disabled-btn"
+            className="soon-btn disabled-btn"
             disabled
             aria-disabled="true"
             title="Гра знаходиться в активній розробці. Слідкуйте за оновленнями!"
