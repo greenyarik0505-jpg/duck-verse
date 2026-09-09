@@ -112,13 +112,13 @@ export default function GameHubPage() {
           <div className="footer-top">
             <div className="footer-brand">
               <div className="footer-logo-row">
-                <span className="footer-logo-icon">GD</span>
+                <span className="footer-logo-icon" style={{ background: 'linear-gradient(135deg, #00ff99, #00f3ff)', color: '#020509' }}>NH</span>
                 <span className="footer-logo-title">
-                  DUCK<span className="brand-accent">VERSE</span>
+                  НЕОНОВИЙ<span className="brand-accent" style={{ color: '#00ff99' }}> ВЗЛОМЩИК</span>
                 </span>
               </div>
               <p className="footer-desc">
-                Преміальна ігрова веб-платформа нового покоління на базі Next.js 15, React 19 та Vercel Production.
+                Кіберпанк ігровий хаб головоломок та екшену на базі Next.js 15, React 19 та Vercel Production.
               </p>
             </div>
 

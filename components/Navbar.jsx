@@ -7,13 +7,13 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
         {/* Brand */}
         <div className="brand">
           <div className="brand-logo" aria-hidden="true">
-            <span className="logo-box">GD</span>
+            <span className="logo-box" style={{ background: 'linear-gradient(135deg, #00ff99, #00f3ff)', color: '#020509' }}>NH</span>
           </div>
           <div className="brand-text">
             <h1 className="logo-title">
-              DUCK<span className="brand-accent">VERSE</span>
+              НЕОНОВИЙ<span className="brand-accent" style={{ color: '#00ff99' }}> ВЗЛОМЩИК</span>
             </h1>
-            <span className="logo-subtitle">ІГРОВИЙ ХАБ</span>
+            <span className="logo-subtitle">NEON HACKER • CYBER HUB</span>
           </div>
         </div>
 

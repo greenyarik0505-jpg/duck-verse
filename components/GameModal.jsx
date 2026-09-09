@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { getGameById, GAME_REGISTRY } from '../lib/games/registry';
+import NeonHacker from './games/NeonHacker';
 
 function GameModalContent({ gameId, onClose, onAddCoins }) {
   const canvasRef = useRef(null);
@@ -268,6 +269,10 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     }
 
     const initGame = async () => {
+      if (currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker') {
+        setLoading(false);
+        return;
+      }
       try {
         await loadScript('/audio.js');
         if (window.SoundController && !window.sound) {
@@ -458,7 +463,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         <div className="gaming-hud-brand flex items-center gap-3">
           <span className="gaming-live-dot" title="Ігровий рушій активний"></span>
           <h2 className="gaming-brand-text">
-            <span>⚡ DUCKVERSE</span>
+            <span>⚡ НЕОНОВИЙ ВЗЛОМЩИК</span>
             <span className="gaming-brand-sep">|</span>
             <span className="gaming-brand-title">{gameMeta.title.toUpperCase()}</span>
           </h2>
@@ -659,15 +664,28 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           </div>
         )}
 
-        <canvas
-          ref={canvasRef}
-          id="game-canvas"
-          width={850}
-          height={480}
-          style={{
-            display: loading ? 'none' : 'block',
-          }}
-        />
+        {currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
+          <div className="w-full h-full flex items-center justify-center overflow-y-auto">
+            <NeonHacker
+              onAddCoins={(c) => {
+                if (onAddCoinsRef.current) onAddCoinsRef.current(c);
+              }}
+              onVictory={() => {
+                if (onAddCoinsRef.current) onAddCoinsRef.current(100);
+              }}
+            />
+          </div>
+        ) : (
+          <canvas
+            ref={canvasRef}
+            id="game-canvas"
+            width={850}
+            height={480}
+            style={{
+              display: loading ? 'none' : 'block',
+            }}
+          />
+        )}
       </div>
 
       <footer className="gaming-hud-footer">
