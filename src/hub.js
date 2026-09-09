@@ -1,4 +1,4 @@
-﻿class DuckVerseHub {
+class DuckVerseHub {
     constructor() {
         this.coins = parseInt(localStorage.getItem('duckverse_coins') || '50', 10);
         this.activeGame = null;
@@ -15,6 +15,17 @@
                 players: '12.4k',
                 bgClass: 'game-bg-gd',
                 category: 'action'
+            },
+            {
+                id: 'neon-hacker',
+                title: 'Неоновий Взломщик',
+                tag: 'PUZZLE & HACKER',
+                badge: '🟣 НОВИНКА',
+                desc: 'Зламуй фаєрволи стріляючи імпульсом через проміжки в кільцях. Потім злам шифр терміналу!',
+                rating: '4.7 ★',
+                players: '1.2k',
+                bgClass: 'game-bg-gd',
+                category: 'puzzle'
             },
             {
                 id: 'flappy',

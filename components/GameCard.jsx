@@ -3,6 +3,8 @@
 const CATEGORY_NAMES = {
   action: 'Екшен та Ритм',
   arcade: 'Аркади',
+  puzzle: 'Головоломки',
+  Puzzle: 'Головоломки',
   casual: 'Казуальні',
   all: 'Усі ігри'
 };
