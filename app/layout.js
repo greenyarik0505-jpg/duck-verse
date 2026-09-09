@@ -1,8 +1,8 @@
 import '../styles.css';
 
 export const metadata = {
-  title: 'Duck Verse — Next.js Game Hub & Geometry Dash',
-  description: 'Cyberpunk Game Hub on Next.js 15 & Vercel featuring Geometry Dash Neon',
+  title: 'Неоновий Взломщик (Neon Hacker) — Кібер-ігровий Хаб',
+  description: 'Кіберпанк гра-головоломка Neon Hacker та екшен хаб на Next.js 15 & Vercel',
 };
 
 export const viewport = {
