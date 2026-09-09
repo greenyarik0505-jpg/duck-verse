@@ -675,7 +675,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           {currentGameId === 'geometry_dash' ? (
             <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
           ) : currentGameId === 'invaders' ? (
-            <span>Керування: <kbd>←</kbd> <kbd>→</kbd> / <kbd>A</kbd> <kbd>D</kbd> / <kbd>Миша</kbd> — рух | <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — лазери</span>
+            <span>Керування: <kbd>←</kbd> <kbd>→</kbd> / <kbd>Миша</kbd> — рух | <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — лазери</span>
           ) : (
             <span>Керування: <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — дія</span>
           )}
