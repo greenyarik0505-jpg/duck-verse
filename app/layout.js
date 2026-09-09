@@ -1,8 +1,8 @@
 import '../styles.css';
 
 export const metadata = {
-  title: 'Неоновий Взломщик (Neon Hacker) — Кібер-ігровий Хаб',
-  description: 'Кіберпанк гра-головоломка Neon Hacker та екшен хаб на Next.js 15 & Vercel',
+  title: 'Duck Verse — Next.js Game Hub & Neon Arcade',
+  description: 'Cyberpunk Game Hub on Next.js 15 & Vercel featuring Geometry Dash Neon, Neon Hacker and Quack Clicker',
 };
 
 export const viewport = {
