@@ -4,6 +4,7 @@ const CATEGORIES = [
   { id: 'all', label: 'Усі ігри' },
   { id: 'action', label: 'Екшен та Ритм' },
   { id: 'arcade', label: 'Аркади' },
+  { id: 'puzzle', label: 'Головоломки' },
   { id: 'casual', label: 'Казуальні' }
 ];
 
