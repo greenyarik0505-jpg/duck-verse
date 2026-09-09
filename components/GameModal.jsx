@@ -304,6 +304,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
                 if (onAddCoinsRef.current) onAddCoinsRef.current(coins || 1);
               }
             );
+            window.activeClicker = instance;
             activeGameRef.current = instance;
             instance.start();
           }
