@@ -463,7 +463,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         <div className="gaming-hud-brand flex items-center gap-3">
           <span className="gaming-live-dot" title="Ігровий рушій активний"></span>
           <h2 className="gaming-brand-text">
-            <span>⚡ DUCKVERSE</span>
+            <span>⚡ НЕОНОВИЙ ВЗЛОМЩИК</span>
             <span className="gaming-brand-sep">|</span>
             <span className="gaming-brand-title">{gameMeta.title.toUpperCase()}</span>
           </h2>
