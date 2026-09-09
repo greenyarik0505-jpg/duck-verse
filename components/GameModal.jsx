@@ -7,6 +7,7 @@ import NeonHacker from './games/NeonHacker';
 function GameModalContent({ gameId, onClose, onAddCoins }) {
   const canvasRef = useRef(null);
   const containerRef = useRef(null);
+  const clickerContainerRef = useRef(null);
   const activeGameRef = useRef(null);
   const menuRef = useRef(null);
 
@@ -219,9 +220,11 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       }
 
       if (e.key === 'r' || e.key === 'R' || e.code === 'KeyR') {
-        e.preventDefault();
-        handleRestart();
-        return;
+        if (currentGameId !== 'neon-hacker' && currentGameId !== 'clicker') {
+          e.preventDefault();
+          handleRestart();
+          return;
+        }
       }
 
       if (e.key === 'f' || e.key === 'F' || e.code === 'KeyF') {
@@ -245,7 +248,9 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       }
 
       if (e.code === 'Space' || e.code === 'ArrowUp') {
-        e.preventDefault();
+        if (currentGameId !== 'clicker') {
+          e.preventDefault();
+        }
       }
     };
 
@@ -267,6 +272,9 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       } catch (err) {}
       activeGameRef.current = null;
     }
+    if (clickerContainerRef.current) {
+      clickerContainerRef.current.innerHTML = '';
+    }
 
     const initGame = async () => {
       if (currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker') {
@@ -279,6 +287,31 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           window.sound = new window.SoundController();
         }
 
+        // 1. Neon Hacker is a pure React Component
+        if (currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker') {
+          setLoading(false);
+          return;
+        }
+
+        // 2. Clicker Game
+        if (currentGameId === 'clicker') {
+          await loadScript('/games/game_clicker.js');
+          if (!isMounted) return;
+          if (window.QuackClickerGame && clickerContainerRef.current) {
+            const instance = new window.QuackClickerGame(
+              clickerContainerRef.current,
+              (coins) => {
+                if (onAddCoinsRef.current) onAddCoinsRef.current(coins || 1);
+              }
+            );
+            activeGameRef.current = instance;
+            instance.start();
+          }
+          setLoading(false);
+          return;
+        }
+
+        // 3. Canvas-based games (Geometry Dash, Galactic Invaders, etc.)
         const enginePath = gameMeta.enginePath || '/games/game_geometry_dash.js';
         await loadScript(enginePath);
 
@@ -376,6 +409,9 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         } catch (err) {}
         activeGameRef.current = null;
       }
+      if (clickerContainerRef.current) {
+        clickerContainerRef.current.innerHTML = '';
+      }
     };
   }, [currentGameId, gameMeta.engineClass, gameMeta.enginePath]);
 
@@ -456,6 +492,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
       }
     }
   };
+
+  const isCanvasGame = currentGameId !== 'neon-hacker' && currentGameId !== 'neon_hacker' && currentGameId !== 'clicker';
 
   return (
     <div className="fixed inset-0 z-50 bg-[#030713] flex flex-col w-screen h-screen overflow-hidden select-none gaming-view-fullscreen">
@@ -558,9 +596,13 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
                 🏆 Рекорд {invadersBest}
               </span>
             </>
+          ) : currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
+            <span className="gaming-stat-badge text-emerald-400 border border-emerald-500/30">
+              💻 КІБЕР-ЗЛОМ ФАЄРВОЛІВ ТА ШИФРІВ
+            </span>
           ) : (
-            <span className="gaming-stat-badge">
-              🎮 {gameMeta.tag}
+            <span className="gaming-stat-badge text-amber-300 border border-amber-500/30">
+              🪙 ТАЙКУН ТА АПГРЕЙДИ
             </span>
           )}
         </div>
@@ -584,17 +626,19 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             </button>
           )}
 
-          <button
-            type="button"
-            className="gaming-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRestart(e);
-            }}
-            title="Перезапустити раунд (Клавіша R)"
-          >
-            <span>🔄 [R] Заново</span>
-          </button>
+          {isCanvasGame && (
+            <button
+              type="button"
+              className="gaming-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRestart(e);
+              }}
+              title="Перезапустити раунд (Клавіша R)"
+            >
+              <span>🔄 [R] Заново</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -664,7 +708,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           </div>
         )}
 
-        {currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
+        {/* 1. Kirill's Neon Hacker (React Component) */}
+        {(currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker') && (
           <div className="w-full h-full flex items-center justify-center overflow-y-auto">
             <NeonHacker
               onAddCoins={(c) => {
@@ -675,17 +720,26 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
               }}
             />
           </div>
-        ) : (
-          <canvas
-            ref={canvasRef}
-            id="game-canvas"
-            width={850}
-            height={480}
-            style={{
-              display: loading ? 'none' : 'block',
-            }}
-          />
         )}
+
+        {/* 2. Clicker Mount Node */}
+        <div
+          ref={clickerContainerRef}
+          id="clicker-mount-container"
+          className="w-full h-full flex items-center justify-center overflow-y-auto p-4"
+          style={{ display: currentGameId === 'clicker' ? 'flex' : 'none' }}
+        />
+
+        {/* 3. Canvas Games (Geometry Dash, Galactic Invaders) */}
+        <canvas
+          ref={canvasRef}
+          id="game-canvas"
+          width={850}
+          height={480}
+          style={{
+            display: isCanvasGame && !loading ? 'block' : 'none',
+          }}
+        />
       </div>
 
       <footer className="gaming-hud-footer">
@@ -694,15 +748,22 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
           ) : currentGameId === 'invaders' ? (
             <span>Керування: <kbd>←</kbd> <kbd>→</kbd> / <kbd>Миша</kbd> — рух | <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — лазери</span>
+          ) : currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
+            <span>Керування: <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — постріл імпульсу | Клавіатура — шифр терміналу</span>
           ) : (
-            <span>Керування: <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — дія</span>
+            <span>Керування: <kbd>Клік</kbd> по качці — збір кряків | Покращення — картки праворуч</span>
           )}
           <span className="text-slate-700">|</span>
-          <span><kbd>R</kbd> — заново</span>
+          {isCanvasGame && (
+            <>
+              <span><kbd>R</kbd> — заново</span>
+              <span className="text-slate-700">|</span>
+            </>
+          )}
           {currentGameId === 'geometry_dash' && (
             <>
-              <span className="text-slate-700">|</span>
               <span><kbd>S</kbd> — швидкість</span>
+              <span className="text-slate-700">|</span>
             </>
           )}
           <span className="text-slate-700">|</span>
