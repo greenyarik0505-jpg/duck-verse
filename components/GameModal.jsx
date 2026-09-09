@@ -269,7 +269,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     }
 
     const initGame = async () => {
-      if (currentGameId === 'neon_hacker') {
+      if (currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker') {
         setLoading(false);
         return;
       }
@@ -664,7 +664,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
           </div>
         )}
 
-        {currentGameId === 'neon_hacker' ? (
+        {currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
           <div className="w-full h-full flex items-center justify-center overflow-y-auto">
             <NeonHacker
               onAddCoins={(c) => {
