@@ -88,17 +88,19 @@ JIRA_API_TOKEN=<ATLASSIAN_API_TOKEN>
 ## 🏗️ 4. Структура файлів проекту
 
 ```
-d:\game_project\
+d:\duck-verse\
 ├── app/
 │   ├── api/scores/route.js     # Серверний API маршрут збереження очок
 │   ├── layout.js               # Головний HTML-шаблон, метатеги, Google Fonts
 │   └── page.js                 # Головна сторінка хабу (каталог, модалки)
 ├── components/
+│   ├── games/
+│   │   └── NeonHacker.jsx      # Компонент гри Неоновий Взломщик (SCRUM-19)
 │   ├── CategoryFilter.jsx      # Фільтрація карток ігор за жанрами
 │   ├── GameCard.jsx            # Картка гри (активна або кнопка "СКОРО")
 │   ├── GameModal.jsx           # Модальне вікно гри (Canvas, повний екран, рестарт)
 │   ├── HeroSpotlight.jsx       # Головний промо-банер флагмана Geometry Dash
-│   ├── Navbar.jsx              # Верхня навігація (баланс монет, скіни, аудіо)
+│   ├── Navbar.jsx              # Верхня навігація (баланс монет, скіни, аудіо, мобільне меню)
 │   └── SkinShopModal.jsx       # Модальне вікно магазину скінів куба
 ├── lib/
 │   ├── games/
