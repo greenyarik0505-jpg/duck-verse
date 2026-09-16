@@ -14,6 +14,7 @@ import {
   RBAC_PERMISSIONS,
   runPrivacySecurityAudit
 } from '../../lib/academy/privacy/audit';
+import GovernanceRoadmapView from '../../components/academy/GovernanceRoadmapView';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -1040,6 +1041,11 @@ export default function AcademyPage() {
               );
             })}
           </div>
+        </section>
+
+        {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
+        <section className="academy-section">
+          <GovernanceRoadmapView />
         </section>
       </main>
 
