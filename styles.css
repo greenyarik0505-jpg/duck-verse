@@ -2705,3 +2705,56 @@ canvas#game-canvas {
     background: rgba(168, 85, 247, 0.2);
     box-shadow: 0 0 16px rgba(168, 85, 247, 0.2);
 }
+
+/* Jira / GitHub Progress Integration (SCRUM-53) */
+.academy-integration-row {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.academy-integration-links {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.academy-integration-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: #cbd5e1;
+    transition: all 0.2s ease;
+}
+
+.academy-integration-badge:hover {
+    border-color: rgba(56, 189, 248, 0.4);
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    transform: translateY(-1px);
+}
+
+.academy-ci-pill {
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 800;
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #34d399;
+}

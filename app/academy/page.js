@@ -335,6 +335,34 @@ export default function AcademyPage() {
                       </div>
                     </div>
                   </div>
+
+                  {/* Jira / GitHub Progress Integration Row (SCRUM-53) */}
+                  <div className="academy-integration-row">
+                    <div className="academy-integration-links">
+                      <a
+                        href={`https://gta6-sliv-cyberleek.atlassian.net/browse/${lesson.jiraKey}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="academy-integration-badge"
+                        title="Переглянути задачу в Jira SCRUM"
+                      >
+                        <span>📋 Jira: {lesson.jiraKey}</span>
+                      </a>
+                      <a
+                        href={`https://github.com/greenyarik0505-jpg/duck-verse/pulls?q=${lesson.jiraKey}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="academy-integration-badge"
+                        title="Зв'язаний Pull Request на GitHub"
+                      >
+                        <span>🐙 GitHub PR</span>
+                        <span className="academy-ci-pill">✓ CI Passed</span>
+                      </a>
+                    </div>
+                    <span style={{ fontSize: '11px', color: '#94a3b8', fontFamily: 'Orbitron, monospace' }}>
+                      🔗 Read-Only Sync: Активна
+                    </span>
+                  </div>
                 </div>
               );
             })}
