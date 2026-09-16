@@ -1,5 +1,8 @@
 'use client';
 
+import Link from 'next/link';
+import { isAcademyEnabled } from '../lib/academy/config';
+
 export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   return (
     <header className="hub-header">
@@ -59,6 +62,23 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
           >
             <span>🎨 Магазин скінів</span>
           </button>
+
+          {/* Duck Academy Link (SCRUM-56) */}
+          {isAcademyEnabled() && (
+            <Link
+              href="/academy"
+              className="header-btn"
+              style={{
+                background: 'rgba(168, 85, 247, 0.14)',
+                borderColor: 'rgba(168, 85, 247, 0.4)',
+                color: '#d8b4fe'
+              }}
+              title="Перейти до навчального треку Duck Academy"
+              aria-label="Duck Academy"
+            >
+              <span>🎓 Академія</span>
+            </Link>
+          )}
 
           {/* Sound Mute */}
           <button
