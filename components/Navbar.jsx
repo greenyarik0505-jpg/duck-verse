@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { isAcademyEnabled } from '../lib/academy/config';
 
-export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
+export default function Navbar({ coins, onOpenShop, onOpenProfile, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   return (
     <header className="hub-header">
       <div className="header-container">
@@ -61,6 +61,16 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
             aria-label="Відкрити магазин скінів"
           >
             <span>🎨 Магазин скінів</span>
+          </button>
+
+          {/* Player Profile (SCRUM-29) */}
+          <button
+            className="header-btn"
+            onClick={onOpenProfile}
+            title="Профіль гравця та прогрес"
+            aria-label="Відкрити профіль гравця"
+          >
+            <span>👤 Профіль</span>
           </button>
 
           {/* Duck Academy Link (SCRUM-56) */}

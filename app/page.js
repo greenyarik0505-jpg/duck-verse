@@ -7,6 +7,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import GameCard from '../components/GameCard';
 import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
+import PlayerProfileModal from '../components/PlayerProfileModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 
 export default function GameHubPage() {
@@ -15,6 +16,7 @@ export default function GameHubPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -59,6 +61,7 @@ export default function GameHubPage() {
       <Navbar
         coins={coins}
         onOpenShop={() => setIsShopOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         searchQuery={searchQuery}
@@ -176,6 +179,13 @@ export default function GameHubPage() {
         onClose={() => setIsShopOpen(false)}
         coins={coins}
         onUpdateCoins={handleUpdateCoins}
+      />
+
+      {/* Player Profile Modal (SCRUM-29) */}
+      <PlayerProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        coins={coins}
       />
 
       {/* Game Playing Modal (SCRUM-13 Benchmark & Launcher) */}
