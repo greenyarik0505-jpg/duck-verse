@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { isAcademyEnabled } from '../lib/academy/config';
 
-export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
+export default function Navbar({ coins, onOpenShop, onOpenTheme, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   return (
     <header className="hub-header">
       <div className="header-container">
@@ -53,6 +53,16 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
             <span className="user-coins-val" suppressHydrationWarning>{coins}</span>
           </div>
 
+          {/* Theme Selector Trigger (SCRUM-33) */}
+          <button
+            className="header-btn theme-trigger-btn"
+            onClick={onOpenTheme}
+            title="Змінити тему оформлення хабу"
+            aria-label="Змінити тему"
+          >
+            <span>🎨 Тема</span>
+          </button>
+
           {/* Skin Shop Trigger (SCRUM-12) */}
           <button
             className="header-btn shop-trigger-btn"
@@ -60,7 +70,7 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
             title="Магазин скінів Geometry Dash"
             aria-label="Відкрити магазин скінів"
           >
-            <span>🎨 Магазин скінів</span>
+            <span>✨ Магазин скінів</span>
           </button>
 
           {/* Duck Academy Link (SCRUM-56) */}

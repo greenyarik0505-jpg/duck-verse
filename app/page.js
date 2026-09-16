@@ -7,7 +7,9 @@ import CategoryFilter from '../components/CategoryFilter';
 import GameCard from '../components/GameCard';
 import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
+import ThemeSelectorModal from '../components/ThemeSelectorModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
+import { loadTheme, applyTheme } from '../lib/themes';
 
 export default function GameHubPage() {
   const [coins, setCoins] = useState(50);
@@ -15,6 +17,8 @@ export default function GameHubPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isThemeOpen, setIsThemeOpen] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('cyberpunk');
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -24,6 +28,10 @@ export default function GameHubPage() {
 
     const savedMuted = localStorage.getItem('duckverse_muted') === 'true';
     setSoundEnabled(!savedMuted);
+
+    const theme = loadTheme();
+    setCurrentTheme(theme);
+    applyTheme(theme);
   }, []);
 
   const handleUpdateCoins = useCallback((delta) => {
@@ -59,6 +67,7 @@ export default function GameHubPage() {
       <Navbar
         coins={coins}
         onOpenShop={() => setIsShopOpen(true)}
+        onOpenTheme={() => setIsThemeOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         searchQuery={searchQuery}
@@ -176,6 +185,14 @@ export default function GameHubPage() {
         onClose={() => setIsShopOpen(false)}
         coins={coins}
         onUpdateCoins={handleUpdateCoins}
+      />
+
+      {/* Theme Selector Modal (SCRUM-33) */}
+      <ThemeSelectorModal
+        isOpen={isThemeOpen}
+        onClose={() => setIsThemeOpen(false)}
+        currentTheme={currentTheme}
+        onSelectTheme={(t) => setCurrentTheme(t)}
       />
 
       {/* Game Playing Modal (SCRUM-13 Benchmark & Launcher) */}
