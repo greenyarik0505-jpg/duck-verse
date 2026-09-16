@@ -21,6 +21,7 @@ yarn-debug.log*
 yarn-error.log*
 __pycache__/
 .cache/
+.data/
 
 # OS and Editor files
 .DS_Store

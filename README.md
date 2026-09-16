@@ -254,9 +254,12 @@ duck-verse/
 │   └── page.js                       # Інтерактивна вітрина Game Hub (Next.js клієнт)
 ├── components/                       # Реюзабельні компоненти інтерфейсу
 ├── lib/
-│   └── games/
-│       ├── geometry_dash.js          # Ядро рушія Geometry Dash Neon
-│       └── registry.js               # Модульний реєстр ігор хабу
+│   ├── games/
+│   │   ├── contract.js               # Єдиний контракт ігор та валідація
+│   │   └── registry.js               # Модульний реєстр ігор хабу
+│   └── storage/
+│       ├── schema.js                 # Схема даних рекордів, міграції та індекси
+│       └── scoresRepository.js       # Багаторівневий репозиторій (Vercel KV / File / Memory)
 ├── src/
 │   ├── audio.js                      # Процедурний Web Audio синтезатор (130 BPM)
 │   ├── hub.js                        # Клієнтська логіка хабу для standalone режиму
@@ -316,6 +319,17 @@ npm install -g vercel
 # Запустити деплой
 vercel
 ```
+
+### 💾 Надійне сховище рекордів (Persistent Scores Storage)
+API рекордів (`/api/scores`) реалізовано за допомогою багаторівневого патерну **Repository** (`lib/storage/scoresRepository.js`):
+1. **Production (Vercel KV / Upstash Redis)**:
+   При встановленні змінних середовища `KV_REST_API_URL` та `KV_REST_API_TOKEN` (або `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN`) рекорди зберігаються у хмарному сховищі з низькою затримкою та переживають холодні старти серверлес-функцій.
+2. **Локальний запуск (Filesystem Cache)**:
+   Без зовнішніх ключів репозиторій автоматично зберігає рекорди у `.data/scores.json` (або в тимчасовій директорії ОС). Дані зберігаються між перезапусками дев-сервера.
+3. **Graceful In-Memory Fallback**:
+   У разі недоступності файлової системи або таймауту мережі сховище повертає початкові рекорди без аварійного збою додатка.
+4. **Ідемпотентність та пагінація**:
+   Метод `POST /api/scores` підтримує `idempotencyKey` та запобігає дублюванню однакових результатів. `GET /api/scores` підтримує `limit`, `offset`, `sortBy` та стабільне сортування.
 
 ---
 
