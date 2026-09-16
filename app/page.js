@@ -7,6 +7,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import GameCard from '../components/GameCard';
 import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
+import EmptyState from '../components/EmptyState';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 
 export default function GameHubPage() {
@@ -85,22 +86,16 @@ export default function GameHubPage() {
               ))}
             </div>
           ) : (
-            <div className="empty-search-state">
-              <span className="empty-search-icon" aria-hidden="true">🔍</span>
-              <h3 className="empty-search-title">Ігор не знайдено</h3>
-              <p className="empty-search-desc">
-                За запитом {searchQuery ? `«${searchQuery}»` : ''} у цій категорії немає ігор. Спробуйте інший запит або скиньте фільтри.
-              </p>
-              <button
-                className="btn-reset-search"
-                onClick={() => {
-                  setSearchQuery('');
-                  setActiveCategory('all');
-                }}
-              >
-                Скинути фільтри
-              </button>
-            </div>
+            <EmptyState
+              icon="🔍"
+              title="Ігор не знайдено"
+              description={`За запитом ${searchQuery ? `«${searchQuery}»` : ''} у цій категорії немає ігор. Спробуйте інший запит або скиньте фільтри.`}
+              actionLabel="Скинути фільтри"
+              onAction={() => {
+                setSearchQuery('');
+                setActiveCategory('all');
+              }}
+            />
           )}
         </section>
 
