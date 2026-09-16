@@ -4,6 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
+import {
+  DOMAIN_BOUNDARIES,
+  ADR_REGISTRY,
+  runArchitectureReviewCheckpoint
+} from '../../lib/academy/sysdesign/adr';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -28,6 +33,25 @@ export default function AcademyPage() {
   });
   const [reviewFeedback, setReviewFeedback] = useState('Чудова архітектурна структура та повне проходження тестів безпеки.');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  // System Design & ADR state (SCRUM-66: L5)
+  const [sysDesignTab, setSysDesignTab] = useState('boundaries'); // 'boundaries' | 'adrs' | 'checkpoint'
+  const [checkpointForm, setCheckpointForm] = useState({
+    jiraKey: 'SCRUM-66',
+    domains: ['hub', 'games', 'academy', 'auth', 'data', 'integrations'],
+    securityImpact: 'Реалізовано RBAC перевірку сесії та валідацію вхідних даних без витоку ключів',
+    performanceImpact: 'Canvas 60 FPS ізольовано від React Virtual DOM, SLA API < 50ms',
+    rejectedAlternatives: 'Single-Bundle React SPA відхилено через просідання FPS; Docker-мікросервіси через надмірну вартість',
+    rollbackStrategy: 'Миттєвий Vercel rollback до попереднього деплою та вимкнення через Feature Flags'
+  });
+  const [checkpointResult, setCheckpointResult] = useState(() => runArchitectureReviewCheckpoint({
+    jiraKey: 'SCRUM-66',
+    domains: ['hub', 'games', 'academy', 'auth', 'data', 'integrations'],
+    securityImpact: 'Реалізовано RBAC перевірку сесії та валідацію вхідних даних без витоку ключів',
+    performanceImpact: 'Canvas 60 FPS ізольовано від React Virtual DOM, SLA API < 50ms',
+    rejectedAlternatives: 'Single-Bundle React SPA відхилено через просідання FPS; Docker-мікросервіси через надмірну вартість',
+    rollbackStrategy: 'Миттєвий Vercel rollback до попереднього деплою та вимкнення через Feature Flags'
+  }));
 
   const enabled = isAcademyEnabled();
   const selectedTrack = ACADEMY_TRACKS.find((t) => t.id === selectedTrackId) || ACADEMY_TRACKS[0];
@@ -397,6 +421,259 @@ export default function AcademyPage() {
               SHA-256 Hash Verification Ready
             </span>
           </div>
+        </section>
+
+        {/* System Design & ADR Review Section (SCRUM-66: L5) */}
+        <section className="academy-sysdesign-panel">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#38bdf8', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>📐</span>
+                <span>Системний Дизайн & Архітектурні Рішення (L5: SCRUM-66)</span>
+              </h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                6 доменних меж платформи Duck Verse, C4 Context & Container архітектура, ADR реєстр та Architecture Review Checkpoint
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontFamily: 'Orbitron, monospace',
+                fontSize: '11px',
+                fontWeight: 800,
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(56, 189, 248, 0.15)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                color: '#38bdf8'
+              }}>
+                LEVEL 5 CAPSTONE READY 🏛️
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="academy-sysdesign-tabs">
+            <button
+              className={`academy-sysdesign-tab-btn ${sysDesignTab === 'boundaries' ? 'is-active' : ''}`}
+              onClick={() => setSysDesignTab('boundaries')}
+            >
+              <span>🌐</span>
+              <span>Доменні межі (6 Domains)</span>
+            </button>
+            <button
+              className={`academy-sysdesign-tab-btn ${sysDesignTab === 'adrs' ? 'is-active' : ''}`}
+              onClick={() => setSysDesignTab('adrs')}
+            >
+              <span>📜</span>
+              <span>Реєстр ADR (Decisions)</span>
+            </button>
+            <button
+              className={`academy-sysdesign-tab-btn ${sysDesignTab === 'checkpoint' ? 'is-active' : ''}`}
+              onClick={() => setSysDesignTab('checkpoint')}
+            >
+              <span>🛡️</span>
+              <span>Architecture Review Checkpoint</span>
+            </button>
+          </div>
+
+          {/* Tab 1: Domain Boundaries */}
+          {sysDesignTab === 'boundaries' && (
+            <div className="academy-domain-grid">
+              {Object.values(DOMAIN_BOUNDARIES).map((domain) => (
+                <div key={domain.id} className="academy-domain-card">
+                  <div>
+                    <div className="academy-domain-header">
+                      <span className="academy-domain-name">{domain.name}</span>
+                      <span className="academy-domain-metric">
+                        {domain.fpsTarget ? `${domain.fpsTarget} FPS` : domain.latencySlaMs ? `< ${domain.latencySlaMs}ms` : domain.securityLevel || 'Active'}
+                      </span>
+                    </div>
+                    <div className="academy-domain-path">{domain.path}</div>
+                    <p className="academy-domain-desc">{domain.description}</p>
+                    <ul className="academy-domain-responsibilities">
+                      {domain.responsibilities.map((resp, idx) => (
+                        <li key={idx}>
+                          <span style={{ color: '#38bdf8' }}>▹</span>
+                          <span>{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="academy-domain-flows">
+                    <span>⬅️ Вхід: {domain.allowedIncoming.length > 0 ? domain.allowedIncoming.join(', ') : 'none'}</span>
+                    <span>Вихід ➡️: {domain.allowedOutgoing.length > 0 ? domain.allowedOutgoing.join(', ') : 'none'}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab 2: ADR Registry */}
+          {sysDesignTab === 'adrs' && (
+            <div>
+              {ADR_REGISTRY.map((adr) => (
+                <div key={adr.id} className="academy-adr-card">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{
+                        fontFamily: 'Orbitron, monospace',
+                        fontWeight: 800,
+                        fontSize: '13px',
+                        color: '#38bdf8',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        padding: '3px 8px',
+                        borderRadius: '6px'
+                      }}>
+                        {adr.id}
+                      </span>
+                      <strong style={{ fontSize: '15px', color: '#ffffff' }}>{adr.title}</strong>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        fontSize: '11px',
+                        fontFamily: 'Orbitron, monospace',
+                        padding: '2px 8px',
+                        borderRadius: '4px',
+                        background: 'rgba(16, 185, 129, 0.2)',
+                        color: '#34d399',
+                        border: '1px solid rgba(16, 185, 129, 0.4)'
+                      }}>
+                        {adr.status}
+                      </span>
+                      <span style={{ fontSize: '11px', color: '#94a3b8' }}>{adr.jiraKey}</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '13px', color: '#cbd5e1', marginBottom: '10px', lineHeight: 1.5 }}>
+                    {adr.summary}
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '10px', fontSize: '12px', background: 'rgba(0,0,0,0.3)', padding: '10px 14px', borderRadius: '8px' }}>
+                    <div>
+                      <span style={{ color: '#f87171', fontWeight: 700 }}>❌ Відхилені варіанти:</span>
+                      <ul style={{ margin: '4px 0 0 14px', padding: 0, color: '#94a3b8' }}>
+                        {adr.rejectedOptions.map((opt, idx) => (
+                          <li key={idx}>{opt}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <span style={{ color: '#fbbf24', fontWeight: 700 }}>🔄 План відкату (Rollback):</span>
+                      <p style={{ margin: '4px 0 0 0', color: '#94a3b8' }}>{adr.rollbackPlan}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab 3: Architecture Review Checkpoint */}
+          {sysDesignTab === 'checkpoint' && (
+            <div className="academy-checkpoint-box">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+                <div className="academy-checkpoint-field">
+                  <label className="academy-checkpoint-label">1. Задача Jira (SCRUM-XX):</label>
+                  <input
+                    type="text"
+                    className="academy-checkpoint-input"
+                    value={checkpointForm.jiraKey}
+                    onChange={(e) => setCheckpointForm({ ...checkpointForm, jiraKey: e.target.value })}
+                  />
+                </div>
+                <div className="academy-checkpoint-field">
+                  <label className="academy-checkpoint-label">2. Оцінка безпеки (Security / RBAC):</label>
+                  <input
+                    type="text"
+                    className="academy-checkpoint-input"
+                    value={checkpointForm.securityImpact}
+                    onChange={(e) => setCheckpointForm({ ...checkpointForm, securityImpact: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+                <div className="academy-checkpoint-field">
+                  <label className="academy-checkpoint-label">3. Продуктивність та SLA:</label>
+                  <input
+                    type="text"
+                    className="academy-checkpoint-input"
+                    value={checkpointForm.performanceImpact}
+                    onChange={(e) => setCheckpointForm({ ...checkpointForm, performanceImpact: e.target.value })}
+                  />
+                </div>
+                <div className="academy-checkpoint-field">
+                  <label className="academy-checkpoint-label">4. Відхилені альтернативи:</label>
+                  <input
+                    type="text"
+                    className="academy-checkpoint-input"
+                    value={checkpointForm.rejectedAlternatives}
+                    onChange={(e) => setCheckpointForm({ ...checkpointForm, rejectedAlternatives: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="academy-checkpoint-field">
+                <label className="academy-checkpoint-label">5. Стратегія відкату (Rollback Strategy):</label>
+                <input
+                  type="text"
+                  className="academy-checkpoint-input"
+                  value={checkpointForm.rollbackStrategy}
+                  onChange={(e) => setCheckpointForm({ ...checkpointForm, rollbackStrategy: e.target.value })}
+                />
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                <button
+                  className="academy-auth-btn"
+                  style={{ background: 'rgba(56, 189, 248, 0.2)', borderColor: '#38bdf8', color: '#38bdf8' }}
+                  onClick={() => {
+                    const res = runArchitectureReviewCheckpoint(checkpointForm);
+                    setCheckpointResult(res);
+                  }}
+                >
+                  ⚡ Провести Architecture Checkpoint
+                </button>
+
+                {checkpointResult && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{
+                      fontFamily: 'Orbitron, monospace',
+                      fontSize: '13px',
+                      fontWeight: 800,
+                      color: checkpointResult.approved ? '#34d399' : '#f87171'
+                    }}>
+                      Бал: {checkpointResult.score} / {checkpointResult.maxScore}
+                    </span>
+                    <span style={{
+                      fontFamily: 'Orbitron, monospace',
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      background: checkpointResult.approved ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                      border: `1px solid ${checkpointResult.approved ? '#34d399' : '#f87171'}`,
+                      color: checkpointResult.approved ? '#34d399' : '#f87171'
+                    }}>
+                      {checkpointResult.verdict}
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Checkpoint Details */}
+              {checkpointResult && (
+                <div style={{ marginTop: '18px' }}>
+                  {checkpointResult.checks.map((c) => (
+                    <div
+                      key={c.id}
+                      className={`academy-checkpoint-check-item ${c.passed ? 'is-pass' : 'is-fail'}`}
+                    >
+                      <span>{c.passed ? '✓' : '✗'} {c.label}</span>
+                      <span style={{ fontSize: '11px' }}>{c.message}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Track Selector Cards */}

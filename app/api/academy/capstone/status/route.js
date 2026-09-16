@@ -12,6 +12,7 @@ export async function GET(request) {
 
   const progress = getOrCreateCapstoneProgress(studentId);
   return NextResponse.json({
+    success: true,
     gates: CAPSTONE_GATES,
     progress,
   });
