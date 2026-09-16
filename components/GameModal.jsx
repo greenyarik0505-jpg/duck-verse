@@ -494,7 +494,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
     }
   };
 
-  const isCanvasGame = currentGameId !== 'neon-hacker' && currentGameId !== 'neon_hacker' && currentGameId !== 'clicker';
+  const isCanvasGame = gameMeta.engineType === 'canvas' || (!['react', 'dom'].includes(gameMeta.engineType));
 
   return (
     <div className="fixed inset-0 z-50 bg-[#030713] flex flex-col w-screen h-screen overflow-hidden select-none gaming-view-fullscreen">
@@ -740,15 +740,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
       <footer className="gaming-hud-footer">
         <div className="flex items-center gap-3">
-          {currentGameId === 'geometry_dash' ? (
-            <span>Керування: <kbd>Пробіл</kbd> / <kbd>↑</kbd> / <kbd>Клік</kbd> — стрибок</span>
-          ) : currentGameId === 'invaders' ? (
-            <span>Керування: <kbd>←</kbd> <kbd>→</kbd> / <kbd>Миша</kbd> — рух | <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — лазери</span>
-          ) : currentGameId === 'neon-hacker' || currentGameId === 'neon_hacker' ? (
-            <span>Керування: <kbd>Пробіл</kbd> / <kbd>Клік</kbd> — постріл імпульсу | Клавіатура — шифр терміналу</span>
-          ) : (
-            <span>Керування: <kbd>Клік</kbd> по качці — збір кряків | Покращення — картки праворуч</span>
-          )}
+          <span>Керування: {gameMeta.controls?.summary || 'Пробіл / Клік — дія'}</span>
           <span className="text-slate-700">|</span>
           {isCanvasGame && (
             <>
