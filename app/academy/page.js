@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
+import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
   ADR_REGISTRY,
@@ -851,6 +852,11 @@ export default function AcademyPage() {
             })}
           </div>
         </section>
+
+        {/* Vibe-Coding Prompt Lab (SCRUM-45: Level 3) */}
+        <div style={{ marginTop: '48px' }}>
+          <VibePromptLab />
+        </div>
       </main>
 
       {/* Footer */}
