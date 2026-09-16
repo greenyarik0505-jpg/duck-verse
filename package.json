@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node tests/academy_registry.test.mjs && node tests/scores_storage.test.mjs"
+    "test": "node tests/academy_registry.test.mjs && node tests/academy_lesson_model.test.mjs && node tests/scores_storage.test.mjs"
   },
   "dependencies": {
     "next": "^15.1.0",
