@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
+import AuthModal from '../../components/academy/AuthModal';
 import {
   DOMAIN_BOUNDARIES,
   ADR_REGISTRY,
@@ -88,6 +89,18 @@ export default function AcademyPage() {
     } catch {}
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/academy/auth/logout', { method: 'POST' });
+    } catch {}
+    setCurrentUser({
+      id: 'user_guest',
+      username: 'Гість',
+      role: 'guest',
+      parentConsent: null
+    });
+  };
+
   const handleSaveReview = async () => {
     try {
       await fetch('/api/academy/mentor/review', {
@@ -154,22 +167,32 @@ export default function AcademyPage() {
           </div>
 
           <div className="academy-header-actions">
-            {/* User Auth Session Chip (SCRUM-54) */}
+            {/* User Auth Session Chip (SCRUM-54 & SCRUM-50) */}
             <div className="academy-auth-box">
               <div className="academy-user-chip">
-                <span>{currentUser.role === 'child' ? '🐥' : currentUser.role === 'mentor' ? '🦉' : '👑'}</span>
+                <span>{currentUser.role === 'child' ? '🐥' : currentUser.role === 'mentor' ? '🦉' : currentUser.role === 'admin' ? '👑' : '👤'}</span>
                 <span>{currentUser.username}</span>
                 <span className={`academy-role-badge role-${currentUser.role}`}>
-                  {currentUser.role === 'child' ? 'Учень' : currentUser.role === 'mentor' ? 'Ментор' : 'Адмін'}
+                  {currentUser.role === 'child' ? 'Учень' : currentUser.role === 'mentor' ? 'Ментор' : currentUser.role === 'admin' ? 'Адмін' : 'Гість'}
                 </span>
               </div>
               <button
                 className="academy-auth-btn"
                 onClick={() => setIsAuthModalOpen(true)}
-                title="Перемкнути роль / перевірити сесію (SCRUM-54)"
+                title="Авторизація або вибір ролі (SCRUM-50)"
               >
-                ⚙️ Ролі & Сесія
+                {currentUser.role === 'guest' ? '🔑 Увійти' : '⚙️ Акаунт'}
               </button>
+              {currentUser.role !== 'guest' && (
+                <button
+                  className="academy-auth-btn"
+                  style={{ borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5' }}
+                  onClick={handleLogout}
+                  title="Вийти з акаунта"
+                >
+                  Вийти
+                </button>
+              )}
             </div>
 
             <a
@@ -187,79 +210,30 @@ export default function AcademyPage() {
         </div>
       </header>
 
-      {/* Role Switcher Modal (SCRUM-54) */}
-      {isAuthModalOpen && (
-        <div className="academy-auth-modal-overlay" onClick={() => setIsAuthModalOpen(false)}>
-          <div className="academy-auth-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div className="academy-auth-modal-header">
-              <h3 className="academy-auth-modal-title">🔐 Керування ролями & Сесіями</h3>
-              <button
-                className="academy-auth-btn"
-                onClick={() => setIsAuthModalOpen(false)}
-              >
-                ✕
-              </button>
-            </div>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '16px' }}>
-              Оберіть профіль для перевірки серверного захисту RBAC та відсутності ескалації привілеїв:
-            </p>
-
-            <button
-              className={`academy-auth-role-item ${currentUser.role === 'child' ? 'is-selected' : ''}`}
-              onClick={() => handleSwitchUser({
-                id: 'user_student_yarik',
-                username: 'student_yarik',
-                role: 'child',
-                parentConsent: true
-              })}
-            >
-              <div>
-                <strong style={{ color: '#38bdf8' }}>🐥 student_yarik (Учень / Child)</strong>
-                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                  Права: читання та запис власного прогресу. Згода батьків підтверджена. Доступ до чужих даних суворо заблокований (403).
-                </p>
-              </div>
-              {currentUser.role === 'child' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
-            </button>
-
-            <button
-              className={`academy-auth-role-item ${currentUser.role === 'mentor' ? 'is-selected' : ''}`}
-              onClick={() => handleSwitchUser({
-                id: 'user_mentor_alex',
-                username: 'mentor_alex',
-                role: 'mentor',
-                parentConsent: null
-              })}
-            >
-              <div>
-                <strong style={{ color: '#34d399' }}>🦉 mentor_alex (Ментор / Mentor)</strong>
-                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                  Права: перевірка робіт учнів, code-review рубрики, затвердження уроків та оцінювання.
-                </p>
-              </div>
-              {currentUser.role === 'mentor' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
-            </button>
-
-            <button
-              className={`academy-auth-role-item ${currentUser.role === 'admin' ? 'is-selected' : ''}`}
-              onClick={() => handleSwitchUser({
-                id: 'user_admin_root',
-                username: 'admin_root',
-                role: 'admin',
-                parentConsent: null
-              })}
-            >
-              <div>
-                <strong style={{ color: '#fbbf24' }}>👑 admin_root (Адміністратор)</strong>
-                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                  Права: повний контроль над навчальним реєстром, аудит логів та керування ролями платформи.
-                </p>
-              </div>
-              {currentUser.role === 'admin' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
-            </button>
+      {/* Guest Mode Notice Banner (SCRUM-50) */}
+      {currentUser.role === 'guest' && (
+        <div className="p-3 bg-amber-500/10 border-b border-amber-500/30 text-amber-300 text-xs flex flex-wrap items-center justify-between gap-2 px-6">
+          <div className="flex items-center gap-2">
+            <span>👤</span>
+            <span><strong>Гостьовий режим</strong>: Створіть обліковий запис, щоб синхронізувати свій прогрес між пристроями та отримати офіційний сертифікат навичок!</span>
           </div>
+          <button
+            type="button"
+            className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 rounded-lg text-xs font-bold transition"
+            onClick={() => setIsAuthModalOpen(true)}
+          >
+            Увійти / Зареєструватися
+          </button>
         </div>
       )}
+
+      {/* Auth Modal (SCRUM-50) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        currentUser={currentUser}
+        onUserChange={setCurrentUser}
+      />
 
       {/* Main Content */}
       <main className="academy-main">
