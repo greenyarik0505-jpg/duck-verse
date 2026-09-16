@@ -732,6 +732,95 @@ body {
     gap: 8px;
 }
 
+.gaming-hud-footer kbd {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'Rajdhani', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Responsive HUD for Mobile Viewports (SCRUM-25) */
+@media (max-width: 768px) {
+    .gaming-hud-header {
+        padding: 8px 12px;
+        gap: 10px;
+    }
+    .gaming-hud-center {
+        gap: 10px;
+    }
+    .gaming-progress-box {
+        width: 140px;
+    }
+    .gaming-hud-footer {
+        padding: 6px 12px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 640px) {
+    .gaming-hud-header {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    .gaming-brand-sep,
+    .gaming-brand-title,
+    .gaming-btn-label {
+        display: none !important;
+    }
+    .gaming-btn {
+        padding: 6px 8px;
+        font-size: 12px;
+        gap: 0;
+    }
+    .gaming-fps-tag {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+    .gaming-progress-box {
+        width: 100px;
+    }
+    .gaming-stat-badge {
+        padding: 3px 8px;
+        font-size: 12px;
+    }
+    .gaming-hud-footer {
+        display: none;
+    }
+}
+
+@media (max-width: 420px) {
+    .gaming-hud-header {
+        padding: 4px 6px;
+        gap: 4px;
+        flex-wrap: wrap;
+    }
+    .gaming-hud-brand .gaming-brand-text {
+        font-size: 11px;
+    }
+    .gaming-hud-center {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 6px;
+        padding-top: 4px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .gaming-hud-right {
+        gap: 4px;
+    }
+    .gaming-btn {
+        padding: 4px 6px;
+        font-size: 11px;
+    }
+    .gaming-fps-tag {
+        display: none;
+    }
+}
+
 .modal-btn {
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.12);
