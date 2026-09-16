@@ -997,7 +997,7 @@ export default function AcademyPage() {
 
                     <div className="academy-evidence-col">
                       <span className="academy-evidence-title">
-                        Обов'язкові свідоцтва (Evidence):
+                        {"Обов'язкові свідоцтва (Evidence):"}
                       </span>
                       <div className="academy-evidence-pills">
                         {lesson.requiredEvidence.map((ev) => (
