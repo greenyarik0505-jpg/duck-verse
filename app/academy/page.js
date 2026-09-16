@@ -10,9 +10,32 @@ export default function AcademyPage() {
   // Initial completed/in-progress simulated state for student
   const [completedLessons, setCompletedLessons] = useState(['lesson-fe-l0-arch']);
 
+  const [currentUser, setCurrentUser] = useState({
+    id: 'user_student_yarik',
+    username: 'student_yarik',
+    role: 'child',
+    parentConsent: true,
+  });
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
   const enabled = isAcademyEnabled();
   const selectedTrack = ACADEMY_TRACKS.find((t) => t.id === selectedTrackId) || ACADEMY_TRACKS[0];
   const trackLessons = getLessonsByTrack(selectedTrackId);
+
+  const handleSwitchUser = async (userProfile) => {
+    setCurrentUser(userProfile);
+    setIsAuthModalOpen(false);
+    try {
+      await fetch('/api/academy/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: userProfile.username,
+          password: userProfile.role === 'child' ? 'DuckPass123!' : userProfile.role === 'mentor' ? 'MentorPass123!' : 'AdminRootPass123!'
+        })
+      });
+    } catch {}
+  };
 
   if (!enabled) {
     return (
@@ -61,6 +84,24 @@ export default function AcademyPage() {
           </div>
 
           <div className="academy-header-actions">
+            {/* User Auth Session Chip (SCRUM-54) */}
+            <div className="academy-auth-box">
+              <div className="academy-user-chip">
+                <span>{currentUser.role === 'child' ? '🐥' : currentUser.role === 'mentor' ? '🦉' : '👑'}</span>
+                <span>{currentUser.username}</span>
+                <span className={`academy-role-badge role-${currentUser.role}`}>
+                  {currentUser.role === 'child' ? 'Учень' : currentUser.role === 'mentor' ? 'Ментор' : 'Адмін'}
+                </span>
+              </div>
+              <button
+                className="academy-auth-btn"
+                onClick={() => setIsAuthModalOpen(true)}
+                title="Перемкнути роль / перевірити сесію (SCRUM-54)"
+              >
+                ⚙️ Ролі & Сесія
+              </button>
+            </div>
+
             <a
               href="https://gta6-sliv-cyberleek.atlassian.net/jira/software/projects/SCRUM/boards/1"
               target="_blank"
@@ -75,6 +116,80 @@ export default function AcademyPage() {
           </div>
         </div>
       </header>
+
+      {/* Role Switcher Modal (SCRUM-54) */}
+      {isAuthModalOpen && (
+        <div className="academy-auth-modal-overlay" onClick={() => setIsAuthModalOpen(false)}>
+          <div className="academy-auth-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="academy-auth-modal-header">
+              <h3 className="academy-auth-modal-title">🔐 Керування ролями & Сесіями</h3>
+              <button
+                className="academy-auth-btn"
+                onClick={() => setIsAuthModalOpen(false)}
+              >
+                ✕
+              </button>
+            </div>
+            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '16px' }}>
+              Оберіть профіль для перевірки серверного захисту RBAC та відсутності ескалації привілеїв:
+            </p>
+
+            <button
+              className={`academy-auth-role-item ${currentUser.role === 'child' ? 'is-selected' : ''}`}
+              onClick={() => handleSwitchUser({
+                id: 'user_student_yarik',
+                username: 'student_yarik',
+                role: 'child',
+                parentConsent: true
+              })}
+            >
+              <div>
+                <strong style={{ color: '#38bdf8' }}>🐥 student_yarik (Учень / Child)</strong>
+                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                  Права: читання та запис власного прогресу. Згода батьків підтверджена. Доступ до чужих даних суворо заблокований (403).
+                </p>
+              </div>
+              {currentUser.role === 'child' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
+            </button>
+
+            <button
+              className={`academy-auth-role-item ${currentUser.role === 'mentor' ? 'is-selected' : ''}`}
+              onClick={() => handleSwitchUser({
+                id: 'user_mentor_alex',
+                username: 'mentor_alex',
+                role: 'mentor',
+                parentConsent: null
+              })}
+            >
+              <div>
+                <strong style={{ color: '#34d399' }}>🦉 mentor_alex (Ментор / Mentor)</strong>
+                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                  Права: перевірка робіт учнів, code-review рубрики, затвердження уроків та оцінювання.
+                </p>
+              </div>
+              {currentUser.role === 'mentor' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
+            </button>
+
+            <button
+              className={`academy-auth-role-item ${currentUser.role === 'admin' ? 'is-selected' : ''}`}
+              onClick={() => handleSwitchUser({
+                id: 'user_admin_root',
+                username: 'admin_root',
+                role: 'admin',
+                parentConsent: null
+              })}
+            >
+              <div>
+                <strong style={{ color: '#fbbf24' }}>👑 admin_root (Адміністратор)</strong>
+                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                  Права: повний контроль над навчальним реєстром, аудит логів та керування ролями платформи.
+                </p>
+              </div>
+              {currentUser.role === 'admin' && <span style={{ color: '#a855f7' }}>✓ Активно</span>}
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="academy-main">
