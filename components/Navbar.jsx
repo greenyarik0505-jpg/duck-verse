@@ -67,7 +67,7 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
           {isAcademyEnabled() && (
             <Link
               href="/academy"
-              className="header-btn"
+              className="header-btn academy-nav-btn"
               style={{
                 background: 'rgba(168, 85, 247, 0.14)',
                 borderColor: 'rgba(168, 85, 247, 0.4)',
