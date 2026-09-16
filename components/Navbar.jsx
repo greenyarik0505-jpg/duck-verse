@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { isAcademyEnabled } from '../lib/academy/config';
 
-export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
+export default function Navbar({ coins, onOpenShop, onOpenProfile, onOpenAchievements, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   return (
     <header className="hub-header">
       <div className="header-container">
@@ -79,6 +79,16 @@ export default function Navbar({ coins, onOpenShop, soundEnabled, onToggleSound,
               <span>🎓 Академія</span>
             </Link>
           )}
+
+          {/* Achievements (SCRUM-32) */}
+          <button
+            className="header-btn"
+            onClick={onOpenAchievements}
+            title="Досягнення та щоденні квести"
+            aria-label="Відкрити досягнення та квести"
+          >
+            <span>🏅 Досягнення</span>
+          </button>
 
           {/* Sound Mute */}
           <button

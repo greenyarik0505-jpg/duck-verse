@@ -7,6 +7,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import GameCard from '../components/GameCard';
 import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
+import AchievementsModal, { AchievementToast, useAchievements } from '../components/AchievementsModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 
 export default function GameHubPage() {
@@ -15,6 +16,7 @@ export default function GameHubPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -36,6 +38,8 @@ export default function GameHubPage() {
     });
   }, []);
 
+  const { achState, updateStat, toast, dismissToast } = useAchievements(handleUpdateCoins);
+
   const handleToggleSound = () => {
     const next = !soundEnabled;
     setSoundEnabled(next);
@@ -44,8 +48,10 @@ export default function GameHubPage() {
   };
 
   const handleLaunchGame = (gameId) => {
-    setSelectedGameId(gameId || 'geometry_dash');
+    const id = gameId || 'geometry_dash';
+    setSelectedGameId(id);
     setIsGameOpen(true);
+    updateStat({ gamesLaunched: (achState?.stats?.gamesLaunched || 0) + 1, addUniqueGame: id });
   };
 
   let filtered = getGamesByCategory(activeCategory);
@@ -59,6 +65,7 @@ export default function GameHubPage() {
       <Navbar
         coins={coins}
         onOpenShop={() => setIsShopOpen(true)}
+        onOpenAchievements={() => setIsAchievementsOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         searchQuery={searchQuery}
@@ -177,6 +184,18 @@ export default function GameHubPage() {
         coins={coins}
         onUpdateCoins={handleUpdateCoins}
       />
+
+      {/* Achievements Modal (SCRUM-32) */}
+      <AchievementsModal
+        isOpen={isAchievementsOpen}
+        onClose={() => setIsAchievementsOpen(false)}
+        achState={achState}
+      />
+
+      {/* Achievement Toast (SCRUM-32) */}
+      {toast && (
+        <AchievementToast achievement={toast} onDismiss={dismissToast} />
+      )}
 
       {/* Game Playing Modal (SCRUM-13 Benchmark & Launcher) */}
       <GameModal
