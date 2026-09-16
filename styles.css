@@ -3248,4 +3248,95 @@ canvas#game-canvas {
     color: #34d399;
 }
 
+/* --- Observability, SLO & Error Budgets (SCRUM-72: L7) --- */
+.academy-observability-panel {
+    background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0.7) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.12);
+}
+
+.academy-observability-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.academy-observability-tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.academy-observability-tab-btn:hover {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.academy-observability-tab-btn.is-active {
+    background: rgba(16, 185, 129, 0.25);
+    border-color: #34d399;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.academy-slo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.academy-slo-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    transition: all 0.2s ease;
+}
+
+.academy-slo-card:hover {
+    border-color: rgba(16, 185, 129, 0.5);
+    background: rgba(16, 185, 129, 0.04);
+}
+
+.academy-runbook-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+}
+
+.academy-alert-box {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
 
