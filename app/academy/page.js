@@ -18,9 +18,27 @@ export default function AcademyPage() {
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
+  const [rubricScores, setRubricScores] = useState({
+    correctness: 5,
+    readability: 4,
+    tests: 5,
+    security: 5,
+    performance: 4,
+    teamwork: 4,
+  });
+  const [reviewFeedback, setReviewFeedback] = useState('Чудова архітектурна структура та повне проходження тестів безпеки.');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
   const enabled = isAcademyEnabled();
   const selectedTrack = ACADEMY_TRACKS.find((t) => t.id === selectedTrackId) || ACADEMY_TRACKS[0];
   const trackLessons = getLessonsByTrack(selectedTrackId);
+
+  const totalRubricScore = Object.values(rubricScores).reduce((sum, val) => sum + Number(val), 0);
+  const isRubricPassed = totalRubricScore >= 24;
+
+  const handleScoreChange = (dimId, val) => {
+    setRubricScores((prev) => ({ ...prev, [dimId]: Number(val) }));
+  };
 
   const handleSwitchUser = async (userProfile) => {
     setCurrentUser(userProfile);
@@ -34,6 +52,25 @@ export default function AcademyPage() {
           password: userProfile.role === 'child' ? 'DuckPass123!' : userProfile.role === 'mentor' ? 'MentorPass123!' : 'AdminRootPass123!'
         })
       });
+    } catch {}
+  };
+
+  const handleSaveReview = async () => {
+    try {
+      await fetch('/api/academy/mentor/review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId: 'user_student_yarik',
+          lessonId: 'lesson-fe-l1-auth',
+          scores: rubricScores,
+          feedback: reviewFeedback,
+          severity: 'suggestion',
+          nextAction: isRubricPassed ? 'Затверджено: перехід до SCRUM-53' : 'Доопрацювати зауваження',
+        }),
+      });
+      setReviewSubmitted(true);
+      setTimeout(() => setReviewSubmitted(false), 3000);
     } catch {}
   };
 
@@ -193,6 +230,94 @@ export default function AcademyPage() {
 
       {/* Main Content */}
       <main className="academy-main">
+        {/* Mentor Dashboard Panel (SCRUM-57: Visible for Mentor / Admin) */}
+        {(currentUser.role === 'mentor' || currentUser.role === 'admin') && (
+          <section className="academy-mentor-panel">
+            <div className="academy-mentor-header">
+              <div>
+                <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#34d399', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span>🦉</span>
+                  <span>Панель Ментора: Стандартизована Code-Review Рубрика (L3)</span>
+                </h2>
+                <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                  Призначений учень: <strong>student_yarik</strong> • Рівень: L1 • Блокери: 0 • Статус: Очікує перевірки
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{
+                  fontFamily: 'Orbitron, monospace',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  padding: '6px 14px',
+                  borderRadius: '8px',
+                  background: isRubricPassed ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
+                  border: `1px solid ${isRubricPassed ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                  color: isRubricPassed ? '#34d399' : '#f87171'
+                }}>
+                  {isRubricPassed ? '✓ ЗАРАХОВАНО' : '⚠ НА ДООПРАЦЮВАННЯ'} ({totalRubricScore} / 30)
+                </span>
+                <button
+                  className="academy-auth-btn"
+                  onClick={handleSaveReview}
+                  style={{ background: '#059669', borderColor: '#10b981', color: '#ffffff' }}
+                >
+                  {reviewSubmitted ? '✓ Збережено в Audit Trail' : '💾 Зберегти Review'}
+                </button>
+              </div>
+            </div>
+
+            {/* 6 Dimensions of the Rubric */}
+            <div className="academy-rubric-grid">
+              {[
+                { id: 'correctness', name: 'Правильність (Correctness)', desc: 'Відповідність Acceptance Criteria та білд без помилок' },
+                { id: 'readability', name: 'Чистота коду (Readability)', desc: 'Модульність, найменування та коментарі до коду' },
+                { id: 'tests', name: 'Тести (Tests & Contracts)', desc: 'Unit-тести та покриття крайових випадків' },
+                { id: 'security', name: 'Безпека (Security & RBAC)', desc: 'Захист від ескалації привілеїв та витоку токенів' },
+                { id: 'performance', name: 'Швидкодія (Performance)', desc: 'Час виконання, кешування та відсутність memory leaks' },
+                { id: 'teamwork', name: 'Команда (Teamwork & Git)', desc: 'Назви гілок, зв’язок із Jira SCRUM та PR опис' },
+              ].map((dim) => (
+                <div key={dim.id} className="academy-rubric-card">
+                  <div className="academy-rubric-name">{dim.name}</div>
+                  <div className="academy-rubric-desc">{dim.desc}</div>
+                  <div className="academy-rubric-slider-row">
+                    <input
+                      type="range"
+                      min="0"
+                      max="5"
+                      value={rubricScores[dim.id]}
+                      onChange={(e) => handleScoreChange(dim.id, e.target.value)}
+                      className="academy-rubric-slider"
+                    />
+                    <span className="academy-rubric-score-badge">{rubricScores[dim.id]} / 5</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div>
+              <label style={{ fontSize: '11px', fontFamily: 'Orbitron, monospace', color: '#94a3b8', textTransform: 'uppercase', display: 'block', marginBottom: '6px' }}>
+                Коментар та рекомендації ментора (Feedback with next steps):
+              </label>
+              <textarea
+                value={reviewFeedback}
+                onChange={(e) => setReviewFeedback(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: 'rgba(0, 0, 0, 0.4)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  color: '#f1f5f9',
+                  fontFamily: 'Rajdhani, sans-serif',
+                  fontSize: '14px',
+                  minHeight: '60px',
+                  resize: 'vertical'
+                }}
+              />
+            </div>
+          </section>
+        )}
+
         {/* Track Selector Cards */}
         <section style={{ marginBottom: '36px' }}>
           <h2 className="academy-section-title">

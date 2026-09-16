@@ -2758,3 +2758,80 @@ canvas#game-canvas {
     border: 1px solid rgba(16, 185, 129, 0.4);
     color: #34d399;
 }
+
+/* Mentor Dashboard & Rubric (SCRUM-57) */
+.academy-mentor-panel {
+    background: rgba(16, 20, 36, 0.85);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    border-radius: 16px;
+    padding: 26px;
+    margin-bottom: 36px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 0 20px rgba(52, 211, 153, 0.05);
+}
+
+.academy-mentor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.academy-rubric-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 960px) {
+    .academy-rubric-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.academy-rubric-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 14px;
+}
+
+.academy-rubric-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.academy-rubric-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.academy-rubric-slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.academy-rubric-slider {
+    flex: 1;
+    accent-color: #34d399;
+    cursor: pointer;
+}
+
+.academy-rubric-score-badge {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 800;
+    color: #34d399;
+    min-width: 30px;
+    text-align: right;
+}
