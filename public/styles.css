@@ -1973,3 +1973,133 @@ canvas#game-canvas {
 }
 
 
+
+
+/* ========== Onboarding Modal (SCRUM-31) ========== */
+.onboarding-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    backdrop-filter: blur(8px);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.onboarding-panel {
+    background: linear-gradient(160deg, #131826 0%, #0e121d 100%);
+    border: 1px solid rgba(56,189,248,0.2);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 520px;
+    padding: 32px 28px 24px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 40px rgba(56,189,248,0.06);
+    animation: slideDown 0.25s ease-out;
+    text-align: center;
+}
+.onboarding-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+}
+.onboarding-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.onboarding-dot.active {
+    background: #38bdf8;
+    transform: scale(1.25);
+}
+.onboarding-dot.done { background: rgba(56,189,248,0.4); }
+.onboarding-icon { font-size: 52px; display: block; margin-bottom: 16px; }
+.onboarding-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: 0.3px;
+}
+.onboarding-desc {
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+.onboarding-hint {
+    background: rgba(56,189,248,0.06);
+    border: 1px solid rgba(56,189,248,0.18);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #7dd3fc;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.onboarding-kbd-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+}
+.onboarding-kbd-hint kbd {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 11px;
+}
+.onboarding-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+.onboarding-nav-btns { display: flex; gap: 8px; }
+.onboarding-skip-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+.onboarding-skip-btn:hover { color: var(--text-muted); }
+.onboarding-prev-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.onboarding-prev-btn:hover { background: rgba(255,255,255,0.1); }
+.onboarding-next-btn {
+    background: #0284c7;
+    border: none;
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: var(--radius-sm);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.onboarding-next-btn:hover { background: #0ea5e9; }
+@media (max-width: 480px) {
+    .onboarding-panel { padding: 20px 16px; }
+    .onboarding-title { font-size: 14px; }
+    .onboarding-actions { flex-direction: column-reverse; align-items: stretch; }
+    .onboarding-nav-btns { justify-content: flex-end; }
+}

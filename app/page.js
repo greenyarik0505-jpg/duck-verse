@@ -7,6 +7,7 @@ import CategoryFilter from '../components/CategoryFilter';
 import GameCard from '../components/GameCard';
 import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
+import OnboardingModal from '../components/OnboardingModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 
 export default function GameHubPage() {
@@ -15,6 +16,7 @@ export default function GameHubPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [isShopOpen, setIsShopOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -24,7 +26,18 @@ export default function GameHubPage() {
 
     const savedMuted = localStorage.getItem('duckverse_muted') === 'true';
     setSoundEnabled(!savedMuted);
+
+    // Show onboarding only on first visit
+    const seen = localStorage.getItem('duckverse_onboarding_done');
+    if (!seen) {
+      setIsOnboardingOpen(true);
+    }
   }, []);
+
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    try { localStorage.setItem('duckverse_onboarding_done', '1'); } catch {}
+  };
 
   const handleUpdateCoins = useCallback((delta) => {
     setCoins((prev) => {
@@ -184,6 +197,12 @@ export default function GameHubPage() {
         gameId={selectedGameId}
         onClose={() => setIsGameOpen(false)}
         onAddCoins={handleUpdateCoins}
+      />
+
+      {/* Interactive Onboarding (SCRUM-31) */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={handleCloseOnboarding}
       />
     </div>
   );
