@@ -1,4 +1,4 @@
-﻿class FlappyDuckGame {
+class FlappyDuckGame {
     constructor(canvas, onGameOver, onAddCoins) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
@@ -363,7 +363,7 @@
         // Quack coins collected in this run
         ctx.font = 'bold 14px "Segoe UI", sans-serif';
         ctx.fillStyle = '#ffe600';
-        ctx.fillText(+ 🪙, this.canvas.width / 2, 70);
+        ctx.fillText('+ ' + this.collectedCoins + ' 🪙', this.canvas.width / 2, 70);
     }
 
     loop() {

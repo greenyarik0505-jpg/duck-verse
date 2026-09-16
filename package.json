@@ -2,12 +2,14 @@
   "name": "duck-verse",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Duck Verse — Modern Cyberpunk Game Hub on Next.js & Vercel",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "node --test tests/games_smoke.test.mjs"
   },
   "dependencies": {
     "next": "^15.1.0",
