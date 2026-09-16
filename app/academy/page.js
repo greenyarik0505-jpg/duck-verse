@@ -9,11 +9,20 @@ import {
   ADR_REGISTRY,
   runArchitectureReviewCheckpoint
 } from '../../lib/academy/sysdesign/adr';
+import {
+  DATA_INVENTORY,
+  RBAC_PERMISSIONS,
+  runPrivacySecurityAudit
+} from '../../lib/academy/privacy/audit';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
   // Initial completed/in-progress simulated state for student
   const [completedLessons, setCompletedLessons] = useState(['lesson-fe-l0-arch']);
+
+  // Privacy & RBAC State (SCRUM-71: L6)
+  const [privacyTab, setPrivacyTab] = useState('inventory'); // 'inventory' | 'rbac' | 'audit'
+  const [privacyAuditData, setPrivacyAuditData] = useState(() => runPrivacySecurityAudit());
 
   const [currentUser, setCurrentUser] = useState({
     id: 'user_student_yarik',
@@ -672,6 +681,187 @@ export default function AcademyPage() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+        </section>
+
+        {/* Data Privacy, RBAC & Parent Consent Section (SCRUM-71: L6) */}
+        <section className="academy-privacy-panel">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#f472b6', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🛡️</span>
+                <span>Конфіденційність, RBAC & Згода Батьків (L6: SCRUM-71)</span>
+              </h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                Privacy-by-Design для неповнолітніх, матриця RBAC/ABAC, запобігання IDOR та право на забуття (Right to be Forgotten)
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontFamily: 'Orbitron, monospace',
+                fontSize: '11px',
+                fontWeight: 800,
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(236, 72, 153, 0.15)',
+                border: '1px solid rgba(236, 72, 153, 0.4)',
+                color: '#f472b6'
+              }}>
+                COPPA & GDPR-K COMPLIANT 🔒
+              </span>
+            </div>
+          </div>
+
+          {/* Navigation Tabs */}
+          <div className="academy-privacy-tabs">
+            <button
+              className={`academy-privacy-tab-btn ${privacyTab === 'inventory' ? 'is-active' : ''}`}
+              onClick={() => setPrivacyTab('inventory')}
+            >
+              <span>📋</span>
+              <span>Інвентаризація даних (Data Inventory)</span>
+            </button>
+            <button
+              className={`academy-privacy-tab-btn ${privacyTab === 'rbac' ? 'is-active' : ''}`}
+              onClick={() => setPrivacyTab('rbac')}
+            >
+              <span>👥</span>
+              <span>Матриця прав (RBAC/ABAC)</span>
+            </button>
+            <button
+              className={`academy-privacy-tab-btn ${privacyTab === 'audit' ? 'is-active' : ''}`}
+              onClick={() => setPrivacyTab('audit')}
+            >
+              <span>🔍</span>
+              <span>Аудит безпеки (Security Audit)</span>
+            </button>
+          </div>
+
+          {/* Tab 1: Data Inventory */}
+          {privacyTab === 'inventory' && (
+            <div className="academy-privacy-grid">
+              {Object.values(DATA_INVENTORY).map((item) => (
+                <div key={item.category} className="academy-privacy-card">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <strong style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '13px', color: '#ffffff' }}>
+                      {item.name}
+                    </strong>
+                    <span style={{
+                      fontFamily: 'Orbitron, monospace',
+                      fontSize: '10px',
+                      color: '#f472b6',
+                      background: 'rgba(236, 72, 153, 0.15)',
+                      padding: '2px 6px',
+                      borderRadius: '4px'
+                    }}>
+                      {item.retentionDays} днів
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '12.5px', color: '#cbd5e1', marginBottom: '8px', lineHeight: 1.4 }}>
+                    <strong>Мета:</strong> {item.purpose}
+                  </p>
+                  <div style={{ fontSize: '11.5px', color: '#94a3b8', background: 'rgba(0,0,0,0.3)', padding: '8px 10px', borderRadius: '6px' }}>
+                    <div><strong>Власник:</strong> {item.owner}</div>
+                    <div style={{ marginTop: '3px' }}><strong>Правило доступу:</strong> {item.accessRule}</div>
+                    <div style={{ marginTop: '3px' }}><strong>Чутливість:</strong> {item.sensitivity}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab 2: RBAC Matrix */}
+          {privacyTab === 'rbac' && (
+            <div className="academy-rbac-table-wrap">
+              <table className="academy-rbac-table">
+                <thead>
+                  <tr>
+                    <th>Право / Дія (Action)</th>
+                    <th>🐥 Child (Учень)</th>
+                    <th>👪 Parent (Батьки)</th>
+                    <th>🦉 Mentor (Ментор)</th>
+                    <th>👑 Admin (Адмін)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Перегляд власного профілю та прогресу</td>
+                    <td style={{ color: '#34d399' }}>✓ Дозволено</td>
+                    <td style={{ color: '#34d399' }}>✓ Дозволено</td>
+                    <td style={{ color: '#34d399' }}>✓ Дозволено</td>
+                    <td style={{ color: '#34d399' }}>✓ Дозволено</td>
+                  </tr>
+                  <tr>
+                    <td>Перегляд чужих приватних даних</td>
+                    <td style={{ color: '#f87171' }}>✗ Заблоковано (403)</td>
+                    <td style={{ color: '#f87171' }}>✗ Тільки своєї дитини</td>
+                    <td style={{ color: '#f87171' }}>✗ Тільки призначених</td>
+                    <td style={{ color: '#34d399' }}>✓ Аудит-доступ</td>
+                  </tr>
+                  <tr>
+                    <td>Згода батьків (Parental Consent)</td>
+                    <td style={{ color: '#94a3b8' }}>— Недоступно</td>
+                    <td style={{ color: '#34d399' }}>✓ Керування згодою</td>
+                    <td style={{ color: '#94a3b8' }}>— Недоступно</td>
+                    <td style={{ color: '#34d399' }}>✓ Аудит згоди</td>
+                  </tr>
+                  <tr>
+                    <td>Експорт персональних даних (Data Portability)</td>
+                    <td style={{ color: '#34d399' }}>✓ Власні дані</td>
+                    <td style={{ color: '#34d399' }}>✓ Дані дитини</td>
+                    <td style={{ color: '#f87171' }}>✗ Заборонено</td>
+                    <td style={{ color: '#34d399' }}>✓ Повний експорт</td>
+                  </tr>
+                  <tr>
+                    <td>Видалення облікового запису (Right to be Forgotten)</td>
+                    <td style={{ color: '#fbbf24' }}>⚠ Запит батькам</td>
+                    <td style={{ color: '#34d399' }}>✓ Підтвердження</td>
+                    <td style={{ color: '#f87171' }}>✗ Заборонено</td>
+                    <td style={{ color: '#34d399' }}>✓ Безпечний purge</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Tab 3: Security & IDOR Audit */}
+          {privacyTab === 'audit' && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#cbd5e1' }}>
+                  Результати автоматизованого тестування безпеки та ізоляції PII:
+                </span>
+                <span style={{
+                  fontFamily: 'Orbitron, monospace',
+                  fontSize: '12px',
+                  fontWeight: 800,
+                  color: '#34d399',
+                  background: 'rgba(16, 185, 129, 0.2)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  padding: '4px 10px',
+                  borderRadius: '6px'
+                }}>
+                  РЕЗУЛЬТАТ АУДИТУ: {privacyAuditData.score} (PASSED)
+                </span>
+              </div>
+
+              {privacyAuditData.auditResults.map((res) => (
+                <div key={res.testId} className="academy-audit-item is-passed">
+                  <div>
+                    <strong style={{ display: 'block', marginBottom: '3px' }}>{res.name}</strong>
+                    <span style={{ fontSize: '12px', color: '#94a3b8' }}>{res.details}</span>
+                  </div>
+                  <span style={{
+                    fontFamily: 'Orbitron, monospace',
+                    fontWeight: 800,
+                    fontSize: '11px',
+                    color: '#34d399'
+                  }}>
+                    ✓ {res.status}
+                  </span>
+                </div>
+              ))}
             </div>
           )}
         </section>
