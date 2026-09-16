@@ -318,6 +318,87 @@ export default function AcademyPage() {
           </section>
         )}
 
+        {/* Capstone Workflow Section (SCRUM-58) */}
+        <section className="academy-capstone-panel">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🏆</span>
+                <span>Випускний Capstone-Реліз & Кваліфікація (L4: SCRUM-58)</span>
+              </h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                Послідовний прохід через 6 воріт якості (Quality Gates) від продуктового бріфу до релізу в production
+              </p>
+            </div>
+            <span style={{
+              fontFamily: 'Orbitron, monospace',
+              fontSize: '12px',
+              fontWeight: 800,
+              padding: '6px 14px',
+              borderRadius: '8px',
+              background: 'rgba(251, 191, 36, 0.15)',
+              border: '1px solid rgba(251, 191, 36, 0.4)',
+              color: '#fbbf24'
+            }}>
+              ЕТАП 2 / 6 В ПРОЦЕСІ ⚡
+            </span>
+          </div>
+
+          <div className="academy-gates-grid">
+            {[
+              { step: 1, title: 'Product Brief & ADR', desc: 'Бріф, User Story, вибір архітектури та ризики', status: 'completed' },
+              { step: 2, title: 'Git Branch & PR', desc: 'Робоча гілка, коміти SCRUM-XX та Pull Request', status: 'active' },
+              { step: 3, title: 'Automated CI/CD', desc: 'Build, лінтинг та 100% модульних тестів', status: 'pending' },
+              { step: 4, title: 'Mentor Code Review', desc: '6-вимірна рубрика ментора (бал >= 24/30)', status: 'pending' },
+              { step: 5, title: 'Production Release', desc: 'Живий деплой Vercel, release notes, rollback plan', status: 'pending' },
+              { step: 6, title: 'Retrospective', desc: 'Аналіз метрик, ретроспектива та випуск', status: 'pending' },
+            ].map((gate) => (
+              <div
+                key={gate.step}
+                className={`academy-gate-card ${
+                  gate.status === 'completed' ? 'is-completed' : gate.status === 'active' ? 'is-active' : ''
+                }`}
+              >
+                <div className="academy-gate-header">
+                  <span className="academy-gate-step-badge">КРОК {gate.step}</span>
+                  <span style={{
+                    fontSize: '10px',
+                    fontFamily: 'Orbitron, monospace',
+                    fontWeight: 800,
+                    color: gate.status === 'completed' ? '#34d399' : gate.status === 'active' ? '#fbbf24' : '#64748b'
+                  }}>
+                    {gate.status === 'completed' ? '✓ ЗАВЕРШЕНО' : gate.status === 'active' ? '⚡ АКТИВНО' : '🔒 ОЧІКУЄ'}
+                  </span>
+                </div>
+                <div className="academy-gate-title">{gate.title}</div>
+                <div className="academy-gate-desc">{gate.desc}</div>
+              </div>
+            ))}
+          </div>
+
+          <div className="academy-certificate-banner">
+            <div>
+              <strong style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '15px', color: '#ffffff', display: 'block', marginBottom: '4px' }}>
+                🎓 Офіційний сертифікат інженера Duck Academy
+              </strong>
+              <p style={{ fontSize: '12px', color: '#cbd5e1' }}>
+                Видається автоматично після проходження всіх 6 етапів Capstone із публічним криптографічним хешем верифікації.
+              </p>
+            </div>
+            <span style={{
+              fontFamily: 'Orbitron, monospace',
+              fontSize: '11px',
+              padding: '6px 12px',
+              borderRadius: '8px',
+              background: 'rgba(0, 0, 0, 0.4)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: '#d8b4fe'
+            }}>
+              SHA-256 Hash Verification Ready
+            </span>
+          </div>
+        </section>
+
         {/* Track Selector Cards */}
         <section style={{ marginBottom: '36px' }}>
           <h2 className="academy-section-title">
