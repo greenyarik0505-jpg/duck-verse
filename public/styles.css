@@ -2962,3 +2962,205 @@ canvas#game-canvas {
     .profile-stats-grid { grid-template-columns: repeat(2, 1fr); }
     .profile-modal-panel { padding: 18px; }
 }
+
+
+/* ==========================================================================
+   Mobile Navigation, Header Responsive & No-Overflow Rules (SCRUM-21)
+   ========================================================================== */
+
+.header-actions-mobile {
+    display: none;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-menu-toggle {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
+    border-radius: var(--radius-sm);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--border-hover);
+}
+
+.mobile-nav-drawer {
+    background: rgba(16, 20, 30, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 20px;
+    margin-top: 14px;
+    animation: slideDown 0.2s ease-out;
+}
+
+.mobile-drawer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mobile-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.mobile-nav-item:hover {
+    background: rgba(56, 189, 248, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+}
+
+.mobile-nav-icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.mobile-nav-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.mobile-nav-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.mobile-nav-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* Category Filter Scroll Smoothing & Touch Targets */
+.categories-bar {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 900px) {
+    .header-search {
+        max-width: 260px;
+    }
+    
+    .desktop-actions .header-btn span {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hub-header {
+        padding: 10px 14px;
+    }
+
+    .desktop-actions {
+        display: none;
+    }
+
+    .header-actions-mobile {
+        display: flex;
+    }
+
+    .brand-text .logo-subtitle {
+        display: none;
+    }
+
+    .header-search {
+        flex: 1;
+        max-width: none;
+        margin: 0 8px;
+    }
+
+    .header-search input {
+        padding: 8px 12px 8px 36px;
+        font-size: 13px;
+    }
+
+    .header-search svg {
+        left: 10px;
+        width: 16px;
+        height: 16px;
+    }
+
+    .hub-main {
+        padding: 16px 14px 40px;
+    }
+
+    .hero-spotlight {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .spotlight-title {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hub-header {
+        padding: 8px 12px;
+    }
+
+    .header-container {
+        gap: 8px;
+    }
+
+    .brand-logo .logo-box {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .brand-text .logo-title {
+        font-size: 18px;
+    }
+
+    .mobile-wallet {
+        padding: 5px 9px;
+        font-size: 13px;
+        gap: 4px;
+    }
+
+    .header-search input {
+        font-size: 12px;
+        padding: 7px 10px 7px 32px;
+    }
+
+    .cat-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .games-grid {
+        grid-template-columns: 1fr;
+    }
+}
