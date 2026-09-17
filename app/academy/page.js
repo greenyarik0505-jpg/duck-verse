@@ -20,6 +20,7 @@ import AiTransparencyConsentView from '../../components/academy/AiTransparencyCo
 import ChildSafeAiPolicyView from '../../components/academy/ChildSafeAiPolicyView';
 import ProductAnalyticsDashboardView from '../../components/academy/ProductAnalyticsDashboardView';
 import PublicStatusView from '../../components/status/PublicStatusView';
+import ReleaseReadinessView from '../../components/academy/ReleaseReadinessView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1738,6 +1739,9 @@ export default function AcademyPage() {
 
         {/* Public Status and Incident Communication (SCRUM-114) */}
         <PublicStatusView />
+
+        {/* Release Readiness Checklist & Change Approval (SCRUM-118) */}
+        <ReleaseReadinessView currentUser={currentUser} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
