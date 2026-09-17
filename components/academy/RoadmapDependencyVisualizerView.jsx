@@ -76,7 +76,7 @@ export default function RoadmapDependencyVisualizerView() {
               className={`px-3 py-1 text-xs font-bold rounded transition-all ${
                 selectedRole === 'mentor'
                   ? 'bg-teal-500 text-slate-950 shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
               }`}
             >
               👨‍🏫 Mentor (Full Team)
@@ -86,7 +86,7 @@ export default function RoadmapDependencyVisualizerView() {
               className={`px-3 py-1 text-xs font-bold rounded transition-all ${
                 selectedRole === 'child'
                   ? 'bg-cyan-500 text-slate-950 shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
               }`}
             >
               🧒 Child (Personal Path)
@@ -96,16 +96,16 @@ export default function RoadmapDependencyVisualizerView() {
           <div className="flex bg-slate-800/90 rounded-lg p-1 border border-slate-700">
             <button
               onClick={() => setActiveFixture('live')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded ${
-                activeFixture === 'live' ? 'bg-slate-700 text-teal-300' : 'text-slate-400 hover:text-white'
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition-all ${
+                activeFixture === 'live' ? 'bg-slate-700 text-teal-300' : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
               }`}
             >
               🟢 Live Jira DAG
             </button>
             <button
               onClick={() => setActiveFixture('circular')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded ${
-                activeFixture === 'circular' ? 'bg-rose-900/80 text-rose-300' : 'text-slate-400 hover:text-rose-300'
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition-all ${
+                activeFixture === 'circular' ? 'bg-rose-900/80 text-rose-300' : 'bg-transparent text-slate-400 hover:text-rose-300 hover:bg-rose-950/30'
               }`}
               title="Test circular dependency error signaling"
             >
@@ -113,8 +113,8 @@ export default function RoadmapDependencyVisualizerView() {
             </button>
             <button
               onClick={() => setActiveFixture('missing')}
-              className={`px-2.5 py-1 text-xs font-semibold rounded ${
-                activeFixture === 'missing' ? 'bg-amber-900/80 text-amber-300' : 'text-slate-400 hover:text-amber-300'
+              className={`px-2.5 py-1 text-xs font-semibold rounded transition-all ${
+                activeFixture === 'missing' ? 'bg-amber-900/80 text-amber-300' : 'bg-transparent text-slate-400 hover:text-amber-300 hover:bg-amber-950/30'
               }`}
               title="Test missing prerequisite error signaling"
             >

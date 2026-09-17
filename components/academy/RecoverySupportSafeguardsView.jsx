@@ -251,7 +251,7 @@ export default function RecoverySupportSafeguardsView() {
               type="button"
               onClick={() => setPrivacyTab('support')}
               className={`px-3 py-1 rounded font-medium transition-all ${
-                privacyTab === 'support' ? 'bg-amber-600 text-white' : 'text-slate-400 hover:text-white'
+                privacyTab === 'support' ? 'bg-amber-600 text-white' : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
               Що бачить Support (Sanitized)
@@ -260,7 +260,7 @@ export default function RecoverySupportSafeguardsView() {
               type="button"
               onClick={() => setPrivacyTab('raw')}
               className={`px-3 py-1 rounded font-medium transition-all ${
-                privacyTab === 'raw' ? 'bg-rose-900/60 text-rose-300' : 'text-slate-400 hover:text-white'
+                privacyTab === 'raw' ? 'bg-rose-900/60 text-rose-300' : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800'
               }`}
             >
               Сирі дані в БД (Заблоковано)

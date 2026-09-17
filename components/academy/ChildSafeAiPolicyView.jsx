@@ -214,7 +214,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
                 className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${
                   selectedRole === role
                     ? 'bg-emerald-600 text-white shadow-md'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800'
+                    : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800'
                 }`}
               >
                 {role === 'child' && '👶 Дитина (Учень)'}
@@ -231,7 +231,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
       {actionMessage && (
         <div className="mt-4 p-3 rounded-xl bg-slate-800/80 border border-emerald-500/40 text-sm text-emerald-200 flex items-center justify-between animate-fadeIn">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage('')} className="text-slate-400 hover:text-white ml-3">
+          <button onClick={() => setActionMessage('')} className="bg-transparent hover:bg-slate-700 text-slate-400 hover:text-white rounded p-1 ml-3 transition-all">
             ✕
           </button>
         </div>
@@ -244,7 +244,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'matrix'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📋 Матриця ролей та інструментів
@@ -254,7 +254,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all relative ${
             activeTab === 'requests'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🔐 Схвалення привілеїв
@@ -269,7 +269,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'quota'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📊 Добова квота та ліміти
@@ -279,7 +279,7 @@ export default function ChildSafeAiPolicyView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'threats'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🛡️ Модель загроз (Threat Model) & Аудит

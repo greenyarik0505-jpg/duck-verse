@@ -277,7 +277,7 @@ export default function MentoringLeadershipLoopView() {
       {notification && (
         <div className="mt-4 p-3 bg-emerald-950/80 border border-emerald-700/60 rounded-xl text-emerald-300 text-sm flex items-center justify-between animate-fadeIn">
           <span>✅ {notification}</span>
-          <button onClick={() => setNotification('')} className="text-xs text-emerald-400 hover:text-white">✕</button>
+          <button onClick={() => setNotification('')} className="text-xs text-emerald-400 hover:text-white bg-transparent hover:bg-emerald-900/40 rounded p-1 transition-all">✕</button>
         </div>
       )}
 
@@ -288,7 +288,7 @@ export default function MentoringLeadershipLoopView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'sessions'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           🔄 Сесії наставництва ({sessions.length})
@@ -298,7 +298,7 @@ export default function MentoringLeadershipLoopView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'self_review'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           ✍️ Студія Self-Review та Експериментів
@@ -308,7 +308,7 @@ export default function MentoringLeadershipLoopView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'rotation'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           ⚖️ Балансування ротації ({rotationReport?.systemFairnessScore || 'Fair'})
@@ -318,7 +318,7 @@ export default function MentoringLeadershipLoopView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'audit'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           📜 Журнал калібрування та зразки ({anonymizedSamples.length})
@@ -849,7 +849,7 @@ export default function MentoringLeadershipLoopView() {
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-6 max-w-xl w-full shadow-2xl space-y-4 text-slate-200 animate-scaleIn">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <h4 className="text-base font-bold text-white">Створити нову сесію наставництва</h4>
-              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-white font-bold">✕</button>
+              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-white font-bold bg-transparent hover:bg-slate-800 rounded p-1 transition-all">✕</button>
             </div>
 
             <form onSubmit={handleCreateSession} className="space-y-3 text-xs">

@@ -32,6 +32,63 @@
     box-sizing: border-box;
 }
 
+/* Universal Base Reset & Interactive Theme Defaults */
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+button {
+    cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    border: none;
+}
+
+/* Fallback: any button without explicit background gets a subtle slate/dark styling */
+button:not([class*="bg-"]):not([style*="background"]):not([class*="btn"]):not([class*="cat-"]):not([class*="modal-"]):not([class*="play"]):not([class*="gaming-"]):not([class*="mobile-"]):not([class*="header-"]):not([class*="onboarding-"]):not([class*="profile-"]):not([class*="skin-"]):not([class*="theme-"]):not([class*="avatar-"]) {
+    background-color: transparent;
+    border: none;
+    color: inherit;
+}
+
+/* Toast and notification close button styling */
+.animate-fadeIn button,
+[class*="bg-"] > button:not([class*="bg-"]) {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Form input, select, textarea fallback */
+input:not([class*="bg-"]):not([style*="background"]),
+select:not([class*="bg-"]):not([style*="background"]),
+textarea:not([class*="bg-"]):not([style*="background"]) {
+    background-color: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: #f1f5f9;
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+}
+
+select option {
+    background-color: #0f172a;
+    color: #f1f5f9;
+}
+
 /* Matte Ultra-Premium Dark Gaming Hub Aesthetic */
 body {
     background-color: var(--bg-dark);

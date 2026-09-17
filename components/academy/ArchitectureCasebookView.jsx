@@ -250,7 +250,7 @@ export default function ArchitectureCasebookView() {
       {notification && (
         <div className="mt-4 p-3 bg-purple-950/80 border border-purple-700/60 rounded-xl text-purple-300 text-sm flex items-center justify-between animate-fadeIn">
           <span>✅ {notification}</span>
-          <button onClick={() => setNotification('')} className="text-xs text-purple-400 hover:text-white">✕</button>
+          <button onClick={() => setNotification('')} className="text-xs text-purple-400 hover:text-white bg-transparent hover:bg-purple-900/40 rounded p-1 transition-all">✕</button>
         </div>
       )}
 
@@ -261,7 +261,7 @@ export default function ArchitectureCasebookView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'cases'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           📚 Архітектурні кейси ({cases.length})
@@ -271,7 +271,7 @@ export default function ArchitectureCasebookView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'comparator'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           ⚖️ Матриця компромісів (Trade-Offs)
@@ -281,7 +281,7 @@ export default function ArchitectureCasebookView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'studio'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           ✍️ Студія формування ADR
@@ -291,7 +291,7 @@ export default function ArchitectureCasebookView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'registry'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           🏛️ Історичний реєстр ADR ({adrs.length})
