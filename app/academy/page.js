@@ -305,7 +305,7 @@ export default function AcademyPage() {
                   <span>Панель Ментора: Стандартизована Code-Review Рубрика (L3)</span>
                 </h2>
                 <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-                  Призначений учень: <strong>student_yarik</strong> • Рівень: L1 • Блокери: 0 • Статус: Очікує перевірки
+                  Призначений учень: <strong>student_duck</strong> • Рівень: L1 • Блокери: 0 • Статус: Очікує перевірки
                 </p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

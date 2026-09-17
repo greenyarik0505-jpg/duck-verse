@@ -10,8 +10,8 @@ export default function PortfolioCertificateView({ currentUser, completedLessons
 
   const handleGenerateCertificate = () => {
     const cert = generateCertificate({
-      learnerId: currentUser?.id || 'learner_yarik',
-      displayName: currentUser?.username || 'Yarik0505',
+      learnerId: currentUser?.id || 'user_guest',
+      displayName: currentUser?.username || 'Гість',
       trackId: 'track-frontend-gaming',
       completedLessonIds: completedLessons,
       expiresInDays: 30
