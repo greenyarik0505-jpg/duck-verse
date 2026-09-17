@@ -19,6 +19,7 @@ import AiSafetyModerationView from '../../components/academy/AiSafetyModerationV
 import AiTransparencyConsentView from '../../components/academy/AiTransparencyConsentView';
 import ChildSafeAiPolicyView from '../../components/academy/ChildSafeAiPolicyView';
 import ProductAnalyticsDashboardView from '../../components/academy/ProductAnalyticsDashboardView';
+import PublicStatusView from '../../components/status/PublicStatusView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1734,6 +1735,9 @@ export default function AcademyPage() {
 
         {/* Product Analytics Event Taxonomy & Learning KPI Dashboard (SCRUM-112) */}
         <ProductAnalyticsDashboardView />
+
+        {/* Public Status and Incident Communication (SCRUM-114) */}
+        <PublicStatusView />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
