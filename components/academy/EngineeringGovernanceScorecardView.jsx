@@ -131,7 +131,7 @@ export default function EngineeringGovernanceScorecardView() {
             className={`px-3 py-1 text-xs font-bold rounded transition-all ${
               selectedPreset === 'passing'
                 ? 'bg-emerald-600 text-white shadow'
-                : 'text-slate-400 hover:text-white'
+                : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
             }`}
           >
             ✓ Exemplar PR (100%)
@@ -141,7 +141,7 @@ export default function EngineeringGovernanceScorecardView() {
             className={`px-3 py-1 text-xs font-bold rounded transition-all ${
               selectedPreset === 'failing'
                 ? 'bg-rose-700 text-white shadow'
-                : 'text-slate-400 hover:text-white'
+                : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
             }`}
           >
             ⚠️ Remediation Sample
@@ -151,7 +151,7 @@ export default function EngineeringGovernanceScorecardView() {
             className={`px-3 py-1 text-xs font-bold rounded transition-all ${
               selectedPreset === 'custom'
                 ? 'bg-cyan-600 text-white shadow'
-                : 'text-slate-400 hover:text-white'
+                : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-700/50'
             }`}
           >
             ⚙️ Custom Evaluator

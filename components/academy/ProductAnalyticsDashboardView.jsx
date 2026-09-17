@@ -189,7 +189,7 @@ export default function ProductAnalyticsDashboardView() {
       {actionMessage && (
         <div className="mt-4 p-3 rounded-xl bg-slate-800/80 border border-cyan-500/40 text-sm text-cyan-200 flex items-center justify-between animate-fadeIn">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage('')} className="text-slate-400 hover:text-white ml-3">
+          <button onClick={() => setActionMessage('')} className="bg-transparent hover:bg-slate-700 text-slate-400 hover:text-white rounded p-1 ml-3 transition-all">
             ✕
           </button>
         </div>
@@ -202,7 +202,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'kpis'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📈 Продуктові Learning KPIs
@@ -212,7 +212,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'health'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           ⚙️ Технічні Platform Health Metrics
@@ -222,7 +222,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'taxonomy'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📑 Таксономія подій (Taxonomy Explorer)
@@ -232,7 +232,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'simulator'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🧪 Симулятор Ingestion & PII Shield
@@ -242,7 +242,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'playbook'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           💡 Decision Playbook (Рішення на основі даних)
@@ -252,7 +252,7 @@ export default function ProductAnalyticsDashboardView() {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'quality'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           ✅ Data Quality Checklist

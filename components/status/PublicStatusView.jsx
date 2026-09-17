@@ -203,7 +203,7 @@ export default function PublicStatusView({ isStandalone = false }) {
       {actionMessage && (
         <div className="mt-4 p-3 rounded-xl bg-slate-800/80 border border-emerald-500/40 text-sm text-emerald-200 flex items-center justify-between animate-fadeIn">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage('')} className="text-slate-400 hover:text-white ml-3">
+          <button onClick={() => setActionMessage('')} className="bg-transparent hover:bg-slate-700 text-slate-400 hover:text-white rounded p-1 ml-3 transition-all">
             ✕
           </button>
         </div>
@@ -240,7 +240,7 @@ export default function PublicStatusView({ isStandalone = false }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'status'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🖥️ Статус компонентів
@@ -250,7 +250,7 @@ export default function PublicStatusView({ isStandalone = false }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all relative ${
             activeTab === 'incidents'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🚨 Активні інциденти
@@ -265,7 +265,7 @@ export default function PublicStatusView({ isStandalone = false }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'simulator'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           🧪 Симулятор життєвого циклу (Ops)
@@ -275,7 +275,7 @@ export default function PublicStatusView({ isStandalone = false }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'archive'
               ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📜 Архів інцидентів & Post-Mortem

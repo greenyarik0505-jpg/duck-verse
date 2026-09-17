@@ -232,7 +232,7 @@ export default function SeniorPortfolioDossierView() {
       {notification && (
         <div className="mt-4 p-3 bg-emerald-950/80 border border-emerald-700/60 rounded-xl text-emerald-300 text-sm flex items-center justify-between animate-fadeIn">
           <span>✅ {notification}</span>
-          <button onClick={() => setNotification('')} className="text-xs text-emerald-400 hover:text-white">✕</button>
+          <button onClick={() => setNotification('')} className="text-xs text-emerald-400 hover:text-white bg-transparent hover:bg-emerald-900/40 rounded p-1 transition-all">✕</button>
         </div>
       )}
 
@@ -257,7 +257,7 @@ export default function SeniorPortfolioDossierView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'metrics'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           📊 Метрики та джерела ({Object.keys(dossier.metrics || {}).length})
@@ -267,7 +267,7 @@ export default function SeniorPortfolioDossierView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'narratives'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           📖 STAR Наративи та Уроки ({dossier.narratives?.length || 0})
@@ -277,7 +277,7 @@ export default function SeniorPortfolioDossierView() {
           className={`px-4 py-2 rounded-lg text-xs font-medium transition-all ${
             activeTab === 'evidence'
               ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              : 'bg-slate-800/60 text-slate-400 hover:bg-slate-700/60 hover:text-slate-200 border border-slate-700/50'
           }`}
         >
           🔍 Верифіковані артефакти ({dossier.verifiedEvidences?.length || 0})

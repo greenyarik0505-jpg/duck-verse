@@ -183,7 +183,7 @@ export default function ReleaseReadinessView({ currentUser }) {
       {actionMessage && (
         <div className="mt-4 p-3 rounded-xl bg-slate-800/80 border border-purple-500/40 text-sm text-purple-200 flex items-center justify-between animate-fadeIn">
           <span>{actionMessage}</span>
-          <button onClick={() => setActionMessage('')} className="text-slate-400 hover:text-white ml-3">
+          <button onClick={() => setActionMessage('')} className="bg-transparent hover:bg-slate-700 text-slate-400 hover:text-white rounded p-1 ml-3 transition-all">
             ✕
           </button>
         </div>
@@ -243,7 +243,7 @@ export default function ReleaseReadinessView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'checklist'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📋 Чекліст 6 гейтів якості
@@ -253,7 +253,7 @@ export default function ReleaseReadinessView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'evidence'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📎 Трасованість доказів (Evidence Links)
@@ -263,7 +263,7 @@ export default function ReleaseReadinessView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all relative ${
             activeTab === 'approval'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           ✍️ Погодження ментора (Change Approval)
@@ -278,7 +278,7 @@ export default function ReleaseReadinessView({ currentUser }) {
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
             activeTab === 'history'
               ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+              : 'bg-slate-800/60 text-slate-400 hover:text-white hover:bg-slate-700/60 border border-slate-700/50'
           }`}
         >
           📜 Реєстр релізів & Follow-ups

@@ -511,7 +511,7 @@ export default function AccountLifecycleAdminView() {
                     type="button"
                     onClick={() => setStatusFilter(st)}
                     className={`px-2.5 py-1 rounded font-medium transition-all ${
-                      statusFilter === st ? 'bg-cyan-600 text-white' : 'text-slate-400 hover:text-white'
+                      statusFilter === st ? 'bg-cyan-600 text-white' : 'bg-transparent text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
                     {st === 'ALL' ? 'Всі' : st === 'ACTIVE' ? 'Активні' : 'Призупинені'}
@@ -530,7 +530,7 @@ export default function AccountLifecycleAdminView() {
                   <button
                     type="button"
                     onClick={() => setSelectedAccountIds([])}
-                    className="text-[11px] text-slate-400 hover:text-white"
+                    className="text-[11px] text-slate-400 hover:text-white bg-transparent hover:bg-indigo-900/40 rounded px-2 py-0.5 transition-all"
                   >
                     Скасувати вибір
                   </button>
@@ -687,7 +687,7 @@ export default function AccountLifecycleAdminView() {
                 <button
                   type="button"
                   onClick={() => setActionTarget(null)}
-                  className="text-xs text-slate-400 hover:text-white"
+                  className="text-xs text-slate-400 hover:text-white bg-transparent hover:bg-slate-800 rounded px-2 py-1 transition-all"
                 >
                   ✕ Закрити
                 </button>
