@@ -13,7 +13,7 @@ export default function SkillCompetencyMatrixView({ currentUser, completedLesson
     setLoading(true);
     setError('');
     try {
-      const studentId = currentUser?.id || 'user_student_duck';
+      const studentId = currentUser?.id || 'user_guest';
       const res = await fetch(`/api/academy/skills?studentId=${studentId}`);
       const json = await res.json();
       if (json.success && json.data) {
