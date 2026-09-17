@@ -54,6 +54,7 @@ import {
   rollbackMigration
 } from '../../lib/academy/plugins/flags';
 import GovernanceRoadmapView from '../../components/academy/GovernanceRoadmapView';
+import RoadmapDependencyVisualizerView from '../../components/academy/RoadmapDependencyVisualizerView';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -1777,6 +1778,11 @@ export default function AcademyPage() {
         {/* Senior Lab: Mentoring Leadership Loop & Feedback Calibration (SCRUM-137) */}
         <section id="mentoring-leadership-section">
           <MentoringLeadershipLoopView />
+        </section>
+
+        {/* Roadmap Dependency Visualizer & Blocked-Work Alerts (SCRUM-138) */}
+        <section id="roadmap-dependencies-section">
+          <RoadmapDependencyVisualizerView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
