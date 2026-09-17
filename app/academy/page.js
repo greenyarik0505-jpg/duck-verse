@@ -21,6 +21,14 @@ import {
   simulateControlledIncident,
   resolveIncident
 } from '../../lib/academy/observability/slo';
+import {
+  getPluginState,
+  isFeatureEnabled,
+  setFeatureFlag,
+  loadPluginSafely,
+  runMigration,
+  rollbackMigration
+} from '../../lib/academy/plugins/flags';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -34,6 +42,12 @@ export default function AcademyPage() {
   // Observability & SLO State (SCRUM-72: L7)
   const [sloTab, setSloTab] = useState('dashboard'); // 'dashboard' | 'runbooks' | 'demo'
   const [obsState, setObsState] = useState(() => getObservabilityState());
+
+  // Plugin Architecture & Feature Flags State (SCRUM-73: L8)
+  const [pluginTab, setPluginTab] = useState('flags'); // 'flags' | 'plugins' | 'migrations'
+  const [pluginState, setPluginState] = useState(() => getPluginState());
+  const [sandboxResult, setSandboxResult] = useState(null);
+  const [flagActionMsg, setFlagActionMsg] = useState('');
 
   const [currentUser, setCurrentUser] = useState({
     id: 'user_student_yarik',
@@ -1123,6 +1137,346 @@ export default function AcademyPage() {
                     {obsState.recentLogs.map((log, idx) => (
                       <div key={idx} style={{ marginBottom: '4px' }}>
                         [{log.timestamp.slice(11, 19)}] {log.level} | {log.correlationId} | {log.action} | {log.durationMs}ms | hasPii: {String(log.hasPii)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* Plugin Architecture, Feature Flags & Migrations Section (SCRUM-73: L8) */}
+        <section className="academy-plugin-panel" suppressHydrationWarning>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#ec4899', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>🔌</span>
+                <span>Плагінна архітектура, Feature Flags &amp; Migrations (L8: SCRUM-73)</span>
+              </h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                Динамічне керування фічами, аварійний Kill Switch, безпечна пісочниця плагінів з Graceful Degradation та zero-downtime міграції
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{
+                fontFamily: 'Orbitron, monospace',
+                fontSize: '11px',
+                fontWeight: 800,
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(236, 72, 153, 0.15)',
+                border: '1px solid rgba(236, 72, 153, 0.4)',
+                color: '#f472b6'
+              }}>
+                SCHEMA V{pluginState.migrations.currentVersion} • ZERO DOWNTIME
+              </span>
+            </div>
+          </div>
+
+          {/* Action notification message if any */}
+          {flagActionMsg && (
+            <div style={{
+              background: 'rgba(56, 189, 248, 0.15)',
+              border: '1px solid #38bdf8',
+              borderRadius: '8px',
+              padding: '10px 14px',
+              marginTop: '14px',
+              fontSize: '12px',
+              color: '#bae6fd'
+            }}>
+              ℹ️ {flagActionMsg}
+            </div>
+          )}
+
+          {/* Navigation Tabs */}
+          <div className="academy-plugin-tabs">
+            <button
+              className={`academy-plugin-tab-btn ${pluginTab === 'flags' ? 'is-active' : ''}`}
+              onClick={() => setPluginTab('flags')}
+            >
+              <span>🚩</span>
+              <span>Feature Flags ({Object.keys(pluginState.flags).length})</span>
+            </button>
+            <button
+              className={`academy-plugin-tab-btn ${pluginTab === 'plugins' ? 'is-active' : ''}`}
+              onClick={() => setPluginTab('plugins')}
+            >
+              <span>🛡️</span>
+              <span>Safe Plugin Sandbox ({pluginState.plugins.length})</span>
+            </button>
+            <button
+              className={`academy-plugin-tab-btn ${pluginTab === 'migrations' ? 'is-active' : ''}`}
+              onClick={() => setPluginTab('migrations')}
+            >
+              <span>🔄</span>
+              <span>Zero-Downtime Migrations</span>
+            </button>
+          </div>
+
+          {/* Tab 1: Feature Flags & Emergency Kill Switch */}
+          {pluginTab === 'flags' && (
+            <div>
+              {Object.values(pluginState.flags).map((flag) => {
+                const isKill = flag.killSwitchActive;
+                return (
+                  <div key={flag.key} className={`academy-flag-card ${isKill ? 'is-killed' : ''}`}>
+                    <div style={{ flex: 1, minWidth: '240px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                        <code style={{ color: isKill ? '#f87171' : '#f472b6', fontWeight: 700 }}>{flag.key}</code>
+                        <span style={{
+                          fontSize: '10px',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          fontWeight: 800,
+                          fontFamily: 'Orbitron, monospace',
+                          textTransform: 'uppercase',
+                          background: flag.lifecycle === 'ga' ? 'rgba(16, 185, 129, 0.2)' : flag.lifecycle === 'beta' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(251, 191, 36, 0.2)',
+                          color: flag.lifecycle === 'ga' ? '#34d399' : flag.lifecycle === 'beta' ? '#38bdf8' : '#fbbf24',
+                          border: `1px solid ${flag.lifecycle === 'ga' ? 'rgba(16, 185, 129, 0.4)' : flag.lifecycle === 'beta' ? 'rgba(56, 189, 248, 0.4)' : 'rgba(251, 191, 36, 0.4)'}`
+                        }}>
+                          {flag.lifecycle}
+                        </span>
+                        {isKill && (
+                          <span style={{
+                            fontSize: '10px',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontWeight: 800,
+                            fontFamily: 'Orbitron, monospace',
+                            background: 'rgba(239, 68, 68, 0.3)',
+                            color: '#fca5a5',
+                            border: '1px solid #ef4444'
+                          }}>
+                            🚨 KILL SWITCH
+                          </span>
+                        )}
+                      </div>
+                      <strong style={{ fontSize: '13.5px', color: '#ffffff', display: 'block' }}>{flag.name}</strong>
+                      <p style={{ fontSize: '12px', color: '#94a3b8', margin: '3px 0' }}>{flag.description}</p>
+                      <span style={{ fontSize: '11px', color: '#64748b' }}>
+                        Власник: <strong style={{ color: '#cbd5e1' }}>{flag.owner}</strong> • Rollout: <strong style={{ color: '#cbd5e1' }}>{flag.rolloutPercentage}%</strong> • Експірація: <strong style={{ color: '#cbd5e1' }}>{flag.expiryDate}</strong>
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <button
+                        className="academy-auth-btn"
+                        style={{
+                          background: flag.enabled && !isKill ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                          borderColor: flag.enabled && !isKill ? '#34d399' : '#64748b',
+                          color: flag.enabled && !isKill ? '#34d399' : '#94a3b8',
+                          fontSize: '11px'
+                        }}
+                        onClick={() => {
+                          try {
+                            setFeatureFlag(flag.key, { enabled: !flag.enabled }, currentUser);
+                            setPluginState(getPluginState());
+                            setFlagActionMsg(`Прапорець ${flag.key} змінено на ${!flag.enabled ? 'ВВІМКНЕНО' : 'ВИМКНЕНО'}`);
+                          } catch (err) {
+                            setFlagActionMsg(`Помилка: ${err.message}`);
+                          }
+                        }}
+                      >
+                        {flag.enabled ? '✓ Ввімкнено' : '○ Вимкнено'}
+                      </button>
+
+                      <button
+                        className="academy-auth-btn"
+                        style={{
+                          background: isKill ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.1)',
+                          borderColor: '#ef4444',
+                          color: '#f87171',
+                          fontSize: '11px'
+                        }}
+                        onClick={() => {
+                          try {
+                            setFeatureFlag(flag.key, { killSwitchActive: !isKill }, currentUser);
+                            setPluginState(getPluginState());
+                            setFlagActionMsg(!isKill ? `🚨 АКТИВОВАНО АВАРІЙНИЙ KILL SWITCH ДЛЯ ${flag.key}` : `Kill switch для ${flag.key} деактивовано`);
+                          } catch (err) {
+                            setFlagActionMsg(`Помилка: ${err.message}`);
+                          }
+                        }}
+                      >
+                        {isKill ? '🔓 Зняти Kill Switch' : '⚡ Kill Switch'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Tab 2: Safe Plugin Sandbox & Fault Isolation */}
+          {pluginTab === 'plugins' && (
+            <div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '14px', marginBottom: '16px' }}>
+                {pluginState.plugins.map((plugin) => (
+                  <div
+                    key={plugin.id}
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '12px',
+                      padding: '16px'
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                      <strong style={{ color: '#ffffff', fontSize: '13.5px' }}>{plugin.name}</strong>
+                      <span style={{
+                        fontSize: '10px',
+                        fontWeight: 800,
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontFamily: 'Orbitron, monospace',
+                        background: plugin.status === 'active' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(251, 191, 36, 0.2)',
+                        color: plugin.status === 'active' ? '#34d399' : '#fbbf24'
+                      }}>
+                        v{plugin.version}
+                      </span>
+                    </div>
+                    <p style={{ fontSize: '12px', color: '#94a3b8', margin: '0 0 8px 0' }}>
+                      Автор: <strong style={{ color: '#cbd5e1' }}>{plugin.author}</strong>
+                    </p>
+                    <div style={{ fontSize: '11px', color: '#64748b', marginBottom: '12px' }}>
+                      Пісочниця: Canvas 2D: {plugin.sandbox.allowCanvas2D ? '✓' : '✗'} • DOM Wipeout: {plugin.sandbox.allowDomWipe ? '✓' : 'BLOCKED 🛡️'}
+                    </div>
+
+                    <button
+                      className="academy-auth-btn"
+                      style={{ width: '100%', fontSize: '11px', background: 'rgba(56, 189, 248, 0.15)', borderColor: '#38bdf8', color: '#38bdf8' }}
+                      onClick={() => {
+                        const res = loadPluginSafely(plugin.id);
+                        setSandboxResult(res);
+                      }}
+                    >
+                      ⚡ Тестувати завантаження в Sandbox
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {sandboxResult && (
+                <div style={{
+                  background: sandboxResult.success ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                  border: `1px solid ${sandboxResult.success ? '#34d399' : '#ef4444'}`,
+                  borderRadius: '10px',
+                  padding: '14px',
+                  marginTop: '12px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                    <strong style={{ color: '#ffffff', fontSize: '13px' }}>
+                      {sandboxResult.success ? '✓ Плагін успішно ініціалізовано' : '🛡️ Перехоплено збій плагіна (Graceful Degradation)'}
+                    </strong>
+                    <span style={{
+                      fontFamily: 'Orbitron, monospace',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      color: sandboxResult.success ? '#34d399' : '#f87171'
+                    }}>
+                      {sandboxResult.pluginId}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: sandboxResult.success ? '#a7f3d0' : '#fca5a5', margin: 0 }}>
+                    {sandboxResult.success
+                      ? `Статус: ${sandboxResult.initResult?.status} • 60 FPS Canvas Ready`
+                      : `${sandboxResult.error} — ${sandboxResult.message}`}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Tab 3: Zero-Downtime Migrations */}
+          {pluginTab === 'migrations' && (
+            <div>
+              <div style={{ marginBottom: '16px' }}>
+                <span style={{ fontSize: '12px', color: '#94a3b8', display: 'block', marginBottom: '10px' }}>
+                  Зареєстровані ідемпотентні міграції схеми даних (Expand &amp; Contract):
+                </span>
+                {pluginState.migrations.list.map((m) => (
+                  <div
+                    key={m.id}
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.35)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '10px',
+                      padding: '12px 16px',
+                      marginBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '10px'
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <code style={{ color: '#f472b6', fontWeight: 700 }}>{m.id}</code>
+                        <span style={{
+                          fontFamily: 'Orbitron, monospace',
+                          fontSize: '10px',
+                          fontWeight: 800,
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          background: m.applied ? 'rgba(16, 185, 129, 0.2)' : 'rgba(100, 116, 139, 0.2)',
+                          color: m.applied ? '#34d399' : '#94a3b8'
+                        }}>
+                          {m.applied ? '✓ APPLIED' : 'PENDING'}
+                        </span>
+                      </div>
+                      <strong style={{ fontSize: '13px', color: '#ffffff', display: 'block', marginTop: '2px' }}>{m.name}</strong>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <button
+                        className="academy-auth-btn"
+                        style={{ fontSize: '11px', background: 'rgba(56, 189, 248, 0.15)', borderColor: '#38bdf8', color: '#38bdf8' }}
+                        onClick={() => {
+                          try {
+                            const res = runMigration(m.id);
+                            setPluginState(getPluginState());
+                            setFlagActionMsg(res.message);
+                          } catch (err) {
+                            setFlagActionMsg(`Помилка: ${err.message}`);
+                          }
+                        }}
+                      >
+                        ⚡ Запустити (Ідемпотентно)
+                      </button>
+
+                      {m.applied && (
+                        <button
+                          className="academy-auth-btn"
+                          style={{ fontSize: '11px', background: 'rgba(239, 68, 68, 0.15)', borderColor: '#ef4444', color: '#f87171' }}
+                          onClick={() => {
+                            try {
+                              const res = rollbackMigration(m.id);
+                              setPluginState(getPluginState());
+                              setFlagActionMsg(res.message);
+                            } catch (err) {
+                              setFlagActionMsg(`Помилка: ${err.message}`);
+                            }
+                          }}
+                        >
+                          ⏪ Rollback
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {pluginState.migrations.log.length > 0 && (
+                <div>
+                  <span style={{ fontSize: '12px', fontFamily: 'Orbitron, monospace', color: '#94a3b8', display: 'block', marginBottom: '8px' }}>
+                    Журнал аудиту міграцій (Zero Downtime Log):
+                  </span>
+                  <div style={{ background: 'rgba(0, 0, 0, 0.6)', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#fbcfe8', maxHeight: '120px', overflowY: 'auto' }} suppressHydrationWarning>
+                    {pluginState.migrations.log.map((log, idx) => (
+                      <div key={idx} style={{ marginBottom: '4px' }}>
+                        [{log.timestamp.slice(11, 19)}] {log.status} | {log.migrationId}
                       </div>
                     ))}
                   </div>

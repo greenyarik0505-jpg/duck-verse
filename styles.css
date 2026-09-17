@@ -3338,5 +3338,75 @@ canvas#game-canvas {
     gap: 10px;
 }
 
+/* --- Plugin Architecture, Feature Flags & Migrations (SCRUM-73: L8) --- */
+.academy-plugin-panel {
+    background: linear-gradient(180deg, rgba(236, 72, 153, 0.08) 0%, rgba(15, 23, 42, 0.7) 100%);
+    border: 1px solid rgba(236, 72, 153, 0.35);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 24px rgba(236, 72, 153, 0.12);
+}
+
+.academy-plugin-tabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.academy-plugin-tab-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.academy-plugin-tab-btn:hover {
+    background: rgba(236, 72, 153, 0.15);
+    color: #f472b6;
+    border-color: rgba(236, 72, 153, 0.4);
+}
+
+.academy-plugin-tab-btn.is-active {
+    background: rgba(236, 72, 153, 0.25);
+    border-color: #ec4899;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(236, 72, 153, 0.3);
+}
+
+.academy-flag-card {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.academy-flag-card.is-killed {
+    border-color: rgba(239, 68, 68, 0.6);
+    background: rgba(239, 68, 68, 0.08);
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
+}
+
+
 
 
