@@ -23,6 +23,7 @@ import PublicStatusView from '../../components/status/PublicStatusView';
 import ReleaseReadinessView from '../../components/academy/ReleaseReadinessView';
 import ParentConsentActivationView from '../../components/academy/ParentConsentActivationView';
 import AccountLifecycleAdminView from '../../components/academy/AccountLifecycleAdminView';
+import RecoverySupportSafeguardsView from '../../components/academy/RecoverySupportSafeguardsView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1753,6 +1754,11 @@ export default function AcademyPage() {
         {/* Account Lifecycle Admin Console (SCRUM-125) */}
         <section id="academy-account-lifecycle-section">
           <AccountLifecycleAdminView />
+        </section>
+
+        {/* Recovery Support Escalation & Irreversible Safeguards (SCRUM-128) */}
+        <section id="academy-recovery-safeguards-section">
+          <RecoverySupportSafeguardsView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
