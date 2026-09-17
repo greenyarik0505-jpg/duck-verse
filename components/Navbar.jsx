@@ -73,6 +73,16 @@ export default function Navbar({ coins, onOpenShop, onOpenTheme, onOpenProfile, 
             <span>✨ Магазин скінів</span>
           </button>
 
+          {/* Player Profile (SCRUM-29) */}
+          <button
+            className="header-btn"
+            onClick={onOpenProfile}
+            title="Профіль гравця та прогрес"
+            aria-label="Відкрити профіль гравця"
+          >
+            <span>👤 Профіль</span>
+          </button>
+
           {/* Duck Academy Link (SCRUM-56) */}
           {isAcademyEnabled() && (
             <Link

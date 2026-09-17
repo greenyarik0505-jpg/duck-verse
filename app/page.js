@@ -11,6 +11,7 @@ import EmptyState from '../components/EmptyState';
 import ThemeSelectorModal from '../components/ThemeSelectorModal';
 import AchievementsModal, { AchievementToast, useAchievements } from '../components/AchievementsModal';
 import OnboardingModal from '../components/OnboardingModal';
+import PlayerProfileModal from '../components/PlayerProfileModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 import { loadTheme, applyTheme } from '../lib/themes';
 
@@ -24,6 +25,7 @@ export default function GameHubPage() {
   const [currentTheme, setCurrentTheme] = useState('cyberpunk');
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -88,6 +90,7 @@ export default function GameHubPage() {
         coins={coins}
         onOpenShop={() => setIsShopOpen(true)}
         onOpenTheme={() => setIsThemeOpen(true)}
+        onOpenProfile={() => setIsProfileOpen(true)}
         onOpenAchievements={() => setIsAchievementsOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
@@ -221,6 +224,13 @@ export default function GameHubPage() {
       {toast && (
         <AchievementToast achievement={toast} onDismiss={dismissToast} />
       )}
+
+      {/* Player Profile Modal (SCRUM-29) */}
+      <PlayerProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        coins={coins}
+      />
       {/* Game Playing Modal (SCRUM-13 Benchmark & Launcher) */}
       <GameModal
         isOpen={isGameOpen}
