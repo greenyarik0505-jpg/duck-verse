@@ -204,9 +204,9 @@ export default function AcademyPage() {
   }
 
   return (
-    <div className="academy-page">
+    <div className="academy-page" suppressHydrationWarning>
       {/* Academy Header */}
-      <header className="academy-header">
+      <header className="academy-header" suppressHydrationWarning>
         <div className="academy-header-inner">
           <div className="academy-header-left">
             <Link
@@ -236,7 +236,7 @@ export default function AcademyPage() {
           <div className="academy-header-actions">
             {/* User Auth Session Chip (SCRUM-54 & SCRUM-50) */}
             <div className="academy-auth-box">
-              <div className="academy-user-chip">
+              <div className="academy-user-chip" suppressHydrationWarning>
                 <span>
                   {currentUser.role === 'guest'
                     ? '👤'
