@@ -14,6 +14,13 @@ import {
   RBAC_PERMISSIONS,
   runPrivacySecurityAudit
 } from '../../lib/academy/privacy/audit';
+import {
+  SLO_DEFINITIONS,
+  RUNBOOKS,
+  getObservabilityState,
+  simulateControlledIncident,
+  resolveIncident
+} from '../../lib/academy/observability/slo';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -23,6 +30,10 @@ export default function AcademyPage() {
   // Privacy & RBAC State (SCRUM-71: L6)
   const [privacyTab, setPrivacyTab] = useState('inventory'); // 'inventory' | 'rbac' | 'audit'
   const [privacyAuditData, setPrivacyAuditData] = useState(() => runPrivacySecurityAudit());
+
+  // Observability & SLO State (SCRUM-72: L7)
+  const [sloTab, setSloTab] = useState('dashboard'); // 'dashboard' | 'runbooks' | 'demo'
+  const [obsState, setObsState] = useState(() => getObservabilityState());
 
   const [currentUser, setCurrentUser] = useState({
     id: 'user_student_yarik',
@@ -862,6 +873,261 @@ export default function AcademyPage() {
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+        </section>
+
+        {/* Observability, SLO & Error Budgets Section (SCRUM-72: L7) */}
+        <section className="academy-observability-panel">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+            <div>
+              <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#34d399', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>📊</span>
+                <span>Спостережуваність, SLO & Error Budgets (L7: SCRUM-72)</span>
+              </h2>
+              <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
+                Моніторинг SLI/SLO в реальному часі, структуровані логи без PII, розрахунок Error Budgets та прив'язка до Runbooks
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                fontFamily: 'Orbitron, monospace',
+                fontSize: '11px',
+                fontWeight: 800,
+                padding: '4px 10px',
+                borderRadius: '6px',
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid rgba(16, 185, 129, 0.4)',
+                color: '#34d399'
+              }}>
+                ERROR BUDGET: {obsState.metrics.errorBudget.budgetRemainingPercent}% REMAINING ⚡
+              </span>
+            </div>
+          </div>
+
+          {/* Active Alert Banner (if simulated) */}
+          {obsState.activeAlerts.length > 0 && (
+            <div className="academy-alert-box" style={{ marginTop: '16px' }}>
+              <div>
+                <strong style={{ color: '#ffffff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span>🚨</span>
+                  <span>{obsState.activeAlerts[0].title}</span>
+                </strong>
+                <p style={{ fontSize: '12px', color: '#fca5a5', marginTop: '4px' }}>
+                  Correlation ID: <code style={{ color: '#ffffff' }}>{obsState.activeAlerts[0].correlationId}</code> • Severity: <strong>{obsState.activeAlerts[0].severity}</strong> • Runbook: <strong>{obsState.activeAlerts[0].runbookId}</strong>
+                </p>
+              </div>
+              <button
+                className="academy-auth-btn"
+                style={{ background: 'rgba(255, 255, 255, 0.2)', borderColor: '#ffffff', color: '#ffffff' }}
+                onClick={() => {
+                  resolveIncident();
+                  setObsState(getObservabilityState());
+                }}
+              >
+                ✓ Усунути інцидент
+              </button>
+            </div>
+          )}
+
+          {/* Navigation Tabs */}
+          <div className="academy-observability-tabs">
+            <button
+              className={`academy-observability-tab-btn ${sloTab === 'dashboard' ? 'is-active' : ''}`}
+              onClick={() => setSloTab('dashboard')}
+            >
+              <span>📈</span>
+              <span>SLO Dashboard (4 Метрики)</span>
+            </button>
+            <button
+              className={`academy-observability-tab-btn ${sloTab === 'runbooks' ? 'is-active' : ''}`}
+              onClick={() => setSloTab('runbooks')}
+            >
+              <span>📖</span>
+              <span>Операційні Runbooks (4 Інструкції)</span>
+            </button>
+            <button
+              className={`academy-observability-tab-btn ${sloTab === 'demo' ? 'is-active' : ''}`}
+              onClick={() => setSloTab('demo')}
+            >
+              <span>🧪</span>
+              <span>Симулятор інцидентів (Preview Demo)</span>
+            </button>
+          </div>
+
+          {/* Tab 1: SLO Dashboard */}
+          {sloTab === 'dashboard' && (
+            <div>
+              <div className="academy-slo-grid">
+                {Object.values(obsState.slos).map((slo) => {
+                  const isHealthy = slo.id === 'latency'
+                    ? obsState.metrics.p95LatencyMs <= slo.target
+                    : slo.currentSli >= slo.target;
+
+                  return (
+                    <div key={slo.id} className="academy-slo-card">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <strong style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '13px', color: '#ffffff' }}>
+                          {slo.name}
+                        </strong>
+                        <span style={{
+                          fontFamily: 'Orbitron, monospace',
+                          fontSize: '11px',
+                          fontWeight: 800,
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          background: isHealthy ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.2)',
+                          color: isHealthy ? '#34d399' : '#f87171',
+                          border: `1px solid ${isHealthy ? 'rgba(16, 185, 129, 0.3)' : '#ef4444'}`
+                        }}>
+                          {slo.id === 'latency' ? `${obsState.metrics.p95LatencyMs} ${slo.unit}` : `${slo.currentSli} ${slo.unit}`}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: '12px', color: '#94a3b8', marginBottom: '10px' }}>
+                        {slo.sliMetric}
+                      </p>
+                      <div style={{ fontSize: '11.5px', color: '#cbd5e1', background: 'rgba(0,0,0,0.3)', padding: '8px 10px', borderRadius: '6px' }}>
+                        <div><strong>Ціль (Target):</strong> {slo.id === 'latency' ? `< ${slo.target} ${slo.unit}` : `>= ${slo.target} ${slo.unit}`}</div>
+                        <div style={{ marginTop: '3px' }}><strong>Runbook:</strong> {slo.runbookId}</div>
+                        <div style={{ marginTop: '3px' }}><strong>Власник:</strong> {slo.owner}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Error Budget Summary Bar */}
+              <div style={{
+                marginTop: '16px',
+                background: 'rgba(0, 0, 0, 0.35)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '12px',
+                padding: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}>
+                <div>
+                  <strong style={{ fontSize: '13px', color: '#ffffff' }}>Стан бюджету помилок (30-day Rolling Error Budget)</strong>
+                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
+                    Загальна кількість запитів: <strong>{obsState.metrics.totalRequests.toLocaleString()}</strong> • Помилки: <strong>{obsState.metrics.failedRequests}</strong> • Статус: <span style={{ color: '#34d399', fontWeight: 700 }}>{obsState.metrics.errorBudget.status}</span>
+                  </p>
+                </div>
+                <div style={{ fontFamily: 'Orbitron, monospace', fontSize: '14px', fontWeight: 800, color: '#34d399' }}>
+                  {obsState.metrics.errorBudget.budgetRemainingPercent}% Залишок
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tab 2: Runbooks */}
+          {sloTab === 'runbooks' && (
+            <div>
+              {Object.values(obsState.runbooks).map((rb) => (
+                <div key={rb.id} className="academy-runbook-card">
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{
+                        fontFamily: 'Orbitron, monospace',
+                        fontSize: '11px',
+                        fontWeight: 800,
+                        color: '#38bdf8',
+                        background: 'rgba(56, 189, 248, 0.15)',
+                        padding: '2px 8px',
+                        borderRadius: '4px'
+                      }}>
+                        {rb.id}
+                      </span>
+                      <strong style={{ fontSize: '14px', color: '#ffffff' }}>{rb.title}</strong>
+                    </div>
+                    <span style={{
+                      fontFamily: 'Orbitron, monospace',
+                      fontSize: '10px',
+                      fontWeight: 800,
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      color: rb.severity === 'CRITICAL' ? '#f87171' : '#fbbf24',
+                      background: rb.severity === 'CRITICAL' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(251, 191, 36, 0.2)'
+                    }}>
+                      {rb.severity}
+                    </span>
+                  </div>
+                  <ul style={{ margin: '8px 0 0 16px', padding: 0, fontSize: '12.5px', color: '#cbd5e1', lineHeight: 1.5 }}>
+                    {rb.steps.map((step, idx) => (
+                      <li key={idx} style={{ marginBottom: '4px' }}>{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Tab 3: Controlled Incident Simulation */}
+          {sloTab === 'demo' && (
+            <div style={{
+              background: 'rgba(0, 0, 0, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              padding: '20px'
+            }}>
+              <h3 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '14px', color: '#ffffff', marginBottom: '8px' }}>
+                🧪 Тестовий полігон інцидентів (Preview Demo з контрольованою помилкою)
+              </h3>
+              <p style={{ fontSize: '12.5px', color: '#94a3b8', marginBottom: '16px' }}>
+                Згенеруйте контрольоване порушення SLO для перевірки спрацьовування алертингу, фіксації correlationId та валідації ранбуків:
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <button
+                  className="academy-auth-btn"
+                  style={{ background: 'rgba(251, 191, 36, 0.2)', borderColor: '#fbbf24', color: '#fbbf24' }}
+                  onClick={() => {
+                    simulateControlledIncident('latency_spike');
+                    setObsState(getObservabilityState());
+                  }}
+                >
+                  ⚡ Сплеск латентності (p95 &gt; 150ms)
+                </button>
+
+                <button
+                  className="academy-auth-btn"
+                  style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444', color: '#ef4444' }}
+                  onClick={() => {
+                    simulateControlledIncident('error_burst');
+                    setObsState(getObservabilityState());
+                  }}
+                >
+                  🔥 Помилки API (HTTP 500 Outage)
+                </button>
+
+                <button
+                  className="academy-auth-btn"
+                  style={{ background: 'rgba(16, 185, 129, 0.2)', borderColor: '#34d399', color: '#34d399' }}
+                  onClick={() => {
+                    resolveIncident();
+                    setObsState(getObservabilityState());
+                  }}
+                >
+                  ✓ Відновити стан (Resolve)
+                </button>
+              </div>
+
+              {obsState.recentLogs.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                  <span style={{ fontSize: '12px', fontFamily: 'Orbitron, monospace', color: '#94a3b8', display: 'block', marginBottom: '8px' }}>
+                    Останні структуровані логи (Zero PII):
+                  </span>
+                  <div style={{ background: 'rgba(0, 0, 0, 0.6)', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#a7f3d0', maxHeight: '140px', overflowY: 'auto' }}>
+                    {obsState.recentLogs.map((log, idx) => (
+                      <div key={idx} style={{ marginBottom: '4px' }}>
+                        [{log.timestamp.slice(11, 19)}] {log.level} | {log.correlationId} | {log.action} | {log.durationMs}ms | hasPii: {String(log.hasPii)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </section>
