@@ -6,6 +6,7 @@ import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/a
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
 import AuthModal from '../../components/academy/AuthModal';
 import PortfolioCertificateView from '../../components/academy/PortfolioCertificateView';
+import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
   ADR_REGISTRY,
@@ -1637,6 +1638,11 @@ export default function AcademyPage() {
             })}
           </div>
         </section>
+
+        {/* Vibe-Coding Prompt Lab (SCRUM-45: Level 3) */}
+        <div style={{ marginTop: '48px' }}>
+          <VibePromptLab />
+        </div>
 
         {/* Portfolio & Cryptographic Skills Certificate (SCRUM-47: Level 4) */}
         <PortfolioCertificateView currentUser={currentUser} completedLessons={completedLessons} />
