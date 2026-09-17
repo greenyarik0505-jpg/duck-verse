@@ -22,6 +22,7 @@ import ProductAnalyticsDashboardView from '../../components/academy/ProductAnaly
 import PublicStatusView from '../../components/status/PublicStatusView';
 import ReleaseReadinessView from '../../components/academy/ReleaseReadinessView';
 import ParentConsentActivationView from '../../components/academy/ParentConsentActivationView';
+import AccountLifecycleAdminView from '../../components/academy/AccountLifecycleAdminView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1747,6 +1748,11 @@ export default function AcademyPage() {
         {/* Parent Consent & Age-Appropriate Account Activation (SCRUM-121) */}
         <section id="academy-parent-consent-section">
           <ParentConsentActivationView />
+        </section>
+
+        {/* Account Lifecycle Admin Console (SCRUM-125) */}
+        <section id="academy-account-lifecycle-section">
+          <AccountLifecycleAdminView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
