@@ -224,8 +224,12 @@ export default function AcademyPage() {
                 </span>
                 <span>{currentUser.username}</span>
                 <span className={`academy-role-badge role-${currentUser.role}`}>
-                  {currentUser.username === 'Yarik0505'
+                  {currentUser.username === 'Yarik0505' || currentUser.username === 'admin_yarik'
                     ? 'Team Lead'
+                    : currentUser.username === 'admin_dima' || currentUser.username === 'dima_stepanenko'
+                    ? 'Адмін (Дмитро)'
+                    : currentUser.username === 'admin_kirill' || currentUser.username === 'kirill_pushkaruk'
+                    ? 'Адмін (Кирил)'
                     : currentUser.role === 'child'
                     ? 'Учень'
                     : currentUser.role === 'mentor'

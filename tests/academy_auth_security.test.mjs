@@ -130,4 +130,19 @@ assert.strictEqual(authenticatedChild.parentConsent.granted, true);
 assert.strictEqual(authenticatedChild.parentConsent.scope, 'educational_only');
 console.log('✅ Автентифікація успішна, згода батьків збережена з мінімальним збором даних');
 
+// 6. Тестування акаунтів команди адміністраторів (Ярик, Діма, Кирил)
+console.log('6. Тест автентифікації адміністраторів команди...');
+const adminYarik = authenticateUser('Yarik0505', 'YarikPass2026!');
+assert.ok(adminYarik, 'Адміністратор Yarik0505 має успішно автентифікуватися');
+assert.strictEqual(adminYarik.role, ACADEMY_ROLES.ADMIN);
+
+const adminDima = authenticateUser('admin_dima', 'DimaPass2026!');
+assert.ok(adminDima, 'Адміністратор admin_dima має успішно автентифікуватися');
+assert.strictEqual(adminDima.role, ACADEMY_ROLES.ADMIN);
+
+const adminKirill = authenticateUser('admin_kirill', 'KirillPass2026!');
+assert.ok(adminKirill, 'Адміністратор admin_kirill має успішно автентифікуватися');
+assert.strictEqual(adminKirill.role, ACADEMY_ROLES.ADMIN);
+console.log('✅ Автентифікація команди адмінів (Yarik0505, admin_dima, admin_kirill) пройшла успішно');
+
 console.log('\n🎉 ВСІ АВТОМАТИЗОВАНІ ТЕСТИ БЕЗПЕКИ ТА АВТОРИЗАЦІЇ (SCRUM-54) УСПІШНО ПРОЙДЕНО!');
