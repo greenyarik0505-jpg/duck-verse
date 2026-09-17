@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
 import AuthModal from '../../components/academy/AuthModal';
+import PortfolioCertificateView from '../../components/academy/PortfolioCertificateView';
 import {
   DOMAIN_BOUNDARIES,
   ADR_REGISTRY,
@@ -1636,6 +1637,9 @@ export default function AcademyPage() {
             })}
           </div>
         </section>
+
+        {/* Portfolio & Cryptographic Skills Certificate (SCRUM-47: Level 4) */}
+        <PortfolioCertificateView currentUser={currentUser} completedLessons={completedLessons} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
