@@ -17,6 +17,7 @@ import MentorOfficeHoursView from '../../components/academy/MentorOfficeHoursVie
 import IndividualLearningPlanView from '../../components/academy/IndividualLearningPlanView';
 import AiSafetyModerationView from '../../components/academy/AiSafetyModerationView';
 import AiTransparencyConsentView from '../../components/academy/AiTransparencyConsentView';
+import ChildSafeAiPolicyView from '../../components/academy/ChildSafeAiPolicyView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1726,6 +1727,9 @@ export default function AcademyPage() {
 
         {/* AI Transparency, Consent & Data Controls (SCRUM-104) */}
         <AiTransparencyConsentView currentUser={currentUser} />
+
+        {/* Child-Safe AI Policy, Roles & Model Controls (SCRUM-110) */}
+        <ChildSafeAiPolicyView currentUser={currentUser} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
