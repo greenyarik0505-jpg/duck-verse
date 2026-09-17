@@ -25,6 +25,7 @@ import ParentConsentActivationView from '../../components/academy/ParentConsentA
 import AccountLifecycleAdminView from '../../components/academy/AccountLifecycleAdminView';
 import RecoverySupportSafeguardsView from '../../components/academy/RecoverySupportSafeguardsView';
 import SeniorPortfolioDossierView from '../../components/academy/SeniorPortfolioDossierView';
+import ArchitectureCasebookView from '../../components/academy/ArchitectureCasebookView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1765,6 +1766,11 @@ export default function AcademyPage() {
         {/* Senior Lab: Engineering Metrics & Portfolio Evidence Dossier (SCRUM-133) */}
         <section id="senior-portfolio-dossier-section">
           <SeniorPortfolioDossierView />
+        </section>
+
+        {/* Senior Lab: Architecture Trade-Off Casebook & ADR Review (SCRUM-136) */}
+        <section id="architecture-casebook-section">
+          <ArchitectureCasebookView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
