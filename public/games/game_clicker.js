@@ -1,4 +1,4 @@
-﻿class QuackClickerGame {
+class QuackClickerGame {
     constructor(container, onAddCoins) {
         this.container = container;
         this.onAddCoins = onAddCoins;
@@ -111,29 +111,40 @@
             const desc = u.qps ? ('+' + u.qps + ' кряк/сек') : ('+' + u.clickPower + ' к клику');
             const disabledClass = this.quacks < u.cost ? 'disabled' : '';
             upgradesHtml += `
-                <button id="upg-btn-${i}" class="upgrade-card ${disabledClass}" onclick="window.activeClicker.buyUpgrade(${i})">
-                    <span class="upg-icon">${u.icon}</span>
+                <button
+                    id="upg-btn-${i}"
+                    class="upgrade-card ${disabledClass}"
+                    onclick="window.activeClicker.buyUpgrade(${i})"
+                    aria-label="Купити покращення: ${u.name}, вартість ${u.cost} монет, ефект ${desc}"
+                >
+                    <span class="upg-icon" aria-hidden="true">${u.icon}</span>
                     <div class="upg-info">
                         <div class="upg-name">${u.name} <span class="upg-count">(${u.count})</span></div>
                         <div class="upg-desc">${desc}</div>
                     </div>
-                    <div class="upg-cost">🪙 ${u.cost}</div>
+                    <div class="upg-cost" aria-label="Вартість ${u.cost} монет">🪙 ${u.cost}</div>
                 </button>
             `;
         });
 
         this.container.innerHTML = `
-            <div class="clicker-layout">
+            <div class="clicker-layout" role="region" aria-label="Ігрове поле Quack Clicker">
                 <div class="clicker-main">
-                    <div class="clicker-stats">
+                    <div class="clicker-stats" role="status" aria-live="polite">
                         <div class="big-stat"><span id="total-quacks">${Math.floor(this.quacks)}</span> 🦆</div>
                         <div class="sub-stat">Кряков в секунду: <span id="quacks-per-sec">${this.quacksPerSec}/сек</span></div>
                         <div class="sub-stat">Сила клика: +${this.clickPower}</div>
                     </div>
                     
                     <div id="duck-click-zone" class="duck-click-zone">
-                        <button id="big-duck-btn" class="big-duck-button">
-                            <div class="duck-graphic">
+                        <button
+                            id="big-duck-btn"
+                            class="big-duck-button"
+                            aria-label="Головна Квантова Качка. Натисніть для кряку та збору монет"
+                            title="Клікніть або натисніть Enter/Space"
+                            tabindex="0"
+                        >
+                            <div class="duck-graphic" aria-hidden="true">
                                 <div class="duck-head">
                                     <div class="duck-visor"></div>
                                     <div class="duck-beak"></div>
@@ -144,9 +155,9 @@
                     </div>
                 </div>
 
-                <div class="clicker-shop">
-                    <h3>⚡ Мультиверс Апгрейды</h3>
-                    <div class="upgrade-list">
+                <div class="clicker-shop" role="region" aria-label="Магазин покращень клікера">
+                    <h3>⚡ Мультиверс Апгрейди</h3>
+                    <div class="upgrade-list" role="list">
                         ${upgradesHtml}
                     </div>
                 </div>
@@ -158,6 +169,12 @@
         const duckBtn = document.getElementById('big-duck-btn');
         if (duckBtn) {
             duckBtn.addEventListener('click', (e) => this.clickDuck(e));
+            duckBtn.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    e.preventDefault();
+                    this.clickDuck(e);
+                }
+            });
         }
     }
 }
