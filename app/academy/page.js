@@ -26,6 +26,7 @@ import AccountLifecycleAdminView from '../../components/academy/AccountLifecycle
 import RecoverySupportSafeguardsView from '../../components/academy/RecoverySupportSafeguardsView';
 import SeniorPortfolioDossierView from '../../components/academy/SeniorPortfolioDossierView';
 import ArchitectureCasebookView from '../../components/academy/ArchitectureCasebookView';
+import MentoringLeadershipLoopView from '../../components/academy/MentoringLeadershipLoopView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1771,6 +1772,11 @@ export default function AcademyPage() {
         {/* Senior Lab: Architecture Trade-Off Casebook & ADR Review (SCRUM-136) */}
         <section id="architecture-casebook-section">
           <ArchitectureCasebookView />
+        </section>
+
+        {/* Senior Lab: Mentoring Leadership Loop & Feedback Calibration (SCRUM-137) */}
+        <section id="mentoring-leadership-section">
+          <MentoringLeadershipLoopView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
