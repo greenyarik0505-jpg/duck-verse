@@ -2265,3 +2265,182 @@ canvas#game-canvas {
     .error-screen-actions { flex-direction: column; }
     .skeleton-search { display: none; }
 }
+
+
+/* ========== Hub Themes Modal (SCRUM-33) ========== */
+.theme-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.78);
+    backdrop-filter: blur(8px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.theme-modal-panel {
+    background: #10141e;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    width: 100%;
+    max-width: 520px;
+    padding: 24px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    animation: slideDown 0.2s ease-out;
+}
+.theme-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.theme-modal-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+}
+.theme-modal-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+}
+.theme-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.theme-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.theme-card:hover:not(.locked) {
+    border-color: var(--border-hover);
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-1px);
+}
+.theme-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    box-shadow: 0 0 16px var(--accent-glow);
+}
+.theme-card.locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+.theme-card-icon {
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+}
+.theme-card-body {
+    flex: 1;
+    min-width: 0;
+}
+.theme-card-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.theme-card-name {
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+}
+.theme-current-badge {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    background: rgba(56,189,248,0.18);
+    color: #38bdf8;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+.theme-locked-badge {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    background: rgba(244,63,94,0.18);
+    color: #f43f5e;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+.theme-card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+.theme-card-hint {
+    font-size: 11px;
+    color: #f59e0b;
+    margin-bottom: 6px;
+}
+.theme-palette-preview {
+    display: flex;
+    gap: 5px;
+}
+.theme-palette-preview span {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: inline-block;
+}
+.theme-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.theme-cancel-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.theme-cancel-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+}
+.theme-apply-btn {
+    background: var(--primary);
+    border: none;
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.theme-apply-btn:hover {
+    background: var(--primary-hover);
+}
+@media (max-width: 480px) {
+    .theme-modal-panel { padding: 18px 14px; }
+    .theme-modal-footer { flex-direction: column; }
+    .theme-cancel-btn, .theme-apply-btn { width: 100%; text-align: center; }
+}
