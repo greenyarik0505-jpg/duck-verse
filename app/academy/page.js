@@ -84,6 +84,12 @@ export default function AcademyPage() {
     parentConsent: null
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Mark mounted after initial render to avoid SSR hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Restore saved session if user previously logged in
   useEffect(() => {
@@ -186,6 +192,17 @@ export default function AcademyPage() {
       setTimeout(() => setReviewSubmitted(false), 3000);
     } catch {}
   };
+
+  if (!mounted) {
+    return (
+      <div className="academy-page" style={{ minHeight: '100vh', background: '#0a0d14', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38bdf8', fontFamily: 'monospace' }} suppressHydrationWarning>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', border: '3px solid #38bdf8', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+          <span style={{ fontSize: '13px', letterSpacing: '2px', color: '#94a3b8' }}>ЗАВАНТАЖЕННЯ DUCK ACADEMY...</span>
+        </div>
+      </div>
+    );
+  }
 
   if (!enabled) {
     return (
