@@ -14,6 +14,7 @@ import AuditLogComplianceView from '../../components/academy/AuditLogComplianceV
 import DemoDayShowcaseView from '../../components/academy/DemoDayShowcaseView';
 import CohortTeamsView from '../../components/academy/CohortTeamsView';
 import MentorOfficeHoursView from '../../components/academy/MentorOfficeHoursView';
+import IndividualLearningPlanView from '../../components/academy/IndividualLearningPlanView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1714,6 +1715,9 @@ export default function AcademyPage() {
 
         {/* Mentor Office Hours & Booking (SCRUM-99) */}
         <MentorOfficeHoursView currentUser={currentUser} />
+
+        {/* Individual Learning Plan & Adaptive Path (SCRUM-100) */}
+        <IndividualLearningPlanView currentUser={currentUser} completedLessons={completedLessons} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
