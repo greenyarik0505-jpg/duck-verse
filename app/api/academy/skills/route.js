@@ -17,7 +17,7 @@ function getAuthenticatedUser(request) {
     }
   }
   // За замовчуванням гість/демо
-  return { userId: 'user_student_duck', username: 'student_duck', role: ACADEMY_ROLES.CHILD };
+  return { userId: 'user_guest', username: 'Гість', role: 'guest' };
 }
 
 /**
@@ -27,12 +27,21 @@ function getAuthenticatedUser(request) {
 export async function GET(request) {
   const currentUser = getAuthenticatedUser(request);
   const { searchParams } = new URL(request.url);
-  const studentId = searchParams.get('studentId') || currentUser.userId;
+  const requestedStudentId = searchParams.get('studentId');
+  const studentId = requestedStudentId || currentUser.userId;
 
-  // Перевірка IDOR: дитина може бачити тільки свій профіль
-  if (currentUser.role === ACADEMY_ROLES.CHILD && studentId !== currentUser.userId) {
+  // Перевірка IDOR для дитини: може бачити тільки свій профіль
+  if (currentUser.role === ACADEMY_ROLES.CHILD && requestedStudentId && requestedStudentId !== currentUser.userId) {
     return NextResponse.json(
       { success: false, error: 'Доступ заборонено: неможливо переглядати аналітику іншого учня' },
+      { status: 403 }
+    );
+  }
+
+  // Перевірка IDOR для гостя: може бачити демо-профіль або свій guest профіль
+  if (currentUser.role === 'guest' && requestedStudentId && requestedStudentId !== 'user_guest' && requestedStudentId !== 'user_student_duck') {
+    return NextResponse.json(
+      { success: false, error: 'Доступ заборонено: гості можуть переглядати тільки свій демо-профіль' },
       { status: 403 }
     );
   }
