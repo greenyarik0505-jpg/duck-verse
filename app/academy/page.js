@@ -7,6 +7,7 @@ import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
 import AuthModal from '../../components/academy/AuthModal';
 import PortfolioCertificateView from '../../components/academy/PortfolioCertificateView';
 import SkillCompetencyMatrixView from '../../components/academy/SkillCompetencyMatrixView';
+import ContentPublishingWorkflowView from '../../components/academy/ContentPublishingWorkflowView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1686,6 +1687,9 @@ export default function AcademyPage() {
 
         {/* Portfolio & Cryptographic Skills Certificate (SCRUM-47: Level 4) */}
         <PortfolioCertificateView currentUser={currentUser} completedLessons={completedLessons} />
+
+        {/* Content Versioning & Publishing Workflow (SCRUM-84) */}
+        <ContentPublishingWorkflowView currentUser={currentUser} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
