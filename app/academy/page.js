@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
 import AuthModal from '../../components/academy/AuthModal';
+import LearningMapDashboard from '../../components/academy/LearningMapDashboard';
 import PortfolioCertificateView from '../../components/academy/PortfolioCertificateView';
 import SkillCompetencyMatrixView from '../../components/academy/SkillCompetencyMatrixView';
 import ContentPublishingWorkflowView from '../../components/academy/ContentPublishingWorkflowView';
@@ -340,6 +341,15 @@ export default function AcademyPage() {
 
       {/* Main Content */}
       <main className="academy-main">
+        {/* Learning Map & Level Progression Dashboard (SCRUM-51) */}
+        <LearningMapDashboard
+          completedLessons={completedLessons}
+          currentUser={currentUser}
+          onSelectLesson={(lessonId) => {
+            const el = document.getElementById(lessonId);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+        />
         {/* Mentor Dashboard Panel (SCRUM-57: Visible for Mentor / Admin) */}
         {(currentUser.role === 'mentor' || currentUser.role === 'admin') && (
           <section className="academy-mentor-panel">
