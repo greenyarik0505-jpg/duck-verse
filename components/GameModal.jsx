@@ -604,8 +604,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         </div>
 
         <div className="gaming-hud-right">
-          <div className="gaming-fps-tag" title="SCRUM-13: Моніторинг швидкодії (фіксовані 60 FPS)">
-            <span>⚡ {fps} FPS | {inputLag}</span>
+          <div className="gaming-fps-tag" title="SCRUM-25: Фізика 60 FPS (Fixed Timestep 16.6ms) | Дисплей: uncapped">
+            <span>⚡ 60 FPS {fps !== 60 ? `(${fps}Hz)` : ''} | {inputLag}</span>
           </div>
 
           {currentGameId === 'geometry_dash' && (
@@ -632,7 +632,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
               }}
               title="Перезапустити раунд (Клавіша R)"
             >
-              <span>🔄 [R] Заново</span>
+              <span>🔄 <span className="gaming-btn-label">[R] Заново</span></span>
             </button>
           )}
 
@@ -645,7 +645,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             }}
             title={soundEnabled ? 'Вимкнути звук (Клавіша M)' : 'Увімкнути звук (Клавіша M)'}
           >
-            <span>{soundEnabled ? '🔊 [M]' : '🔇 [M]'}</span>
+            <span>{soundEnabled ? '🔊' : '🔇'} <span className="gaming-btn-label">[M]</span></span>
           </button>
 
           <button
@@ -657,7 +657,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             }}
             title={isFullscreen ? 'Вийти з повного екрана (Клавіша F)' : 'Повноекранний режим (Клавіша F)'}
           >
-            <span>⛶ [F]</span>
+            <span>⛶ <span className="gaming-btn-label">[F]</span></span>
           </button>
 
           <button
@@ -669,7 +669,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
             }}
             title="Повернутися до хабу (Клавіша Escape)"
           >
-            <span>✖ [Esc] До хабу</span>
+            <span>✖ <span className="gaming-btn-label">[Esc] До хабу</span></span>
           </button>
         </div>
       </header>
