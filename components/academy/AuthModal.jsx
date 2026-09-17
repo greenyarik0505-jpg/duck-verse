@@ -157,7 +157,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onUserChange }
                 type="text"
                 required
                 className="academy-auth-input"
-                placeholder="наприклад: student_yarik"
+                placeholder="наприклад: student_duck або admin_root"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
