@@ -55,6 +55,7 @@ import {
 } from '../../lib/academy/plugins/flags';
 import GovernanceRoadmapView from '../../components/academy/GovernanceRoadmapView';
 import RoadmapDependencyVisualizerView from '../../components/academy/RoadmapDependencyVisualizerView';
+import RepoProvisioningAutomationView from '../../components/academy/RepoProvisioningAutomationView';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -1783,6 +1784,11 @@ export default function AcademyPage() {
         {/* Roadmap Dependency Visualizer & Blocked-Work Alerts (SCRUM-138) */}
         <section id="roadmap-dependencies-section">
           <RoadmapDependencyVisualizerView />
+        </section>
+
+        {/* GitHub Repository Provisioning & Permissions Automation (SCRUM-142) */}
+        <section id="repo-provisioning-section">
+          <RepoProvisioningAutomationView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
