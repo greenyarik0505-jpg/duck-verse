@@ -10,6 +10,7 @@ import SkinShopModal from '../components/SkinShopModal';
 import EmptyState from '../components/EmptyState';
 import ThemeSelectorModal from '../components/ThemeSelectorModal';
 import AchievementsModal, { AchievementToast, useAchievements } from '../components/AchievementsModal';
+import OnboardingModal from '../components/OnboardingModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 import { loadTheme, applyTheme } from '../lib/themes';
 
@@ -22,6 +23,7 @@ export default function GameHubPage() {
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('cyberpunk');
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -35,7 +37,18 @@ export default function GameHubPage() {
     const theme = loadTheme();
     setCurrentTheme(theme);
     applyTheme(theme);
+
+    // Show onboarding only on first visit
+    const seen = localStorage.getItem('duckverse_onboarding_done');
+    if (!seen) {
+      setIsOnboardingOpen(true);
+    }
   }, []);
+
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    try { localStorage.setItem('duckverse_onboarding_done', '1'); } catch {}
+  };
 
   const handleUpdateCoins = useCallback((delta) => {
     setCoins((prev) => {
@@ -214,6 +227,12 @@ export default function GameHubPage() {
         gameId={selectedGameId}
         onClose={() => setIsGameOpen(false)}
         onAddCoins={handleUpdateCoins}
+      />
+
+      {/* Interactive Onboarding (SCRUM-31) */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={handleCloseOnboarding}
       />
     </div>
   );
