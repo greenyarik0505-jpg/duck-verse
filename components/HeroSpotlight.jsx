@@ -4,9 +4,9 @@ export default function HeroSpotlight({ onLaunch }) {
   return (
     <section className="hero-spotlight">
       <div className="spotlight-content">
-        <div className="spotlight-badge">🔥 ФЛАГМАН ХАБУ • СПРИНТ 1</div>
+        <div className="spotlight-badge">🔥 ФЛАГМАН ХАБУ • LIVE PRODUCTION</div>
         <h2 className="spotlight-title">
-          GEOMETRY DASH <span className="brand-accent">ORIGINAL</span>
+          GEOMETRY DASH <span className="brand-accent">NEON</span>
         </h2>
         <p className="spotlight-desc">
           Ритм, швидкість та чистий адреналін! Долайте геометричні перешкоди, злітайте на батутах,
