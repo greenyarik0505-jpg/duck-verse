@@ -8,6 +8,7 @@ import AuthModal from '../../components/academy/AuthModal';
 import PortfolioCertificateView from '../../components/academy/PortfolioCertificateView';
 import SkillCompetencyMatrixView from '../../components/academy/SkillCompetencyMatrixView';
 import ContentPublishingWorkflowView from '../../components/academy/ContentPublishingWorkflowView';
+import LearningCalendarNotificationsView from '../../components/academy/LearningCalendarNotificationsView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1690,6 +1691,9 @@ export default function AcademyPage() {
 
         {/* Content Versioning & Publishing Workflow (SCRUM-84) */}
         <ContentPublishingWorkflowView currentUser={currentUser} />
+
+        {/* Learning Calendar & Smart Reminders (SCRUM-85) */}
+        <LearningCalendarNotificationsView currentUser={currentUser} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
