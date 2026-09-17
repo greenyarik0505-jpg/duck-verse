@@ -377,6 +377,7 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
 
     initGame();
 
+    const clickerNode = clickerContainerRef.current;
     let rafId = null;
     let lastTime = performance.now();
     let frameCount = 0;
@@ -410,8 +411,8 @@ function GameModalContent({ gameId, onClose, onAddCoins }) {
         } catch (err) {}
         activeGameRef.current = null;
       }
-      if (clickerContainerRef.current) {
-        clickerContainerRef.current.innerHTML = '';
+      if (clickerNode) {
+        clickerNode.replaceChildren();
       }
     };
   }, [currentGameId, gameMeta.engineClass, gameMeta.enginePath]);
