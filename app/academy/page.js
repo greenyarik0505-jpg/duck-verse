@@ -224,12 +224,12 @@ export default function AcademyPage() {
                 </span>
                 <span>{currentUser.username}</span>
                 <span className={`academy-role-badge role-${currentUser.role}`}>
-                  {currentUser.username === 'Yarik0505' || currentUser.username === 'admin_yarik'
-                    ? 'Team Lead'
-                    : currentUser.username === 'admin_dima' || currentUser.username === 'dima_stepanenko'
-                    ? 'Адмін (Дмитро)'
-                    : currentUser.username === 'admin_kirill' || currentUser.username === 'kirill_pushkaruk'
-                    ? 'Адмін (Кирил)'
+                  {currentUser.username?.toLowerCase() === 'yarik0505' || currentUser.username?.toLowerCase() === 'admin_yarik'
+                    ? 'TEAM LEAD (Місцевий Тцк)'
+                    : currentUser.username?.toLowerCase() === 'admin_dima' || currentUser.username?.toLowerCase() === 'dima_stepanenko'
+                    ? 'АДМІН (Сменщик Ников)'
+                    : currentUser.username?.toLowerCase() === 'admin_kirill' || currentUser.username?.toLowerCase() === 'kirill_pushkaruk'
+                    ? 'АДМІН (Тулбоксер)'
                     : currentUser.role === 'child'
                     ? 'Учень'
                     : currentUser.role === 'mentor'
