@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import FlappyDuckGame from '../public/games/game_flappy.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+
+const code = fs.readFileSync(path.join(process.cwd(), 'public/games/game_flappy.js'), 'utf-8');
+const sandbox = { window: {}, module: { exports: {} }, console, Math, Date, requestAnimationFrame: () => {}, cancelAnimationFrame: () => {} };
+sandbox.window = sandbox;
+vm.createContext(sandbox);
+vm.runInContext(code, sandbox);
+const FlappyDuckGame = sandbox.module.exports || sandbox.window.FlappyDuckGame;
 
 test('FlappyDuckGame initializes with classic settings and zero score', () => {
     let gameOverCalled = false;
