@@ -878,7 +878,7 @@ export default function AcademyPage() {
         </section>
 
         {/* Observability, SLO & Error Budgets Section (SCRUM-72: L7) */}
-        <section className="academy-observability-panel">
+        <section className="academy-observability-panel" suppressHydrationWarning>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
             <div>
               <h2 style={{ fontFamily: 'Orbitron, sans-serif', fontSize: '18px', color: '#34d399', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -1009,13 +1009,13 @@ export default function AcademyPage() {
                 flexWrap: 'wrap',
                 gap: '12px'
               }}>
-                <div>
+                <div suppressHydrationWarning>
                   <strong style={{ fontSize: '13px', color: '#ffffff' }}>Стан бюджету помилок (30-day Rolling Error Budget)</strong>
-                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }}>
-                    Загальна кількість запитів: <strong>{obsState.metrics.totalRequests.toLocaleString()}</strong> • Помилки: <strong>{obsState.metrics.failedRequests}</strong> • Статус: <span style={{ color: '#34d399', fontWeight: 700 }}>{obsState.metrics.errorBudget.status}</span>
+                  <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '2px' }} suppressHydrationWarning>
+                    Загальна кількість запитів: <strong>{obsState.metrics.totalRequests}</strong> • Помилки: <strong>{obsState.metrics.failedRequests}</strong> • Статус: <span style={{ color: '#34d399', fontWeight: 700 }}>{obsState.metrics.errorBudget.status}</span>
                   </p>
                 </div>
-                <div style={{ fontFamily: 'Orbitron, monospace', fontSize: '14px', fontWeight: 800, color: '#34d399' }}>
+                <div style={{ fontFamily: 'Orbitron, monospace', fontSize: '14px', fontWeight: 800, color: '#34d399' }} suppressHydrationWarning>
                   {obsState.metrics.errorBudget.budgetRemainingPercent}% Залишок
                 </div>
               </div>
@@ -1119,7 +1119,7 @@ export default function AcademyPage() {
                   <span style={{ fontSize: '12px', fontFamily: 'Orbitron, monospace', color: '#94a3b8', display: 'block', marginBottom: '8px' }}>
                     Останні структуровані логи (Zero PII):
                   </span>
-                  <div style={{ background: 'rgba(0, 0, 0, 0.6)', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#a7f3d0', maxHeight: '140px', overflowY: 'auto' }}>
+                  <div style={{ background: 'rgba(0, 0, 0, 0.6)', borderRadius: '8px', padding: '12px', fontFamily: 'monospace', fontSize: '11px', color: '#a7f3d0', maxHeight: '140px', overflowY: 'auto' }} suppressHydrationWarning>
                     {obsState.recentLogs.map((log, idx) => (
                       <div key={idx} style={{ marginBottom: '4px' }}>
                         [{log.timestamp.slice(11, 19)}] {log.level} | {log.correlationId} | {log.action} | {log.durationMs}ms | hasPii: {String(log.hasPii)}
