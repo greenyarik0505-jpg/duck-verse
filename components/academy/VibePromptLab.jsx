@@ -97,8 +97,8 @@ export default function VibePromptLab({ onCompleteExercise }) {
         <p className="text-sm text-slate-300 mb-3">{activeExercise.scenario}</p>
 
         <div className="bg-slate-950/80 border border-slate-800/60 rounded-lg p-3">
-          <span className="text-xs text-amber-400 font-mono block mb-1">💭 Сира "Vibe-ідея" (як часто формулюють у чаті):</span>
-          <p className="text-sm font-mono text-amber-200/90 italic">"{activeExercise.rawIdea}"</p>
+          <span className="text-xs text-amber-400 font-mono block mb-1">{"💭 Сира \"Vibe-ідея\" (як часто формулюють у чаті):"}</span>
+          <p className="text-sm font-mono text-amber-200/90 italic">&quot;{activeExercise.rawIdea}&quot;</p>
         </div>
       </div>
 

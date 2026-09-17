@@ -877,7 +877,7 @@ export default function AcademyPage() {
                 <span>Спостережуваність, SLO & Error Budgets (L7: SCRUM-72)</span>
               </h2>
               <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px' }}>
-                Моніторинг SLI/SLO в реальному часі, структуровані логи без PII, розрахунок Error Budgets та прив'язка до Runbooks
+                {"Моніторинг SLI/SLO в реальному часі, структуровані логи без PII, розрахунок Error Budgets та прив'язка до Runbooks"}
               </p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

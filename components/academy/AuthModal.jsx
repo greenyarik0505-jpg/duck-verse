@@ -154,7 +154,7 @@ export default function AuthModal({ isOpen, onClose, currentUser, onUserChange }
           <form onSubmit={handleLogin} className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1" htmlFor="login-username">
-                Ім'я користувача (Username):
+                {"Ім'я користувача (Username):"}
               </label>
               <input
                 id="login-username"
