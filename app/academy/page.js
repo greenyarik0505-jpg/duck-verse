@@ -12,6 +12,7 @@ import LearningCalendarNotificationsView from '../../components/academy/Learning
 import ParentMentorPortalView from '../../components/academy/ParentMentorPortalView';
 import AuditLogComplianceView from '../../components/academy/AuditLogComplianceView';
 import DemoDayShowcaseView from '../../components/academy/DemoDayShowcaseView';
+import CohortTeamsView from '../../components/academy/CohortTeamsView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1706,6 +1707,9 @@ export default function AcademyPage() {
 
         {/* Demo Day & Privacy-Safe Showcase (SCRUM-90) */}
         <DemoDayShowcaseView currentUser={currentUser} />
+
+        {/* Cohorts, Teams & Invitations (SCRUM-94) */}
+        <CohortTeamsView currentUser={currentUser} />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
