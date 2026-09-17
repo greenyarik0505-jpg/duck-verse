@@ -24,6 +24,7 @@ import ReleaseReadinessView from '../../components/academy/ReleaseReadinessView'
 import ParentConsentActivationView from '../../components/academy/ParentConsentActivationView';
 import AccountLifecycleAdminView from '../../components/academy/AccountLifecycleAdminView';
 import RecoverySupportSafeguardsView from '../../components/academy/RecoverySupportSafeguardsView';
+import SeniorPortfolioDossierView from '../../components/academy/SeniorPortfolioDossierView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1759,6 +1760,11 @@ export default function AcademyPage() {
         {/* Recovery Support Escalation & Irreversible Safeguards (SCRUM-128) */}
         <section id="academy-recovery-safeguards-section">
           <RecoverySupportSafeguardsView />
+        </section>
+
+        {/* Senior Lab: Engineering Metrics & Portfolio Evidence Dossier (SCRUM-133) */}
+        <section id="senior-portfolio-dossier-section">
+          <SeniorPortfolioDossierView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
