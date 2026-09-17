@@ -18,6 +18,7 @@ import IndividualLearningPlanView from '../../components/academy/IndividualLearn
 import AiSafetyModerationView from '../../components/academy/AiSafetyModerationView';
 import AiTransparencyConsentView from '../../components/academy/AiTransparencyConsentView';
 import ChildSafeAiPolicyView from '../../components/academy/ChildSafeAiPolicyView';
+import ProductAnalyticsDashboardView from '../../components/academy/ProductAnalyticsDashboardView';
 import VibePromptLab from '../../components/academy/VibePromptLab';
 import {
   DOMAIN_BOUNDARIES,
@@ -1730,6 +1731,9 @@ export default function AcademyPage() {
 
         {/* Child-Safe AI Policy, Roles & Model Controls (SCRUM-110) */}
         <ChildSafeAiPolicyView currentUser={currentUser} />
+
+        {/* Product Analytics Event Taxonomy & Learning KPI Dashboard (SCRUM-112) */}
+        <ProductAnalyticsDashboardView />
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
         <section className="academy-section">
