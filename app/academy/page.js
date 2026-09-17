@@ -56,6 +56,7 @@ import {
 import GovernanceRoadmapView from '../../components/academy/GovernanceRoadmapView';
 import RoadmapDependencyVisualizerView from '../../components/academy/RoadmapDependencyVisualizerView';
 import RepoProvisioningAutomationView from '../../components/academy/RepoProvisioningAutomationView';
+import EngineeringGovernanceScorecardView from '../../components/academy/EngineeringGovernanceScorecardView';
 
 export default function AcademyPage() {
   const [selectedTrackId, setSelectedTrackId] = useState('track-frontend-gaming');
@@ -1789,6 +1790,11 @@ export default function AcademyPage() {
         {/* GitHub Repository Provisioning & Permissions Automation (SCRUM-142) */}
         <section id="repo-provisioning-section">
           <RepoProvisioningAutomationView />
+        </section>
+
+        {/* Engineering Governance Scorecard for PR & Release Evidence (SCRUM-146) */}
+        <section id="governance-scorecard-section">
+          <EngineeringGovernanceScorecardView />
         </section>
 
         {/* Engineering Governance & Learning Roadmap (SCRUM-70) */}
