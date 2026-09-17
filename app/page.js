@@ -9,6 +9,7 @@ import GameModal from '../components/GameModal';
 import SkinShopModal from '../components/SkinShopModal';
 import EmptyState from '../components/EmptyState';
 import ThemeSelectorModal from '../components/ThemeSelectorModal';
+import AchievementsModal, { AchievementToast, useAchievements } from '../components/AchievementsModal';
 import { GAME_REGISTRY, getGamesByCategory, searchGames } from '../lib/games/registry';
 import { loadTheme, applyTheme } from '../lib/themes';
 
@@ -20,6 +21,7 @@ export default function GameHubPage() {
   const [isShopOpen, setIsShopOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
   const [currentTheme, setCurrentTheme] = useState('cyberpunk');
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
   const [isGameOpen, setIsGameOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState('geometry_dash');
 
@@ -45,6 +47,8 @@ export default function GameHubPage() {
     });
   }, []);
 
+  const { achState, updateStat, toast, dismissToast } = useAchievements(handleUpdateCoins);
+
   const handleToggleSound = () => {
     const next = !soundEnabled;
     setSoundEnabled(next);
@@ -53,8 +57,10 @@ export default function GameHubPage() {
   };
 
   const handleLaunchGame = (gameId) => {
-    setSelectedGameId(gameId || 'geometry_dash');
+    const id = gameId || 'geometry_dash';
+    setSelectedGameId(id);
     setIsGameOpen(true);
+    updateStat({ gamesLaunched: (achState?.stats?.gamesLaunched || 0) + 1, addUniqueGame: id });
   };
 
   let filtered = getGamesByCategory(activeCategory);
@@ -69,6 +75,7 @@ export default function GameHubPage() {
         coins={coins}
         onOpenShop={() => setIsShopOpen(true)}
         onOpenTheme={() => setIsThemeOpen(true)}
+        onOpenAchievements={() => setIsAchievementsOpen(true)}
         soundEnabled={soundEnabled}
         onToggleSound={handleToggleSound}
         searchQuery={searchQuery}
@@ -190,6 +197,17 @@ export default function GameHubPage() {
         onSelectTheme={(t) => setCurrentTheme(t)}
       />
 
+      {/* Achievements Modal (SCRUM-32) */}
+      <AchievementsModal
+        isOpen={isAchievementsOpen}
+        onClose={() => setIsAchievementsOpen(false)}
+        achState={achState}
+      />
+
+      {/* Achievement Toast (SCRUM-32) */}
+      {toast && (
+        <AchievementToast achievement={toast} onDismiss={dismissToast} />
+      )}
       {/* Game Playing Modal (SCRUM-13 Benchmark & Launcher) */}
       <GameModal
         isOpen={isGameOpen}
