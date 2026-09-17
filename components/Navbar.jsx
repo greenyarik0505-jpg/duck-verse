@@ -1,11 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { isAcademyEnabled } from '../lib/academy/config';
 
 export default function Navbar({ coins, onOpenShop, onOpenTheme, onOpenProfile, onOpenAchievements, soundEnabled, onToggleSound, searchQuery, onSearchChange }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const searchInputRef = useRef(null);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Focus search on '/' or 'Ctrl+K' / 'Cmd+K' when not already in an input
+      if (
+        (e.key === '/' || ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k')) &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const toggleMobileMenu = () => setMobileMenuOpen(prev => !prev);
   const closeMobileMenu = () => setMobileMenuOpen(false);
@@ -32,14 +49,16 @@ export default function Navbar({ coins, onOpenShop, onOpenTheme, onOpenProfile, 
             <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <input
+            ref={searchInputRef}
             type="text"
-            placeholder="Пошук ігор у хабі..."
+            placeholder="Пошук ігор... (Geometry Dash, Клікер, Шутер)"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             aria-label="Пошук ігор у хабі"
           />
           {searchQuery && (
             <button
+              type="button"
               className="search-clear-btn"
               onClick={() => onSearchChange('')}
               title="Очистити пошук"

@@ -102,8 +102,9 @@ body {
 }
 
 .header-search {
-    flex: 1;
-    max-width: 400px;
+    flex: 1 1 360px;
+    min-width: 260px;
+    max-width: 520px;
     position: relative;
     display: flex;
     align-items: center;
@@ -111,52 +112,85 @@ body {
 
 .header-search svg {
     position: absolute;
-    left: 14px;
-    color: var(--text-dim);
+    left: 15px;
+    color: var(--primary);
+    pointer-events: none;
+    transition: color 0.2s ease;
 }
 
 .header-search input {
     width: 100%;
-    padding: 10px 14px 10px 42px;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--border-subtle);
+    height: 44px;
+    padding: 10px 42px 10px 46px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: 24px;
     color: #fff;
     font-size: 14px;
+    font-weight: 500;
     outline: none;
     transition: all 0.2s ease;
 }
 
+.header-search input::placeholder {
+    color: rgba(148, 163, 184, 0.85);
+}
+
 .header-search input:focus {
-    border-color: rgba(56, 189, 248, 0.45);
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.7);
+    background: rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18), 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+.search-clear-btn {
+    position: absolute;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: none;
+    border-radius: 50%;
+    color: #cbd5e1;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+
+.search-clear-btn:hover {
+    background: rgba(239, 68, 68, 0.35);
+    color: #fca5a5;
+    transform: scale(1.1);
 }
 
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .user-wallet {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: rgba(245, 158, 11, 0.08);
     border: 1px solid rgba(245, 158, 11, 0.25);
-    padding: 7px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
     font-weight: 700;
     color: #fbbf24;
+    font-size: 13px;
+    white-space: nowrap;
 }
 
 .header-btn {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-subtle);
     color: var(--text-main);
-    padding: 8px 16px;
-    border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;

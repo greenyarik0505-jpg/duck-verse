@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ACADEMY_TRACKS, getLessonsByTrack, isLessonUnlocked } from '../../lib/academy/registry';
 import { isAcademyEnabled, ACADEMY_CONFIG } from '../../lib/academy/config';
@@ -54,12 +54,25 @@ export default function AcademyPage() {
   const [flagActionMsg, setFlagActionMsg] = useState('');
 
   const [currentUser, setCurrentUser] = useState({
-    id: 'user_student_yarik',
-    username: 'student_yarik',
-    role: 'child',
-    parentConsent: true,
+    id: 'user_guest',
+    username: 'Гість',
+    role: 'guest',
+    parentConsent: null
   });
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Restore saved session if user previously logged in
+  useEffect(() => {
+    try {
+      const savedUser = localStorage.getItem('duckverse_academy_user');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (parsed && parsed.username && parsed.role) {
+          setCurrentUser(parsed);
+        }
+      }
+    } catch {}
+  }, []);
 
   const [rubricScores, setRubricScores] = useState({
     correctness: 5,
@@ -106,6 +119,7 @@ export default function AcademyPage() {
     setCurrentUser(userProfile);
     setIsAuthModalOpen(false);
     try {
+      localStorage.setItem('duckverse_academy_user', JSON.stringify(userProfile));
       await fetch('/api/academy/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -119,6 +133,7 @@ export default function AcademyPage() {
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem('duckverse_academy_user');
       await fetch('/api/academy/auth/logout', { method: 'POST' });
     } catch {}
     setCurrentUser({
@@ -198,13 +213,30 @@ export default function AcademyPage() {
             {/* User Auth Session Chip (SCRUM-54 & SCRUM-50) */}
             <div className="academy-auth-box">
               <div className="academy-user-chip">
-                <span>{currentUser.role === 'child' ? '🐥' : currentUser.role === 'mentor' ? '🦉' : currentUser.role === 'admin' ? '👑' : '👤'}</span>
+                <span>
+                  {currentUser.role === 'guest'
+                    ? '👤'
+                    : currentUser.username === 'Yarik0505' || currentUser.role === 'admin'
+                    ? '👑'
+                    : currentUser.role === 'mentor'
+                    ? '🦉'
+                    : '🐥'}
+                </span>
                 <span>{currentUser.username}</span>
                 <span className={`academy-role-badge role-${currentUser.role}`}>
-                  {currentUser.role === 'child' ? 'Учень' : currentUser.role === 'mentor' ? 'Ментор' : currentUser.role === 'admin' ? 'Адмін' : 'Гість'}
+                  {currentUser.username === 'Yarik0505'
+                    ? 'Team Lead'
+                    : currentUser.role === 'child'
+                    ? 'Учень'
+                    : currentUser.role === 'mentor'
+                    ? 'Ментор'
+                    : currentUser.role === 'admin'
+                    ? 'Адмін'
+                    : 'Гість'}
                 </span>
               </div>
               <button
+                type="button"
                 className="academy-auth-btn"
                 onClick={() => setIsAuthModalOpen(true)}
                 title="Авторизація або вибір ролі (SCRUM-50)"
@@ -213,6 +245,7 @@ export default function AcademyPage() {
               </button>
               {currentUser.role !== 'guest' && (
                 <button
+                  type="button"
                   className="academy-auth-btn"
                   style={{ borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5' }}
                   onClick={handleLogout}
@@ -231,26 +264,23 @@ export default function AcademyPage() {
             >
               <span>📋 Jira Board (SCRUM)</span>
             </a>
-            <span className="academy-lead-badge">
-              Lead: {selectedTrack.lead}
-            </span>
           </div>
         </div>
       </header>
 
       {/* Guest Mode Notice Banner (SCRUM-50) */}
       {currentUser.role === 'guest' && (
-        <div className="p-3 bg-amber-500/10 border-b border-amber-500/30 text-amber-300 text-xs flex flex-wrap items-center justify-between gap-2 px-6">
-          <div className="flex items-center gap-2">
-            <span>👤</span>
+        <div className="academy-guest-banner">
+          <div className="academy-guest-banner-left">
+            <span className="academy-guest-banner-icon">👤</span>
             <span><strong>Гостьовий режим</strong>: Створіть обліковий запис, щоб синхронізувати свій прогрес між пристроями та отримати офіційний сертифікат навичок!</span>
           </div>
           <button
             type="button"
-            className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40 rounded-lg text-xs font-bold transition"
+            className="academy-guest-banner-btn"
             onClick={() => setIsAuthModalOpen(true)}
           >
-            Увійти / Зареєструватися
+            <span>🔑</span> Увійти / Зареєструватися
           </button>
         </div>
       )}
@@ -1498,7 +1528,9 @@ export default function AcademyPage() {
                 <span>{selectedTrack.icon}</span>
                 <span>{selectedTrack.title}</span>
               </h2>
-              <p className="academy-timeline-subtitle">Граф уроків, передумов (prerequisites) та необхідних свідоцтв</p>
+              <p className="academy-timeline-subtitle">
+                Граф уроків, передумов (prerequisites) та необхідних свідоцтв • Керівник треку: <strong style={{ color: '#34d399' }}>{selectedTrack.lead}</strong>
+              </p>
             </div>
             <span className="academy-timeline-badge">
               Всього модулів: {trackLessons.length}
